@@ -3,7 +3,6 @@
 <!-- Prioritized, top = next. Link items to their spec: (spec: specs/0001-foo.md) -->
 
 ## Now
-- [ ] Confirm GitHub plan supports Pages on a private repo before first deploy; create the repo on GitHub and push (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 - [ ] Write `api/v3/items.md`, `bom.md`, `search.md`, `attachments.md`, `workflow.md` from mined source material (see stub pages for source pointers) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Next
@@ -18,3 +17,4 @@
 
 ## Done
 - [x] Scaffold Astro Starlight site, GitHub Actions deploy workflow, llms.txt/llms-full.txt generator, and 4 concepts pages (auth, versioning, pagination, errors) written in full from mined source material
+- [x] Create GitHub repo (AutoGusX/fusion-manage-plm-docs), push, and deploy to GitHub Pages — made public since GitHub Free doesn't support Pages on private repos: https://autogusx.github.io/fusion-manage-plm-docs/

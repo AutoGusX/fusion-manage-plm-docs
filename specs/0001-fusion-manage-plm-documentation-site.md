@@ -31,7 +31,7 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 
 **Site generator:** Astro Starlight — markdown-native, fast, built-in search, easy GitHub Pages deploy.
 
-**Repo visibility:** private (matches existing AutoGusX GitHub pattern for these tools; covers proprietary examples/customer scenarios). GitHub Pages from a private repo requires a plan that supports it (Pro/Team/Enterprise) — confirm the account has this before first deploy; otherwise the repo stays private with Pages deploy deferred until visibility is revisited.
+**Repo visibility:** public (decided 2026-07-08). Originally set to private, but the AutoGusX GitHub account is on the Free plan, which the Pages API confirmed (422) does not support Pages on private repos. Rather than pay for a plan upgrade, the repo was deliberately made public — not a silent fallback — after that blocker was confirmed live against the API.
 
 **Pipeline:** convert Postman collection → draft endpoint stubs → cross-check against Autodesk docs → verify against live instance during authoring → scrub instance-specific values (base URLs, IDs, tokens) → commit.
 
@@ -46,10 +46,9 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 - [ ] Docs are readable directly as raw markdown from the repo (not JS-rendered-only) — verified by reading a page's `.md` source without running the build
 - [ ] Site search returns relevant results for at least 5 spot-check queries (e.g., "create item", "bearer token", "BOM export")
 - [ ] No bearer token, session cookie, instance hostname, or other instance-specific secret appears anywhere in git history — verified by grep before each commit
-- [ ] Repo visibility (public vs private/internal) is explicitly decided and documented before the first deploy
+- [x] Repo visibility (public vs private/internal) is explicitly decided and documented before the first deploy
 
 ## Risks / open questions
-- **Repo visibility follow-up:** if the GitHub plan in use doesn't support Pages on private repos, decide between upgrading the plan or making the repo public before deploy — don't silently flip to public to unblock a deploy.
 - **Postman collection coverage:** likely doesn't cover 100% of the v2/v3 surface — gaps need to be filled from Autodesk's official docs, which may themselves be incomplete.
 - **Staleness:** no automated sync with Autodesk's API changes in v1 — needs a manual review cadence (e.g., quarterly) or this rots quickly.
 - **Token hygiene:** live-token verification during authoring means every example must be scrubbed of real instance data before commit — needs a concrete checklist/habit, not just intent.

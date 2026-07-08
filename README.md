@@ -6,7 +6,7 @@ See `specs/0001-fusion-manage-plm-documentation-site.md` for the full spec and `
 
 ## Repo visibility
 
-**Decision: private.** This covers proprietary examples and customer scenarios, so it defaults closed rather than open (see spec's Risks section). GitHub Pages on a private repo requires GitHub Pro, Team, or Enterprise — **confirm the GitHub account/org this repo lands in has one of those plans before enabling Pages.** If it doesn't, the repo stays private with the Pages deploy deferred rather than silently flipping the repo public to unblock it.
+**Decision: public.** The original default was private (proprietary-leaning content), but GitHub Pages on a private repo requires GitHub Pro/Team/Enterprise, and the AutoGusX account is on Free — confirmed via a 422 from the Pages API. Rather than pay for a plan upgrade, the repo was made public deliberately (not silently) after confirming the plan blocker. Content still needs review against the secret-hygiene checklist in the spec before merging anything with real tenant/customer data.
 
 ## Local development
 
