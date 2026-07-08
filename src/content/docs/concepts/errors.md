@@ -5,19 +5,19 @@ description: The standard Fusion Manage error envelope, the HTTP status code tab
 
 ## Error envelope
 
-Errors follow a consistent shape:
+**Verified live** (2026-07-08, against a real v3 endpoint on a live tenant) — the actual shape is:
 
 ```json
 {
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Field TITLE is required",
-    "details": []
-  }
+  "statusCode": 404,
+  "errors": ["NOT_FOUND"],
+  "message": "Item 999999999 was not found"
 }
 ```
 
-| HTTP | Code | Description |
+i.e. `statusCode` + `errors` (an array of code strings) + a human-readable `message` — **not** the nested `{"error": {"code", "message", "details"}}` shape that older internal reference docs describe. Confirmed for both 403 and 404 responses on v3 endpoints; treat the nested-`error`-object shape as unverified/likely-outdated until seen in practice.
+
+| HTTP | Example `errors[]` value | Description |
 |---|---|---|
 | 400 | `VALIDATION_ERROR` | Missing or invalid field values |
 | 401 | `UNAUTHORIZED` | Invalid or expired token |
@@ -30,9 +30,13 @@ Errors follow a consistent shape:
 
 In practice, a 401 on an otherwise-working integration means the bearer token expired, not that the credentials are wrong. Refresh the token (see `concepts/authentication`) and retry before treating a 401 as a hard failure.
 
-## 403 on certain "view" endpoints means "not enabled here," not "forbidden"
+## 403 on certain "view" endpoints means "wrong direction" or "not enabled here," not "forbidden"
 
-A handful of endpoints — change-orders-linked-to-an-item, affected-items-on-a-change-order, and workflow history — are backed by workspace-specific numbered "views" (`views/2`, `views/11`, etc.) that don't exist on every workspace or tenant. A verified-working production client treats a 403 from these specific endpoints as **"this feature/view is not enabled for this workspace"** and returns an empty result instead of propagating a hard error:
+A handful of endpoints — change-orders-linked-to-an-item, affected-items-on-a-change-order, and workflow history — are backed by workspace-specific numbered "views" (`views/2`, `views/11`, etc.) that don't exist on every workspace or tenant, or that only make sense in one direction.
+
+**Verified live:** calling `views/11` (affected items) on a plain item returns `403` with `"message": "... access VIEW_WORKFLOW_ITEMS denied. WS: {ws}, dmsID: {id}"`, and calling `views/2` (linked change orders) on a Change Order itself returns `403` with `"... access VIEW_ASSOCIATED_WORKFLOW denied ..."`. In both cases the 403 means "this view doesn't apply to this item type," not a real permissions problem — see `api/v3/relationships-and-affected-items` for the confirmed direction mapping.
+
+A verified-working production client treats a 403 from these specific endpoints as **"this feature/view is not enabled for this workspace"** and returns an empty result instead of propagating a hard error:
 
 ```python
 except httpx.HTTPStatusError as exc:

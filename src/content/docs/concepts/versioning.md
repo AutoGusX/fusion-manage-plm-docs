@@ -13,29 +13,24 @@ Fusion Manage exposes three API surfaces that are easy to conflate. This page is
 
 A single workflow often mixes all three: e.g. searching for an item via v3 `/search-results`, then updating it via a v1 `PUT`.
 
-:::caution[Needs live verification — base host]
-Some documentation (the APS/OAuth-oriented reference) states the v3 base URL is `https://{tenant}.autodeskplm.com/api/v3/`. However, the only **verified-working, production** code examined — a Chrome extension confirmed live against a real tenant, and a working Python MCP server client — both call `https://{tenant}.autodeskplm360.net/api/v3/...` for v3 endpoints, i.e. **the same host as v1**, not a separate `autodeskplm.com` domain. Until re-checked against a live tenant, treat `.autodeskplm360.net` as correct for both v1 and v3.
+:::tip[Confirmed live — base host]
+**Resolved (2026-07-08).** Live-tested directly against a real tenant: both `GET /api/rest/v1/workspaces` and `GET /api/v3/workspaces` return `200` on `https://{tenant}.autodeskplm360.net/...` — **the same host for both v1 and v3.** The `https://{tenant}.autodeskplm.com` host claimed by some documentation was never confirmed and should be treated as incorrect (or at best an alternate/legacy alias) unless proven otherwise on a specific tenant.
 :::
 
-:::caution[Needs live verification — create/update verb and version]
+:::caution[Live-tested but inconclusive — create/update verb and version]
 Documentation describes:
 - Create: `POST /api/v3/workspaces/{wsId}/items`
 - Update: `PATCH /api/v3/workspaces/{wsId}/items/{itemId}`
 
-But the verified-working MCP client (`client.py`) actually implements:
+The verified-working MCP client (`client.py`) instead implements:
 - Create: `POST` against the **v1** path `/api/rest/v1/workspaces/{wsId}/items`, with a flat field-map body (not the v3 `sections[].fields[]` shape)
 - Update: `PUT` (not `PATCH`) against the **v1** path `/api/rest/v1/workspaces/{wsId}/items/{itemId}`
 
-Both can't be the current, correct behavior for the same tenant configuration — this may be a tenant-version difference (some tenants may genuinely support the v3 create/PATCH flow) rather than one source simply being wrong. **Do not assume either is universally correct** — verify against your specific tenant before building on either pattern. See `api/v3/items` for both documented shapes side by side.
+**Attempted live (2026-07-08)** against a real tenant: neither the v1 flat-map shape nor the v3 `sections[].fields[]` shape could be confirmed working — v1 create returned `400 Title is required` regardless of payload shape tried (including with a `TITLE` value present), and v3 create returned an opaque `500 UNKNOWN` error. This needs the Postman collection's actual working request (or Autodesk's official docs) to resolve, not more trial and error — see `api/v3/items` for the full detail of what was tried.
 :::
 
-:::caution[Needs live verification — CO/item relationship view direction]
-Two sources directly conflict on which workspace "view" number goes which direction:
-
-- The verified-working `client.py` code comment states: **`views/2`** = Change Orders linked to an item (item → CO direction), and **`views/11`** = affected items listed on a Change Order (CO → item direction).
-- A separate internal note (from the same overall project) states: "Related COs for a parts item come via **views/11**" — the opposite direction assignment for views/11.
-
-Both cannot be correct simultaneously. This is flagged, not resolved — see `api/v3/relationships-and-affected-items` for the full detail. Verify directly against a live tenant before relying on either direction in new code, and expect that view-ID-to-meaning mapping may also vary by tenant/workspace configuration.
+:::tip[Confirmed live — CO/item relationship view direction]
+**Resolved (2026-07-08).** Live-tested against a real tenant with real items and Change Orders: `views/2` on a plain item returned `204` (valid, empty); `views/11` on the same item returned `403 VIEW_WORKFLOW_ITEMS denied`. Conversely, `views/11` on two different real Change Orders returned `200` with a populated `affectedItems[]` array pointing to real parts, while `views/2` on those same COs returned `403 VIEW_ASSOCIATED_WORKFLOW denied`. This confirms the `client.py` reading: **`views/2`** = Change Orders linked to an item (item → CO direction), **`views/11`** = affected items on a Change Order (CO → item direction). The other internal note claiming the opposite was incorrect for this tenant — see `api/v3/relationships-and-affected-items`.
 :::
 
 ## Legacy v1 patterns to treat as historical, not current guidance

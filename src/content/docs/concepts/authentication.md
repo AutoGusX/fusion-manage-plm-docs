@@ -79,6 +79,6 @@ Content-Type: application/json
 
 A 401 almost always means an expired token, not a permissions problem — refresh and retry rather than treating it as a hard failure. If a session-derived token (flow 1) starts failing, the user's underlying PLM browser session has likely expired too; they need to reload a Fusion Manage tab to re-authenticate before token refresh will succeed again.
 
-:::caution[Needs live verification]
-Sources disagree on the base host for the token endpoint. The APS OAuth docs (flow 2) and one internal reference describe a v3 host of `{tenant}.autodeskplm.com`, but the only **production-verified, currently-working** code found (a Chrome extension confirmed against a live tenant, and a working MCP server client) both call `{tenant}.autodeskplm360.net` for `/api/v3/token` and all other v3 endpoints. Treat `.autodeskplm360.net` as correct until this is re-checked live — see `concepts/versioning` for the fuller discussion of this discrepancy.
+:::tip[Confirmed live — 2026-07-08]
+Live-tested directly against a real tenant: both v1 and v3 endpoints (including the token/session model) work correctly on `{tenant}.autodeskplm360.net`. The `{tenant}.autodeskplm.com` host described by some documentation was never confirmed and should be treated as incorrect (or at best an alternate/legacy alias) — see `concepts/versioning`.
 :::
