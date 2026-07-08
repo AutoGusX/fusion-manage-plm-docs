@@ -17,16 +17,15 @@ A single workflow often mixes all three: e.g. searching for an item via v3 `/sea
 **Resolved (2026-07-08).** Live-tested directly against a real tenant: both `GET /api/rest/v1/workspaces` and `GET /api/v3/workspaces` return `200` on `https://{tenant}.autodeskplm360.net/...` — **the same host for both v1 and v3.** The `https://{tenant}.autodeskplm.com` host claimed by some documentation was never confirmed and should be treated as incorrect (or at best an alternate/legacy alias) unless proven otherwise on a specific tenant.
 :::
 
-:::caution[Live-tested but inconclusive — create/update verb and version]
-Documentation describes:
-- Create: `POST /api/v3/workspaces/{wsId}/items`
-- Update: `PATCH /api/v3/workspaces/{wsId}/items/{itemId}`
+:::tip[Confirmed live — create/update verb and version]
+**Resolved (2026-07-08).** The `client.py` MCP client's v1 create/update path (`POST`/`PUT` against `/api/rest/v1/workspaces/{wsId}/items[/{itemId}]`) could not be reproduced against a live tenant — every v1 create payload shape tried returned `400 Title is required`, even with a `TITLE` value present.
 
-The verified-working MCP client (`client.py`) instead implements:
-- Create: `POST` against the **v1** path `/api/rest/v1/workspaces/{wsId}/items`, with a flat field-map body (not the v3 `sections[].fields[]` shape)
-- Update: `PUT` (not `PATCH`) against the **v1** path `/api/rest/v1/workspaces/{wsId}/items/{itemId}`
+The actual confirmed-working path, sourced from a Chrome extension's production clone-item code and verified end-to-end live, is **v3-only**:
+- **Create:** `POST /api/v3/workspaces/{wsId}/items` with `{ sections: [{ link, fields: [{ __self__, value }] }] }`, using **workspace-scoped** section/field links.
+- **Update:** both `PATCH` and `PUT` work on `/api/v3/workspaces/{wsId}/items/{itemId}`, but `PATCH` requires **item-scoped** links while `PUT` accepts either item-scoped or workspace-scoped links.
+- **Delete:** unsupported (`405`) — items are soft-deleted via `PATCH .../items/{itemId}?deleted=true`.
 
-**Attempted live (2026-07-08)** against a real tenant: neither the v1 flat-map shape nor the v3 `sections[].fields[]` shape could be confirmed working — v1 create returned `400 Title is required` regardless of payload shape tried (including with a `TITLE` value present), and v3 create returned an opaque `500 UNKNOWN` error. This needs the Postman collection's actual working request (or Autodesk's official docs) to resolve, not more trial and error — see `api/v3/items` for the full detail of what was tried.
+See `api/v3/items` for the full confirmed shapes and constraints. Treat the v1 create/update path as unresolved/likely non-functional on this API version unless proven otherwise on a specific tenant.
 :::
 
 :::tip[Confirmed live — CO/item relationship view direction]

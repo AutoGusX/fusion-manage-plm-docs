@@ -17,6 +17,13 @@ description: The standard Fusion Manage error envelope, the HTTP status code tab
 
 i.e. `statusCode` + `errors` (an array of code strings) + a human-readable `message` — **not** the nested `{"error": {"code", "message", "details"}}` shape that older internal reference docs describe. Confirmed for both 403 and 404 responses on v3 endpoints; treat the nested-`error`-object shape as unverified/likely-outdated until seen in practice.
 
+**Two more distinct shapes were found live, on top of the one above — this API does not use one consistent error envelope:**
+
+- **v1 field-validation errors** use yet another shape entirely: `{"httpStatusCode": 400, "error": [{"fieldId": "TITLE", "message": "Title is required."}]}` (an array of per-field problems, confirmed on `POST /api/rest/v1/workspaces/{ws}/items`).
+- **v3 opaque server errors** (confirmed on a malformed `POST /api/v3/workspaces/{ws}/items`) can return: `{"errorCode": "UNKNOWN", "message": "Unknown error.", "params": null, "url": null, "errorClass": "APIError"}` — a fourth shape, and unfortunately not useful for diagnosing what was actually wrong with the request.
+
+Don't write error-parsing code that assumes a single envelope shape across this API — check `statusCode`/`httpStatusCode`/absence of both, and branch accordingly.
+
 | HTTP | Example `errors[]` value | Description |
 |---|---|---|
 | 400 | `VALIDATION_ERROR` | Missing or invalid field values |
