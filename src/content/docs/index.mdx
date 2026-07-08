@@ -1,0 +1,37 @@
+---
+title: Fusion Manage PLM Docs
+description: Human- and AI-readable reference for the Autodesk Fusion Manage PLM API (v2 and v3) — concepts, endpoint reference, and task-oriented guides.
+template: splash
+hero:
+  tagline: A single, reconciled reference for the Fusion Manage PLM API — built for engineers and for AI coding agents alike.
+  actions:
+    - text: Start with Concepts
+      link: /concepts/authentication/
+      icon: right-arrow
+    - text: API Reference — v3
+      link: /api/v3/items/
+      icon: right-arrow
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why this exists
+
+Fusion Manage's API surface (v1, v2, and v3) is documented across scattered official docs, a Postman collection, and tribal knowledge from years of building PLM add-ins. This site reconciles those sources into one place — and every page is plain markdown, so an AI agent can read it directly from the repo without crawling rendered HTML. See `/llms.txt` and `/llms-full.txt` at the site root for a machine-readable index.
+
+<CardGrid stagger>
+	<Card title="Concepts" icon="open-book">
+		Auth flows, pagination, error handling, and the v1/v2/v3 versioning story — including where docs and working code disagree.
+	</Card>
+	<Card title="API Reference" icon="rocket">
+		Per-resource endpoint reference for v3 (items, BOM, search, attachments, workflow, and more) and the v2 classification subsystem.
+	</Card>
+	<Card title="Guides" icon="puzzle">
+		Task-oriented walkthroughs for common PLM workflows: creating items, managing BOMs, running change orders, and more.
+	</Card>
+</CardGrid>
+
+:::caution
+This is an early, in-progress reference. Pages marked **⚠ Needs live verification** describe behavior reconstructed from prior projects' code and docs, not yet re-checked against a live tenant. Treat them as a strong starting point, not ground truth.
+:::

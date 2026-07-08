@@ -1,0 +1,17 @@
+{
+  "name": "fusion-manage-plm-docs",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "generate:llms": "node scripts/generate-llms-txt.mjs",
+    "build": "npm run generate:llms && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "latest",
+    "astro": "latest"
+  }
+}
