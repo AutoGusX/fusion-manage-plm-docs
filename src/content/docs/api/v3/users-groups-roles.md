@@ -1,9 +1,7 @@
 ---
 title: Users, Groups, and Roles
-description: User, group, and role lookups, the current-user (@me) pattern, and a documented v1/v3 inconsistency in the assign/unassign group pair.
+description: User, group, and role management on v3 — confirmed live and cross-checked against Autodesk's official Postman collection, including a corrected v3-roles claim.
 ---
-
-Sourced from a full grep of a production Fusion Manage API client (`plm.js`, BOM Builder Fork extension).
 
 ## Current user
 
@@ -11,38 +9,63 @@ Sourced from a full grep of a production Fusion Manage API client (`plm.js`, BOM
 GET /api/v3/users/@me
 ```
 
-This single endpoint serves double duty in the source client: it's used both as "get my profile" and as "get my assigned groups" (by reading `.groups` off the same response) — there is no separate dedicated groups-assigned endpoint.
+Serves double duty: it's "get my profile," and (per one production client) also "get my assigned groups" by reading `.groups` off the same response — there's no separate dedicated groups-assigned endpoint.
 
-## Users and groups
+## Users
 
 | Operation | Endpoint |
 |---|---|
-| List users | `GET /api/v3/users?sort=displayName&activeOnly={bool}&mappedOnly={bool}&offset={n}&limit={n}` — defaults `limit=1000`, `activeOnly=false`, `mappedOnly=false`. Pass header `Accept: application/vnd.autodesk.plm.users.bulk+json` for the bulk response variant (used by default in the source client). |
-| List groups | `GET /api/v3/groups?offset={n}&limit={n}` — default `limit=100`. Same bulk-header pattern: `Accept: application/vnd.autodesk.plm.groups.bulk+json`. |
-| Add a user | `POST /api/v3/users` with body `{ "email": "...", "thumbnailPref": "Yes", "uomPref": "Metric", "timezone": "Etc/GMT+1", "licenseType": { "licenseCode": "S" } }` (`licenseCode` `"S"` = Professional, `"P"` = Participant). New user ID is parsed from the `Location` response header, not the body. |
-| Assign groups to a user | `POST /api/v3/users/{userId}/groups` with a raw array body of group references |
+| List users | `GET /api/v3/users?sort=displayName&activeOnly={bool}&mappedOnly={bool}&offset={n}&limit={n}` — `Accept: application/vnd.autodesk.plm.users.bulk+json` for the bulk variant |
+| Get a single user by login name | `GET /api/v3/users?filter[loginName]={loginName}` |
+| Get a single user (v1) | `GET /api/rest/v1/users/{userId}` |
+| Add a user | `POST /api/v3/users` — see body note below |
+| Assign groups to a user | `POST /api/v3/users/{userId}/groups` — body is a **raw array of group URN strings**, e.g. `["urn:adsk.plm:tenant.group:{TENANT}.145"]` (confirmed by Autodesk's official example — a production client instead sent an array of group objects; if one shape fails, try the other) |
+| Disable a user | `PATCH /api/v3/users/{userId}`, `Content-Type: application/json-patch+json`, JSON-Patch body: `[{ "op": "replace", "path": "/userStatus", "value": "Deleted" }]` |
 | Unassign a group from a user | `DELETE /api/rest/v1/users/{userId}/groups/{groupId}` |
 
 :::caution
-`unassignGroup` uses the **v1** path while its counterpart `assignGroups` uses **v3** — a real inconsistency within the same assign/unassign pair in the source client, not a typo. Confirm both independently before assuming symmetry.
+`unassignGroup` uses the **v1** path while `assignGroups` uses **v3** — a real inconsistency within the same assign/unassign pair, confirmed independently in both a production client and Autodesk's own official Postman collection (its "Remove User From Group" call also hits `DELETE /api/rest/v1/users/{userId}/groups/{groupId}`). Not a typo — don't assume v3 symmetry here.
 :::
 
-## Roles and permissions
+**Add User body** — Autodesk's official example omits `licenseType` entirely and adds `notifyUser`:
+```json
+{
+  "email": "person@example.com",
+  "thumbnailPref": "Yes",
+  "uomPref": "Metric",
+  "timezone": "Etc/GMT+1",
+  "notifyUser": false
+}
+```
+A commented-out line in the same official example notes `licenseType: { licenseCode }` (`"S"` = Professional, `"P"` = Participant) should **only** be used for trial/demo environments — omit it for normal tenants and let the default license apply. New user ID is parsed from the `Location` response header, not the response body.
+
+## Groups
 
 | Operation | Endpoint |
 |---|---|
-| List roles | `GET /api/rest/v1/roles` — v1-only, no v3 equivalent exists in the source client (its own code comments explicitly flag this as "(V1)") |
-| Get permissions definition | `GET /api/rest/v1/permissions` — also explicitly v1-only |
+| List all groups | `GET /api/v3/groups?offset={n}&limit={n}` — `Accept: application/vnd.autodesk.plm.groups.bulk+json` |
+| Get group details | `GET /api/v3/groups/{groupId}` |
+| Get a group's users | `GET /api/v3/groups/{groupId}/users` |
+| Get a group's workspace access | `GET /api/v3/groups/{groupId}/workspaces` (each entry includes a `permissions` array, e.g. `["Update","Delete","Create","Read"]`) |
+| Remove a group's access to a workspace | `DELETE /api/v3/groups/{groupId}/workspaces/{workspaceId}` |
+
+## Roles and permissions
+
+:::tip[Correction, confirmed live — 2026-07-09]
+An earlier pass claimed role listing was v1-only, based on one production client that happened to only call the v1 path. That was wrong: **`GET /api/v3/roles?offset={n}&limit={n}` exists and is confirmed live** against a real tenant (`200`, standard paginated envelope). Use v3 for roles; don't assume v1-only just because one client never called the v3 form.
+:::
+
+| Operation | Endpoint |
+|---|---|
+| List roles | `GET /api/v3/roles?offset={n}&limit={n}` — confirmed live |
+| Get permissions definition | `GET /api/rest/v1/permissions` — v1, not yet found on v3 |
 | Get current-user permissions on a workspace or item | `GET /api/v3/workspaces/{wsId}/users/@me/permissions` or `GET /api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions` |
 
-## System logs (admin)
+## Logs (admin)
 
-```
-GET /api/v3/tenants/{TENANT_UPPERCASE}/system-logs?offset={n}&limit={n}[&type=item]
-```
+Both confirmed from Autodesk's official Postman collection, both path-scoped by the **uppercased tenant name** as a URL segment — the only place in this API that does that instead of just using the tenant subdomain as the host:
 
-Worth calling out separately: this is the only endpoint in this entire cluster that path-scopes by the **uppercased tenant name** as a URL segment, rather than just using the tenant subdomain as the host. Every other v3 call in this group is a plain `/api/v3/{resource}` path off the tenant host.
-
-:::note
-None of the endpoints on this page have been independently live-verified against a tenant yet — they're transcribed from production client code, not yet re-checked. Treat them as high-confidence but unverified.
-:::
+| Operation | Endpoint |
+|---|---|
+| System log entries | `GET /api/v3/tenants/{TENANT_UPPERCASE}/system-logs?offset={n}&limit={n}[&type=item]` |
+| Setup/config-change log entries | `GET /api/v3/tenants/{TENANT_UPPERCASE}/setup-logs?offset={n}&limit={n}` |

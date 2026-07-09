@@ -32,6 +32,8 @@ GET https://developer.api.autodesk.com/authentication/v2/authorize
   ?response_type=code&client_id={CLIENT_ID}&redirect_uri={CALLBACK_URL}&scope=data:read data:write
 ```
 
+Confirmed by Autodesk's own official Postman collection for this API, which ships a pre-configured OAuth2 flow with `scope: data:read data:write data:search`, `addTokenTo: header` — a real, working token carries additional scopes beyond this (`data:create`, `user:read` were seen on a live token), so treat the scope list as "at least these," not exhaustive.
+
 Exchange the returned code for a token:
 
 ```

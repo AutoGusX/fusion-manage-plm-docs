@@ -30,12 +30,15 @@ No v3 reports endpoint exists in this client — reports appear to be v1-only.
 | Add a bookmark | `POST /api/v3/users/@me/bookmarks` — body `{ "dmsId": ..., "comment": "..." }` (comment optional) |
 | Remove a bookmark | `DELETE /api/v3/users/@me/bookmarks/{dmsId}` |
 
-## Recently-viewed
+## Recently-viewed and outstanding work
 
 ```
 GET /api/v3/users/@me/recently-viewed
+GET /api/v3/users/@me/outstanding-work
 ```
 
+`outstanding-work` — confirmed live — is a personal worklist, not a saved report: it returns `count`, `recalculating` (a boolean — the list is computed asynchronously and may be stale while `true`), `lastRecalculateStarted`/`lastRecalculateUpdate` timestamps, and an `outstandingWork[]` array of pending action items assigned to the current user.
+
 :::note
-None of the endpoints on this page have been independently live-verified against a tenant yet — they're transcribed from production client code, not yet re-checked. Treat them as high-confidence but unverified.
+The reports, dashboard-chart, and bookmarks endpoints on this page have not been independently live-verified against a tenant yet — they're transcribed from production client code, not yet re-checked. `outstanding-work` **has** been confirmed live (2026-07-09).
 :::
