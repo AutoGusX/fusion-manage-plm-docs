@@ -14,6 +14,10 @@ Not to be confused with **lifecycle transitions** (revision/release state, v1, X
 
 `workflowId` is `1` in every example seen so far — likely a per-workspace constant (each workspace has one workflow, workflow-scoped IDs like states/transitions are what actually vary), but not confirmed as universally `1`.
 
+:::tip[Confirmed live — 2026-07-13]
+`GET /api/v3/workspaces/{ws}/workflows/1/transitions` returns `200` with a real array of transition definitions (`name`, `customLabel`, `fromState`, `sendEmail`, etc.) against a real Change Orders workspace.
+:::
+
 ## Item-level
 
 | Purpose | Endpoint |
@@ -23,8 +27,8 @@ Not to be confused with **lifecycle transitions** (revision/release state, v1, X
 | Workflow history | `GET /api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/history` |
 | Perform a transition | `POST /api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/transitions`, with a `content-location` header pointing at the specific transition being performed (`/api/v3/workspaces/{ws}/workflows/{workflowId}/transitions/{transitionId}`) |
 
-:::caution[Needs live verification]
-The 403-as-"not enabled"-not-error pattern (see `concepts/errors`) was observed on a v1-style workflow-history call in an older client; it hasn't been re-confirmed against the v3 `workflows/{id}/history` endpoint shown above. Confirm before assuming the same graceful-degradation behavior applies here.
+:::tip[Confirmed live — 2026-07-13]
+Both read endpoints confirmed live against a real Change Order: `GET .../workflows/1/transitions` returns `200` with the transitions available right now on that specific item (a subset of the workspace-level list, reflecting the item's current state), and `GET .../workflows/1/history` returns `200` with a `history[]` array of past transitions, each with `user`, `created` timestamp, and the transition performed. The `POST` (perform a transition) was **not** tested — it mutates the CO's real workflow state.
 :::
 
 :::caution[Needs live verification]
