@@ -3,7 +3,7 @@
 <!-- Prioritized, top = next. Link items to their spec: (spec: specs/0001-foo.md) -->
 
 ## Now
-- [ ] Site search spot-check against 5 example queries now that all content is filled in (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Manually spot-check search in an actual browser (previous check decompressed the Pagefind index directly — confirms indexed content is correct, but hasn't exercised the live search UI) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Next
 - [ ] Live-verify remaining write operations transcribed from Autodesk's official Postman collection but not yet independently tested: Managed Items add/update/delete (needs a real CO — riskier, plan carefully), Grid/Project tab rows (unknown view IDs for this tenant), workflow transition POST (mutates real workflow state), group/role writes, v2 classification writes (pollutes taxonomy — low priority to test) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
@@ -16,6 +16,7 @@
 - [ ] Confirm the exact `X-User-Id` admin-impersonation request combination — only described conceptually in the source examined, never seen verbatim (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Done
+- [x] Search-index spot-check (2026-07-13) — decompressed the built Pagefind fragments and confirmed all 5 spec example queries ("create item", "bearer token", "BOM export", "archive item", "workflow transition") match their correct primary reference page. Confirms indexed content is correct; a live in-browser check of the search UI itself is still a good idea (moved to Now).
 - [x] Cleaned up the two leftover disposable test items (21509, 21510) with a fresh token (2026-07-13), then confirmed BOM row add/update/delete had already worked (prior session) and finished the Relationships tab live test: add-relationship fails with `400 "Workspace {A} is not related to workspace {B}"` for both same-workspace and cross-workspace attempts — **relationships require a tenant-admin-configured workspace-pair relationship first**, not just any two items. Also confirmed live: `GET /api/v2/parts?referenceUrn=...` (real compact shape, relative-path links) and `GET .../views/8/suppliers` (200 with empty array + item-level `hasQuotes`/`hasDefaultQuote` on a supplier-less item). Two more disposable test items created and archived during this pass.
 - [x] Full content pass complete (2026-07-13) — every planned page on the site has real content, no stubs remain: all `api/v2/` and `api/v3/` reference pages, all 7 `guides/` pages including the authentication quickstart
 - [x] Scaffold Astro Starlight site, GitHub Actions deploy workflow, llms.txt/llms-full.txt generator, and 4 concepts pages (auth, versioning, pagination, errors) written in full from mined source material

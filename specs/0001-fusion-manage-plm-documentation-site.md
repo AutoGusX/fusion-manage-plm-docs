@@ -44,7 +44,7 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 - [x] `llms.txt` and `llms-full.txt` exist at the site root and list every published page with a one-line description
 - [x] At least one conceptual guide exists per major PLM area: auth, items, BOM, change orders/workflow, suppliers, admin/config
 - [x] Docs are readable directly as raw markdown from the repo (not JS-rendered-only) — verified by reading a page's `.md` source without running the build
-- [ ] Site search returns relevant results for at least 5 spot-check queries (e.g., "create item", "bearer token", "BOM export")
+- [x] Site search returns relevant results for at least 5 spot-check queries (e.g., "create item", "bearer token", "BOM export") — verified 2026-07-13 by decompressing the built Pagefind index fragments and confirming each of 5 queries ("create item", "bearer token", "BOM export"/flat BOM, "archive item", "workflow transition") matches its correct primary reference page. This checks the indexed content, not a live browser search-UI interaction (no browser automation tool was available in this environment) — worth a manual spot-check in an actual browser at some point, but the underlying index is confirmed correct.
 - [x] No bearer token, session cookie, instance hostname, or other instance-specific secret appears anywhere in git history — verified by grep before every commit this session
 - [x] Repo visibility (public vs private/internal) is explicitly decided and documented before the first deploy
 
