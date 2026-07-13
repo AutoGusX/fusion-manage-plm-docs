@@ -3,7 +3,7 @@ title: Suppliers
 description: Approved Manufacturer/Supplier (AML) list and quotes for an item, via the fixed views/8 pattern.
 ---
 
-Sourced from two independent production clients (a Chrome extension and a Python MCP server) that agree exactly on shape — not yet independently live-tested against a live tenant in this documentation effort.
+Sourced from two independent production clients (a Chrome extension and a Python MCP server) that agree exactly on shape.
 
 ## Endpoints
 
@@ -13,6 +13,21 @@ Sourced from two independent production clients (a Chrome extension and a Python
 | Get quotes for one supplier | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/8/suppliers/{supplierId}/quotes` |
 
 Like BOM (`views/5`) and Project (`views/16`), `views/8` for suppliers/AML appears to be a fixed view number rather than something that varies per workspace — not confirmed as universal across all tenants, but consistent across every source examined.
+
+:::tip[Confirmed live — 2026-07-13]
+`GET .../views/8/suppliers` returns `200` even for an item with zero suppliers configured (rather than `404`):
+```json
+{
+  "__self__": "/api/v3/workspaces/57/items/9878/views/8/suppliers",
+  "suppliers": [],
+  "workingVersionChanged": false,
+  "costIgnored": false,
+  "hasQuotes": false,
+  "hasDefaultQuote": false
+}
+```
+Note `hasQuotes`/`hasDefaultQuote` also appear at the **top level** of this response (item-wide, "does this item have any quotes/a default quote across all its suppliers"), not just per-supplier as documented below — check both depending on whether you need an item-wide or per-supplier answer.
+:::
 
 ## Response shape
 

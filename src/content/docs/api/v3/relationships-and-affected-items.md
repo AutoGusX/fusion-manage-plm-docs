@@ -57,10 +57,8 @@ Note the add endpoint's path doesn't match the read/update/remove endpoints' pat
 
 ## Relationships tab (views/10) — item-to-item relationships
 
-From Autodesk's official Postman collection (not yet independently live-tested):
-
 - **Read** — `GET /api/v3/workspaces/{ws}/items/{itemId}/views/10`
-- **Add** — `POST /api/v3/workspaces/{ws}/items/{itemId}/views/10`, with a `content-location` header pointing at the specific item being related (`/api/v3/workspaces/{ws}/items/{itemId}/views/10/linkable-items/{targetItemId}`), body:
+- **Add** — `POST /api/v3/workspaces/{ws}/items/{itemId}/views/10`, with a `content-location` header pointing at the specific item being related (`/api/v3/workspaces/{targetWs}/items/{itemId}/views/10/linkable-items/{targetItemId}`), body:
   ```json
   { "description": "Relationship created by API", "direction": { "type": "Bi-Directional" } }
   ```
@@ -69,3 +67,9 @@ From Autodesk's official Postman collection (not yet independently live-tested):
 - **Remove** — `DELETE /api/v3/workspaces/{ws}/items/{itemId}/views/10/relationships/{relationshipId}`
 
 The `content-location` header pattern (pointing to a `linkable-items` or similar sub-resource) recurs elsewhere in this API — see `api/v3/views-fields-tableaus` for the Project tab, which uses the same convention for linking an existing item into a tab.
+
+:::caution[Confirmed live — 2026-07-13: relationships require a pre-configured workspace pair]
+Attempted against a live tenant, twice: an add-relationship `POST` between two items in the **same** workspace (Items → Items) returned `400 "Workspace 57 is not related to workspace 57"`. A second attempt across workspaces (Items → Documents) returned `400 "Workspace 57 is not related to workspace 71"`.
+
+**This confirms relationships are gated by tenant admin configuration** — a workspace pair must be explicitly set up as "related" (in Fusion Manage's workspace/relationship setup, not exposed as a discoverable API call in this pass) before `POST .../views/10` will accept a relationship between items in that pair. Don't assume any two arbitrary workspaces (or even an item to another item in its own workspace) can be related without checking this first. Read (`GET .../views/10`) worked fine (`204`, empty) regardless — it's specifically the write path that enforces this.
+:::
