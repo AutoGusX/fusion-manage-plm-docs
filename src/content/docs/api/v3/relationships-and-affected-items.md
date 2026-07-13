@@ -36,12 +36,9 @@ Example response shape from `GET /api/v3/workspaces/{coWsId}/items/{coId}/views/
 - `GET /api/v3/workspaces/{coWs}/items/{coId}/views/11` — list managed/affected items (shown above)
 - `GET /api/v3/workspaces/{coWs}/items/{coId}/views/11/fields` — tab's field/column definitions
 
-**Write** (from Autodesk's official Postman collection, not yet independently live-tested):
+**Write:**
 
-- **Add** — `POST /api/v3/workspaces/{coWs}/items/{coId}/affected-items` (note: **not** nested under `views/11`), `Accept: application/vnd.autodesk.plm.affected.items.bulk+json`, body is a raw array of item links:
-  ```json
-  ["/api/v3/workspaces/57/items/{itemId}"]
-  ```
+- **Add** — `POST /api/v3/workspaces/{coWs}/items/{coId}/affected-items` (note: **not** nested under `views/11`), `Accept: application/vnd.autodesk.plm.affected.items.bulk+json`, body is a raw array of item links.
 - **Update** — `PUT /api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}`:
   ```json
   {
@@ -54,6 +51,19 @@ Example response shape from `GET /api/v3/workspaces/{coWsId}/items/{coId}/views/
 - **Remove** — `DELETE /api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}`
 
 Note the add endpoint's path doesn't match the read/update/remove endpoints' path (`affected-items` directly under the item, vs. `views/11/affected-items`) — this is confirmed from the official source, not a typo.
+
+:::tip[Confirmed live end-to-end — 2026-07-13, with an important correction]
+Full add/update/remove cycle tested against a real Change Order:
+
+| Call | Result |
+|---|---|
+| `POST .../affected-items` with a **relative** path in the array (`["/api/v3/workspaces/57/items/{id}"]`, as shown in Autodesk's official example) | `400 GEN_INVALID_INPUT_SCHEMA "Incorrect payload"` |
+| Same call with an **absolute URL** (`["https://{tenant}.autodeskplm360.net/api/v3/workspaces/57/items/{id}"]`) | `200`, `[{ "path": "...", "result": "SUCCESS", "location": "/{n}" }]` |
+| `PUT .../views/11/affected-items/{itemId}` with `{ "linkedFields": [] }` | `204` |
+| `DELETE .../views/11/affected-items/{itemId}` | `204` |
+
+**Correction to Autodesk's own official example:** the add-items array requires **fully-qualified absolute URLs**, not the relative paths shown in the official Postman collection. This same requirement was also confirmed on the Grid tab's add-rows endpoint (see `api/v3/views-fields-tableaus`) — treat it as a general rule for any endpoint expecting a bulk array of item/field links, not a one-off quirk of this endpoint.
+:::
 
 ## Relationships tab (views/10) — item-to-item relationships
 

@@ -56,3 +56,11 @@ Use `"type": "picklist"` for a picklist property, then create its options separa
 **Add a property to a class** — `PUT /api/v2/classifications/{classId}/property-instances/{propertyId}`, body `{ "id": "{propertyId}" }`
 
 See `api/v2/property-instances` for reading property values once assigned, and `api/v3/search` for the `CLASS:` query-grammar prefix used to search by classification.
+
+## Where an item's classification actually lives
+
+Confirmed live (2026-07-13) against a real Documents-workspace item: a workspace bound to the classification system has a dedicated section with `"type": "CLASSIFICATION"` (distinct from the ordinary `FIELDCONTAINER` type — see `api/v3/workspaces` for the sections endpoint). On the item itself, that section carries `classificationId` and `classificationName` directly (e.g. `118` / `"Documents"`, the default for that workspace), plus one or more dynamically-named fields following the pattern seen in `api/v2/property-instances`'s lookup convention — e.g. `0CWS_DOCUMENT_CLASS_NAME` — rather than static field IDs like `TITLE`/`DESCRIPTION`.
+
+:::caution[Attempted, inconclusive — 2026-07-13]
+Tried reassigning an item's classification by `PATCH`-ing the item with an updated `classificationId` on that section (`{"sections":[{"link":"...sections/543","classificationId":206}]}`) — this returned a `500 INTERNAL_SERVER_ERROR`, not a normal validation error. That's a signal this isn't the right mechanism (or isn't supported via this endpoint at all), not a transient failure to retry. The item itself was unaffected — verified intact and unchanged afterward. How to actually reclassify an item via API remains unresolved; it may require the Fusion Manage UI, a different endpoint entirely, or a specific field-write shape not yet found.
+:::

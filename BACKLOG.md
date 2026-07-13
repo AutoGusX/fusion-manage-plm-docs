@@ -6,8 +6,9 @@
 - [ ] Manually spot-check search in an actual browser (previous check decompressed the Pagefind index directly — confirms indexed content is correct, but hasn't exercised the live search UI) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Next
-- [ ] Live-verify remaining write operations transcribed from Autodesk's official Postman collection but not yet independently tested: Managed Items add/update/delete (needs a real CO — riskier, plan carefully), Grid/Project tab rows (unknown view IDs for this tenant), workflow transition **POST** (reads now confirmed live; the actual transition-performing call still mutates real workflow state, not tested), group/role writes, v2 classification writes (pollutes taxonomy — low priority to test) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Discover how to actually reclassify an item via API (attempted PATCH on the classification section returned a 500, not a validation error — likely the wrong mechanism entirely; see `api/v2/classifications`) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 - [ ] Whether *configuring* a new workspace-relationship pair is exposed via API at all (vs. admin-UI-only) is still unconfirmed — `related-workspaces` (confirmed live) only lets you discover existing pairs, not create new ones (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Group/role writes and v2 classification create/link writes (Create Class/Property/Enumeration, Link Class to Parent) remain transcribed-only, not live-tested — v2 classification writes are low priority since they'd pollute the tenant's real taxonomy long-term (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Later
 - [ ] Locate Autodesk's official (non-Postman) API docs, if they add anything the collection doesn't (spec: specs/0001-fusion-manage-plm-documentation-site.md)
@@ -16,6 +17,14 @@
 - [ ] Confirm the exact `X-User-Id` admin-impersonation request combination — only described conceptually in the source examined, never seen verbatim (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Done
+- [x] Deep live-testing pass on a real CO, a real Engineering Project, and a disposable Documents item (2026-07-13):
+  - **Workflow transitions fully confirmed end-to-end** — performed a real transition and reverted it. Successful transitions return `303`, not `200`/`204`. Transitions can carry business-rule preconditions (400 with a plain message, state unchanged) and some require a `comment` field (singular — `comments`/`workflowComments` both fail).
+  - **Managed Items add/update/remove fully confirmed** — and found a real correction to Autodesk's own official example: the add-items array requires **absolute URLs**, not the relative paths shown in their docs (`400 GEN_INVALID_INPUT_SCHEMA` otherwise).
+  - **Grid tab add/update/delete fully confirmed** — same absolute-URL requirement applies.
+  - **Project Management tab add/remove fully confirmed** — this one's body is a flat object, not an array, and works fine with relative-path-free plain JSON (no absolute-URL fix needed).
+  - **Found `GET /api/v3/workspaces/{ws}/views`** — lists every named view with its number, replacing guesswork about fixed view IDs (Grid=13, Project Management=16, Managed Items=11, Relationships=10 confirmed on this tenant).
+  - **Attempted item reclassification, inconclusive** — PATCH-ing an item's classification section returned a 500, not a normal error; the real mechanism (if any) is still unknown.
+  - Four disposable test items created and archived; the CO's workflow state was restored to its original value. Nothing left behind.
 - [x] Confirmed live (2026-07-13): all three workflow read endpoints (`workflows/1/transitions` at both workspace and item level, `workflows/1/history`) against a real Change Order. Only the transition-performing `POST` remains untested (mutates real state).
 - [x] Relationships tab (views/10) fully resolved end-to-end (2026-07-13) — `related-workspaces` confirmed live (ws 57 Items is related to ws 143 Requirements and ws 147 Supplier Packages, not to itself or Documents, which explains the earlier 400s). Full add/read/update/delete cycle confirmed live between a disposable item and a real Requirements item: `relationshipId` in the URL is the target item's own dmsId, `GET` returns an array (not a wrapped object). Disposable test item created and archived as part of verification.
 - [x] Search-index spot-check (2026-07-13) — decompressed the built Pagefind fragments and confirmed all 5 spec example queries ("create item", "bearer token", "BOM export", "archive item", "workflow transition") match their correct primary reference page. Confirms indexed content is correct; a live in-browser check of the search UI itself is still a good idea (moved to Now).

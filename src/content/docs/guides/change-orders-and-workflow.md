@@ -30,8 +30,9 @@ POST /api/v3/workspaces/{coWs}/items/{coId}/affected-items
 ```
 Body is a raw array of item links (not nested under `views/11`, despite the read/update/remove calls being there):
 ```json
-["/api/v3/workspaces/{itemWs}/items/{itemId}"]
+["https://{tenant}.autodeskplm360.net/api/v3/workspaces/{itemWs}/items/{itemId}"]
 ```
+**Must be a fully-qualified absolute URL** — a relative path here returns `400 GEN_INVALID_INPUT_SCHEMA` (confirmed live; see `api/v3/relationships-and-affected-items`).
 
 ## 4. Check current status and available transitions
 
@@ -44,7 +45,10 @@ GET /api/v3/workspaces/{coWs}/items/{coId}/workflows/{workflowId}/transitions   
 
 ```
 POST /api/v3/workspaces/{coWs}/items/{coId}/workflows/{workflowId}/transitions
+Header: content-location: /api/v3/workspaces/{coWs}/workflows/{workflowId}/transitions/{transitionId}
+Body: {}   (or { "comment": "..." } if the transition requires one)
 ```
-With a `content-location` header pointing at the specific transition being performed. See `api/v3/workflow` — this is transcribed from Autodesk's official documentation and not yet independently live-tested, since exercising it mutates the CO's real workflow state.
+
+Confirmed live (2026-07-13): a successful transition returns `303`, not `200`/`204`. Some transitions carry business-rule preconditions surfaced as a `400` with a plain-English message (e.g. "Change tasks must be defined in Tasks Planning tab first") — the CO's state is left unchanged when that happens, so it's safe to just try a different transition. If a transition needs a comment, the required field is `comment` (singular) — `comments`/`workflowComments` both fail. See `api/v3/workflow` for the full detail.
 
 Don't confuse this with a **lifecycle** transition (revision/release state, a separate v1 XML-bodied endpoint — see `api/v3/items`). Workflow transitions move a CO through its approval steps; lifecycle transitions move an *item* between release states.
