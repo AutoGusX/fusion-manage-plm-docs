@@ -57,8 +57,20 @@ Note the add endpoint's path doesn't match the read/update/remove endpoints' pat
 
 ## Relationships tab (views/10) — item-to-item relationships
 
+### Step 1 — discover valid relationship targets
+
+```
+GET /api/v3/workspaces/{ws}/views/10/related-workspaces
+```
+
+:::tip[Confirmed live — 2026-07-13]
+Returns `200` with `{ "workspaces": [ { "link", "urn", "title", "type": "/relation" }, ... ] }` — the set of workspaces this workspace is actually configured to relate to. On the tenant tested, the Items workspace (57) is related to Requirements (143) and Supplier Packages (147) — **not** to itself, and not to Documents. Check this before attempting a write; guessing a workspace pair returns the `400` documented below.
+:::
+
+### Step 2 — read, add, update, remove
+
 - **Read** — `GET /api/v3/workspaces/{ws}/items/{itemId}/views/10`
-- **Add** — `POST /api/v3/workspaces/{ws}/items/{itemId}/views/10`, with a `content-location` header pointing at the specific item being related (`/api/v3/workspaces/{targetWs}/items/{itemId}/views/10/linkable-items/{targetItemId}`), body:
+- **Add** — `POST /api/v3/workspaces/{ws}/items/{itemId}/views/10`, with a `content-location` header pointing at the specific item being related (`/api/v3/workspaces/{targetWs}/items/{targetItemId}/views/10/linkable-items/{targetItemId}`), body:
   ```json
   { "description": "Relationship created by API", "direction": { "type": "Bi-Directional" } }
   ```
@@ -68,18 +80,17 @@ Note the add endpoint's path doesn't match the read/update/remove endpoints' pat
 
 The `content-location` header pattern (pointing to a `linkable-items` or similar sub-resource) recurs elsewhere in this API — see `api/v3/views-fields-tableaus` for the Project tab, which uses the same convention for linking an existing item into a tab.
 
-:::caution[Confirmed live — 2026-07-13: relationships require a pre-configured workspace pair]
-Attempted against a live tenant, twice: an add-relationship `POST` between two items in the **same** workspace (Items → Items) returned `400 "Workspace 57 is not related to workspace 57"`. A second attempt across workspaces (Items → Documents) returned `400 "Workspace 57 is not related to workspace 71"`.
+:::tip[Confirmed live end-to-end — 2026-07-13]
+Full CRUD cycle tested against a real tenant, relating an Items-workspace item to a real Requirements-workspace item (a valid pair per step 1):
 
-**This confirms relationships are gated by tenant admin configuration** — a workspace pair must be explicitly set up as "related" before `POST .../views/10` will accept a relationship between items in that pair. Don't assume any two arbitrary workspaces (or even an item to another item in its own workspace) can be related without checking this first. Read (`GET .../views/10`) worked fine (`204`, empty) regardless — it's specifically the write path that enforces this.
+| Call | Result |
+|---|---|
+| `POST .../items/{itemId}/views/10` with `content-location` pointing at the target | `201`, `Location: .../views/10/relationships/{relationshipId}` |
+| `GET .../items/{itemId}/views/10` afterward | `200`, an **array** of relationship objects (not wrapped in a `relationships` key) — each with `item`, `workspace`, `direction`, `description` |
+| `PUT .../views/10/relationships/{relationshipId}` | `204` |
+| `DELETE .../views/10/relationships/{relationshipId}` | `204` |
+
+**The `relationshipId` in the URL is the target item's own dmsId**, not a separately-generated relationship ID — confirmed by the `Location` header and the read-back matching exactly.
+
+**Earlier finding, now fully explained:** an add-relationship attempt between two items in the same workspace, or between workspaces with no configured relationship, returns `400 "Workspace X is not related to workspace Y"`. This isn't a bug or a permissions issue — it's the expected result of trying an unconfigured workspace pair. Always check step 1 first.
 :::
-
-### Discovering which workspaces are configured as related
-
-Found in a production client (not yet independently live-tested — the token available while researching this expired before it could be checked):
-
-```
-GET /api/v3/workspaces/{ws}/views/{view}/related-workspaces
-```
-
-Response: `{ "workspaces": [ /* ... */ ] }`. Pass the Relationships tab's view number (`10`) to check which workspaces this one can actually be related to **before** attempting a `POST` — this should let a client avoid the `400 "Workspace X is not related to workspace Y"` error above by checking first rather than guessing. Whether the *write* side (configuring a new relationship pair) is exposed via API at all, or is admin-UI-only, is still unconfirmed.
