@@ -71,5 +71,15 @@ The `content-location` header pattern (pointing to a `linkable-items` or similar
 :::caution[Confirmed live — 2026-07-13: relationships require a pre-configured workspace pair]
 Attempted against a live tenant, twice: an add-relationship `POST` between two items in the **same** workspace (Items → Items) returned `400 "Workspace 57 is not related to workspace 57"`. A second attempt across workspaces (Items → Documents) returned `400 "Workspace 57 is not related to workspace 71"`.
 
-**This confirms relationships are gated by tenant admin configuration** — a workspace pair must be explicitly set up as "related" (in Fusion Manage's workspace/relationship setup, not exposed as a discoverable API call in this pass) before `POST .../views/10` will accept a relationship between items in that pair. Don't assume any two arbitrary workspaces (or even an item to another item in its own workspace) can be related without checking this first. Read (`GET .../views/10`) worked fine (`204`, empty) regardless — it's specifically the write path that enforces this.
+**This confirms relationships are gated by tenant admin configuration** — a workspace pair must be explicitly set up as "related" before `POST .../views/10` will accept a relationship between items in that pair. Don't assume any two arbitrary workspaces (or even an item to another item in its own workspace) can be related without checking this first. Read (`GET .../views/10`) worked fine (`204`, empty) regardless — it's specifically the write path that enforces this.
 :::
+
+### Discovering which workspaces are configured as related
+
+Found in a production client (not yet independently live-tested — the token available while researching this expired before it could be checked):
+
+```
+GET /api/v3/workspaces/{ws}/views/{view}/related-workspaces
+```
+
+Response: `{ "workspaces": [ /* ... */ ] }`. Pass the Relationships tab's view number (`10`) to check which workspaces this one can actually be related to **before** attempting a `POST` — this should let a client avoid the `400 "Workspace X is not related to workspace Y"` error above by checking first rather than guessing. Whether the *write* side (configuring a new relationship pair) is exposed via API at all, or is admin-UI-only, is still unconfirmed.

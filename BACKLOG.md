@@ -7,7 +7,7 @@
 
 ## Next
 - [ ] Live-verify remaining write operations transcribed from Autodesk's official Postman collection but not yet independently tested: Managed Items add/update/delete (needs a real CO — riskier, plan carefully), Grid/Project tab rows (unknown view IDs for this tenant), workflow transition POST (mutates real workflow state), group/role writes, v2 classification writes (pollutes taxonomy — low priority to test) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
-- [ ] Discover the actual admin UI/API path for configuring a workspace-relationship pair (needed before the Relationships tab write path can be exercised end-to-end — see confirmed finding below) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Live-verify `GET /api/v3/workspaces/{ws}/views/10/related-workspaces` (found in a production client's source, token expired before it could be tested) — should let a client discover valid relationship targets before attempting a write. Whether *configuring* a new relationship pair is exposed via API at all (vs. admin-UI-only) is still unconfirmed. (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Later
 - [ ] Locate Autodesk's official (non-Postman) API docs, if they add anything the collection doesn't (spec: specs/0001-fusion-manage-plm-documentation-site.md)
