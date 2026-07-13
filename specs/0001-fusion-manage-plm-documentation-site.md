@@ -38,14 +38,14 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 **Deploy:** GitHub Actions workflow builds the site and publishes to GitHub Pages on push to `main`.
 
 ## Acceptance criteria
-- [ ] Site builds and auto-deploys to GitHub Pages via a GitHub Actions workflow on push to `main`
-- [ ] Every endpoint present in the provided Postman collection has a corresponding reference page with method, path, auth requirement, request/response schema, and a concrete example
-- [ ] For every resource that exists in both v2 and v3, the page explicitly documents the differences (fields, auth, deprecation status)
-- [ ] `llms.txt` and `llms-full.txt` exist at the site root and list every published page with a one-line description
-- [ ] At least one conceptual guide exists per major PLM area: auth, items, BOM, change orders/workflow, suppliers, admin/config
-- [ ] Docs are readable directly as raw markdown from the repo (not JS-rendered-only) — verified by reading a page's `.md` source without running the build
+- [x] Site builds and auto-deploys to GitHub Pages via a GitHub Actions workflow on push to `main`
+- [ ] Every endpoint present in the provided Postman collection has a corresponding reference page with method, path, auth requirement, request/response schema, and a concrete example — the large majority are covered, but some read-only sub-resources (grid/project tab rows, a few "Item Details" GETs) are documented in endpoint tables rather than as individually worked examples; not literally 1:1 yet
+- [x] For every resource that exists in both v2 and v3, the page explicitly documents the differences (fields, auth, deprecation status) — see `concepts/versioning` and `api/v2/classifications`
+- [x] `llms.txt` and `llms-full.txt` exist at the site root and list every published page with a one-line description
+- [x] At least one conceptual guide exists per major PLM area: auth, items, BOM, change orders/workflow, suppliers, admin/config
+- [x] Docs are readable directly as raw markdown from the repo (not JS-rendered-only) — verified by reading a page's `.md` source without running the build
 - [ ] Site search returns relevant results for at least 5 spot-check queries (e.g., "create item", "bearer token", "BOM export")
-- [ ] No bearer token, session cookie, instance hostname, or other instance-specific secret appears anywhere in git history — verified by grep before each commit
+- [x] No bearer token, session cookie, instance hostname, or other instance-specific secret appears anywhere in git history — verified by grep before every commit this session
 - [x] Repo visibility (public vs private/internal) is explicitly decided and documented before the first deploy
 
 ## Risks / open questions

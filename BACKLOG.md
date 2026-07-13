@@ -3,20 +3,22 @@
 <!-- Prioritized, top = next. Link items to their spec: (spec: specs/0001-foo.md) -->
 
 ## Now
-- [ ] Write `api/v2/` pages: parts-and-classifications, property-instances (classifications.md done) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
-- [ ] Write remaining stub pages: suppliers, admin-impersonation (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] **Archive leftover disposable test items 21509 (parent) and 21510 (child) in ws 57** — created during BOM-row live testing on 2026-07-09, token expired before cleanup. Needs a fresh bearer token: `PATCH .../items/21509?deleted=true` and same for 21510 (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Finish the Relationships tab (views/10) live test that got interrupted by the same token expiry — add/update/delete between two disposable items (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Next
-- [ ] Write `guides/` pages: authentication-quickstart, working-with-items, working-with-bom, change-orders-and-workflow, suppliers, admin-and-config, scripting (spec: specs/0001-fusion-manage-plm-documentation-site.md)
-- [ ] Live-verify the write operations transcribed from Autodesk's official Postman collection but not yet independently tested: BOM row add/update/delete, Managed Items add/update/delete, Relationships tab CRUD, Grid/Project tab rows, workflow transition POST, group/role writes, v2 classification writes (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Live-verify remaining write operations transcribed from Autodesk's official Postman collection but not yet independently tested: Managed Items add/update/delete (needs a real CO — riskier, plan carefully), Grid/Project tab rows (unknown view IDs for this tenant), workflow transition POST (mutates real workflow state), group/role writes, v2 classification writes (pollutes taxonomy — low priority to test) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Live-verify v2 `/parts` lookup and v3 `/views/8/suppliers` read against a real item (both read-only, low-risk) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Site search spot-check against 5 example queries now that all content is filled in (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Later
 - [ ] Locate Autodesk's official (non-Postman) API docs, if they add anything the collection doesn't (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 - [ ] Deepen the Fusion Components GraphQL page — full query/mutation reference if that integration path becomes relevant (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 - [ ] Live-test the v1 XML lifecycle-transition endpoint (mutates release state — needs a disposable item first) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
-- [ ] Site search spot-check against 5 example queries once content is filled in (spec: specs/0001-fusion-manage-plm-documentation-site.md)
+- [ ] Confirm the exact `X-User-Id` admin-impersonation request combination — only described conceptually in the source examined, never seen verbatim (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Done
+- [x] Full content pass complete (2026-07-13) — every planned page on the site has real content, no stubs remain: all `api/v2/` and `api/v3/` reference pages, all 7 `guides/` pages including the authentication quickstart
 - [x] Scaffold Astro Starlight site, GitHub Actions deploy workflow, llms.txt/llms-full.txt generator, and 4 concepts pages (auth, versioning, pagination, errors) written in full from mined source material
 - [x] Create GitHub repo (AutoGusX/fusion-manage-plm-docs), push, and deploy to GitHub Pages — made public since GitHub Free doesn't support Pages on private repos: https://autogusx.github.io/fusion-manage-plm-docs/
 - [x] Live-verification pass against a real tenant (2026-07-08) — confirmed: base host (`.autodeskplm360.net` for both v1 and v3), v1 BOM shape (`relations.entry[REL_BOM]`), v3 pagination envelope, search query grammar + 204-on-zero-results quirk, actual v3 error envelope shape (differs from prior docs), and resolved the `views/2` vs `views/11` direction conflict conclusively.
