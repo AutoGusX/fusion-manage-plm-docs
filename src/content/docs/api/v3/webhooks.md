@@ -3,6 +3,10 @@ title: Webhooks
 description: Register callbacks for item/workflow events — a separate APS Webhooks API, not a Fusion Manage endpoint, discovered via Autodesk's official Postman collection.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-blue-low);color:var(--sl-color-blue-high)">From Autodesk's official collection — not yet live-verified</span></p>
+<!-- verification-badge:end -->
+
 :::note[Different base URL — this is not `{tenant}.autodeskplm360.net`]
 Webhooks are a general Autodesk Platform Services (APS) capability, not Fusion-Manage-specific. Every call here goes to `developer.api.autodesk.com`, not the tenant's PLM host, and the tenant is passed as an `X-Tenant` header rather than being part of the URL.
 :::

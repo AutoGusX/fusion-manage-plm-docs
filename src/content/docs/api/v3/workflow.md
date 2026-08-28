@@ -3,6 +3,10 @@ title: Workflow
 description: Workspace-level and item-level workflow states/transitions/history on v3 — confirmed from Autodesk's official Postman collection. Distinct from lifecycle transitions.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 Not to be confused with **lifecycle transitions** (revision/release state, v1, XML-bodied — see [Items](/api/v3/items/)). Workflow transitions move an item along its configured workflow steps.
 
 ## Workspace-level (definitions)

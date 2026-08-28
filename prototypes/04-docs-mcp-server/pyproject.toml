@@ -1,0 +1,9 @@
+[project]
+name = "fusion-manage-docs-mcp"
+version = "0.1.0"
+description = "MCP server exposing the Fusion Manage PLM Docs to an AI agent"
+requires-python = ">=3.11"
+dependencies = ["mcp>=1.26.0"]
+
+[tool.uv]
+package = false

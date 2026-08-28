@@ -3,6 +3,7 @@
 <!-- Prioritized, top = next. Link items to their spec: (spec: specs/0001-foo.md) -->
 
 ## Now
+- [ ] **Review the feature prototypes in `prototypes/`** — each is self-contained with enable/disable instructions in `prototypes/README.md`; decide which to adopt, and delete the rest (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 - [ ] Manually spot-check search in an actual browser (previous check decompressed the Pagefind index directly — confirms indexed content is correct, but hasn't exercised the live search UI) (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Next
@@ -17,6 +18,8 @@
 - [ ] Confirm the exact `X-User-Id` admin-impersonation request combination — only described conceptually in the source examined, never seen verbatim (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Done
+- [x] **All 8 spec acceptance criteria met (2026-08-28).** Closed the last one (1:1 Postman endpoint coverage) with `npm run coverage`: 91/91 PLM REST endpoints documented, after finding and documenting one genuine gap (`general-settings`).
+- [x] Bug-fix pass (2026-08-28) — three bugs that a passing build was hiding: 65 cross-references were backtick spans rather than links (the site had *zero* internal links); markdown links aren't base-prefixed by Astro so they'd have 404'd (fixed with a rehype plugin, base now defined once); and `/favicon.svg` was referenced on every page but never existed (confirmed 404 live). Added `npm run check:links`, wired into CI — it caught the favicon bug on first run.
 - [x] Deep live-testing pass on a real CO, a real Engineering Project, and a disposable Documents item (2026-07-13):
   - **Workflow transitions fully confirmed end-to-end** — performed a real transition and reverted it. Successful transitions return `303`, not `200`/`204`. Transitions can carry business-rule preconditions (400 with a plain message, state unchanged) and some require a `comment` field (singular — `comments`/`workflowComments` both fail).
   - **Managed Items add/update/remove fully confirmed** — and found a real correction to Autodesk's own official example: the add-items array requires **absolute URLs**, not the relative paths shown in their docs (`400 GEN_INVALID_INPUT_SCHEMA` otherwise).

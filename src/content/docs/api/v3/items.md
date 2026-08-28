@@ -3,6 +3,10 @@ title: Items
 description: Create, update, and archive items on v3 — confirmed request shapes, link-scoping rules, and the PUT/PATCH asymmetry, verified live against a real tenant.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 Read access (`GET /api/v3/workspaces/{ws}/items/{itemId}`) is covered in [API Versions](/concepts/versioning/) and [Workspaces](/api/v3/workspaces/). This page covers the write operations, which have several non-obvious, easy-to-get-wrong requirements confirmed by testing against a live tenant.
 
 ## Create

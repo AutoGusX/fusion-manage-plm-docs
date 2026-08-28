@@ -3,6 +3,10 @@ title: Authentication
 description: How to obtain and use a Fusion Manage bearer token — the session-cookie exchange, APS OAuth flows, and the legacy localStorage fallback.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 Fusion Manage's v1 and v3 REST APIs both authenticate with an OAuth2 bearer token. There are three distinct ways to obtain one, depending on what kind of client you're building, plus one legacy fallback.
 
 ## 1. Session-cookie token exchange (browser / extension clients)

@@ -3,6 +3,10 @@ title: BOM
 description: BOM views, read/flatten/where-used, and add/update/remove rows on v3 — confirmed shapes from Autodesk's official Postman collection.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 ## BOM views
 
 BOM view definitions live under view `5` on workspaces that have a BOM tab. Rather than assuming that number, confirm it for a given workspace with `GET /api/v3/workspaces/{ws}/views`, which lists every view with its number and title (see [Views, Fields, and Tableaus](/api/v3/views-fields-tableaus/)) — on the tenant tested, "Bill of Materials" was view `5`.

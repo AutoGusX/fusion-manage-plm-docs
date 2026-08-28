@@ -3,12 +3,16 @@ title: Parts and Classifications
 description: Link a workspace to its root classifications and look up a workspace's classification-bound "part" record.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 Sourced from a production Fusion Manage API client (`plm.js`, BOM Builder Fork extension).
 
 ## Get a workspace's root classifications
 
 ```
-GET /api/v2/parts?referenceUrn={encoded referenceUrn}
+GET /api/v2/parts?referenceUrn={referenceUrn}
 ```
 
 Where `referenceUrn` is built from the tenant and workspace ID:

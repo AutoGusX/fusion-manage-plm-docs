@@ -3,6 +3,10 @@ title: Views, Fields, Tableaus, Grid/Project Tabs, and Picklists
 description: Workspace field/view discovery, tableau CRUD, grid and project tab rows, and picklist lookups — confirmed from Autodesk's official Postman collection.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 Field discovery is a prerequisite for most write operations elsewhere on this site ([Items](/api/v3/items/), [BOM](/api/v3/bom/)) — read this page before constructing a create/update body. The view-1 fields embedded in an item's own detail response lack `editability`/`derived`/`derivedFieldSource`/validator metadata that `GET /api/v3/workspaces/{ws}/fields` exposes — use the workspace-level fields endpoint for anything that needs to check whether a field is required, derived, or writable.
 
 :::tip[Confirmed live — 2026-07-13: discover view numbers, don't guess them]

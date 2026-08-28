@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "generate:llms": "node scripts/generate-llms-txt.mjs",
-    "build": "npm run generate:llms && astro build",
+    "prototype:endpoint-index": "node prototypes/01-endpoint-index/generate-endpoint-index.mjs",
+    "build": "npm run prototype:endpoint-index && npm run generate:llms && astro build",
     "check:links": "node scripts/check-links.mjs",
     "coverage": "node scripts/coverage-report.mjs",
     "verify": "npm run build && npm run check:links",
