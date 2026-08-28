@@ -63,6 +63,23 @@ function urlForFile(filePath) {
 	return `${SITE_ORIGIN}${path}`;
 }
 
+/**
+ * Rewrite root-relative markdown links (`/api/v3/items/`) to fully absolute
+ * URLs.
+ *
+ * llms-full.txt is meant to be fetched and read on its own, with no site
+ * context — a root-relative path in it resolves to nothing, so an agent
+ * following a cross-reference would have no way to know where it points.
+ * (In the rendered site the same paths are handled by the rehype plugin in
+ * astro.config.mjs; this is the equivalent for the text artifact.)
+ */
+function absolutizeLinks(body) {
+	return body.replace(
+		/\]\((\/(?!\/)[^)]*)\)/g,
+		(_, path) => `](${SITE_ORIGIN}${BASE_PATH}${path})`,
+	);
+}
+
 function sectionFor(filePath) {
 	const rel = relative(DOCS_DIR, filePath).split(sep).join('/');
 	for (const section of SECTION_ORDER) {
@@ -109,7 +126,14 @@ function main() {
 		fullLines.push(`## ${section.label}`, '');
 		for (const page of sectionPages) {
 			lines.push(`- [${page.title}](${page.url}): ${page.description}`);
-			fullLines.push(`### ${page.title}`, '', `${page.url}`, '', page.body, '');
+			fullLines.push(
+				`### ${page.title}`,
+				'',
+				`${page.url}`,
+				'',
+				absolutizeLinks(page.body),
+				'',
+			);
 		}
 		lines.push('');
 	}

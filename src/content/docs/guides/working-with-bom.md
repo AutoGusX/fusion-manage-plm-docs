@@ -7,7 +7,7 @@ Full endpoint reference lives in [BOM](/api/v3/bom/) — this page walks through
 
 ## 1. Find the BOM view
 
-BOM views live under a fixed view number (`views/5`) on the parent item's workspace:
+BOM views live under view `5` on the parent item's workspace (confirm with `GET /api/v3/workspaces/{ws}/views` rather than assuming — see [Views, Fields, and Tableaus](/api/v3/views-fields-tableaus/)):
 ```
 GET /api/v3/workspaces/{ws}/views/5
 GET /api/v3/workspaces/{ws}/views/5/viewdef/{bomViewId}/fields

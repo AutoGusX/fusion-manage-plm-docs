@@ -12,7 +12,7 @@ Sourced from two independent production clients (a Chrome extension and a Python
 | List approved suppliers for an item | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/8/suppliers` |
 | Get quotes for one supplier | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/8/suppliers/{supplierId}/quotes` |
 
-Like BOM (`views/5`) and Project (`views/16`), `views/8` for suppliers/AML appears to be a fixed view number rather than something that varies per workspace — not confirmed as universal across all tenants, but consistent across every source examined.
+Like BOM (`views/5`) and Project Management (`views/16`), suppliers/AML lives under view `8`. Confirm the number for a given workspace with `GET /api/v3/workspaces/{ws}/views` rather than assuming it — see [Views, Fields, and Tableaus](/api/v3/views-fields-tableaus/).
 
 :::tip[Confirmed live — 2026-07-13]
 `GET .../views/8/suppliers` returns `200` even for an item with zero suppliers configured (rather than `404`):
