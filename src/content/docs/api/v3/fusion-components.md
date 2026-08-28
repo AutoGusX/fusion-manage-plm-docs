@@ -7,6 +7,9 @@ description: A separate GraphQL API bridging Fusion Manage PLM items to Fusion 3
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-blue-low);color:var(--sl-color-blue-high)">From Autodesk's official collection — not yet live-verified</span></p>
 <!-- verification-badge:end -->
 
+
+
+
 :::note[A genuinely separate API]
 This is Autodesk's Manufacturing (CDE/mfg) GraphQL API, not a Fusion Manage REST endpoint. It's included here because Autodesk's official Fusion Manage Postman collection bundles it under a "Fusion Components" folder for items that are linked to Fusion 360 CAD components — but the request mechanics (GraphQL over a single POST endpoint, a `hub`/`component`/`model` domain model) are entirely different from everything else on this site.
 :::

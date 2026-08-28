@@ -7,6 +7,9 @@ description: The standard Fusion Manage error envelope, the HTTP status code tab
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
+
+
+
 ## Error envelope
 
 **Verified live** (2026-07-08, against a real v3 endpoint on a live tenant) — the actual shape is:

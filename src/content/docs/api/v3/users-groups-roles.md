@@ -7,6 +7,9 @@ description: User, group, and role management on v3 — confirmed live and cross
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
+
+
+
 ## Current user
 
 ```

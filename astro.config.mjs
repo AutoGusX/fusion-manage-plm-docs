@@ -50,6 +50,14 @@ export default defineConfig({
 			title: 'Fusion Manage PLM Docs',
 			description:
 				'Human- and AI-readable reference for the Autodesk Fusion Manage PLM API (v2 + v3).',
+			// --- PROTOTYPE 05 (tenant playground): remove this head entry to disable ---
+			head: [
+				{
+					tag: 'script',
+					attrs: { src: `${BASE}/tenant-playground.js`, defer: true },
+				},
+			],
+			// --- end PROTOTYPE 05 ---
 			social: [
 				{
 					icon: 'github',

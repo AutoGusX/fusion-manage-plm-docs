@@ -46,7 +46,9 @@ for (const f of allFiles) {
 served.add(`${BASE}/`);
 served.add(BASE);
 
-const hrefRe = /href="([^"]+)"/g;
+// Both `href` and `src`: a dangling <script src> or <img src> is just as broken
+// as a dead link, and checking only href is how the missing favicon shipped.
+const refRe = /(?:href|src)="([^"]+)"/g;
 let broken = 0;
 let checked = 0;
 
@@ -55,7 +57,7 @@ for (const file of htmlFiles) {
 	const page = '/' + relative(DIST, file).split(/[\\/]/).join('/');
 	const seen = new Set();
 
-	for (const m of html.matchAll(hrefRe)) {
+	for (const m of html.matchAll(refRe)) {
 		let href = m[1];
 		if (seen.has(href)) continue;
 		seen.add(href);

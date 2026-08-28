@@ -1,5 +1,15 @@
 node_modules/
 dist/
 .astro/
+
+# Generated into public/ at build time.
 public/llms.txt
 public/llms-full.txt
+
+# PROTOTYPE 05: a build-time copy of prototypes/05-tenant-playground/.
+# Committing it would create a second source of truth that can drift.
+public/tenant-playground.js
+
+# Note: public/openapi.json (PROTOTYPE 03) is deliberately NOT ignored. It is
+# generated, but it is also a useful standalone artifact to grab from the repo,
+# and committing it means the API surface is diffable in git history.

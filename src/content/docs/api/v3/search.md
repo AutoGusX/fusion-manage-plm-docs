@@ -7,6 +7,9 @@ description: The two distinct search subsystems — the v3 query-grammar search-
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
+
+
+
 Two distinct search mechanisms exist. Use the v3 grammar for ad-hoc/free-text queries and the v1 structured body for programmatic, field-by-field search construction.
 
 ## v3 query-grammar search
