@@ -80,6 +80,23 @@ function absolutizeLinks(body) {
 	);
 }
 
+/**
+ * Replace the injected verification badge (PROTOTYPE 02) with a plain-text
+ * equivalent.
+ *
+ * The badge is a styled HTML span aimed at browsers. Passing it through
+ * verbatim would spend an agent's context on inline CSS and Starlight variable
+ * names that mean nothing outside a page. The *status* is worth keeping — it
+ * tells the reader how much to trust the page — so this translates rather than
+ * strips it. A no-op if prototype 02 is removed.
+ */
+function textifyBadges(body) {
+	return body.replace(
+		/<!-- verification-badge:begin -->[\s\S]*?>([^<]+)<\/span><\/p>\s*<!-- verification-badge:end -->/g,
+		(_, label) => `> **Verification status:** ${label.trim()}`,
+	);
+}
+
 function sectionFor(filePath) {
 	const rel = relative(DOCS_DIR, filePath).split(sep).join('/');
 	for (const section of SECTION_ORDER) {
@@ -131,7 +148,7 @@ function main() {
 				'',
 				`${page.url}`,
 				'',
-				absolutizeLinks(page.body),
+				absolutizeLinks(textifyBadges(page.body)),
 				'',
 			);
 		}
