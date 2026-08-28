@@ -50,7 +50,7 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 
 ## Risks / open questions
 - **Postman collection coverage:** likely doesn't cover 100% of the v2/v3 surface — gaps need to be filled from Autodesk's official docs, which may themselves be incomplete.
-- **Staleness:** no automated sync with Autodesk's API changes in v1 — needs a manual review cadence (e.g., quarterly) or this rots quickly.
+- **Staleness:** no automated sync with Autodesk's API changes — still true, and the most serious standing risk, since a doc set selling "this was actually tested" reads as authoritative long after it stops being accurate. Partially mitigated: `npm run check:freshness` reports the age of each page's most recent live verification, so a quarterly review has a concrete worklist instead of a vague intention. It reads dates already written in the prose rather than adding metadata to maintain. Run it with `--strict` to fail CI once a cadence is agreed.
 - **Token hygiene:** live-token verification during authoring means every example must be scrubbed of real instance data before commit — needs a concrete checklist/habit, not just intent.
 
 ## Out of scope
