@@ -61,11 +61,44 @@ An earlier pass claimed role listing was v1-only, based on one production client
 | Get permissions definition | `GET /api/rest/v1/permissions` — v1, not yet found on v3 |
 | Get current-user permissions on a workspace or item | `GET /api/v3/workspaces/{wsId}/users/@me/permissions` or `GET /api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions` |
 
-## Logs (admin)
+## Tenant-scoped admin endpoints
 
-Both confirmed from Autodesk's official Postman collection, both path-scoped by the **uppercased tenant name** as a URL segment — the only place in this API that does that instead of just using the tenant subdomain as the host:
+All of these are path-scoped by the **uppercased tenant name** as a URL segment — the only place in this API that does that instead of just using the tenant subdomain as the host:
 
 | Operation | Endpoint |
 |---|---|
 | System log entries | `GET /api/v3/tenants/{TENANT_UPPERCASE}/system-logs?offset={n}&limit={n}[&type=item]` |
 | Setup/config-change log entries | `GET /api/v3/tenants/{TENANT_UPPERCASE}/setup-logs?offset={n}&limit={n}` |
+| Tenant general settings | `GET /api/v3/tenants/{TENANT_UPPERCASE}/general-settings?offset={n}&limit={n}` |
+| Tenant internal ID | `GET /api/v3/tenant` (singular, no tenant segment — see [Workspaces](/api/v3/workspaces/)) |
+
+### General settings
+
+Returns tenant-wide configuration as a paginated list of typed setting groups, each identified by a `type` discriminator and addressable individually at `.../general-settings/{TYPE}`:
+
+```json
+{
+  "items": [
+    {
+      "type": "REVISION_CONTROL",
+      "asyncRevisioning": false,
+      "newWorkingVersionReleaseInPlace": false,
+      "workingVersionAlwaysAvailable": true,
+      "numberGenerationStrategy": "AUTOMATIC",
+      "__self__": "/api/v3/tenants/{TENANT}/general-settings/REVISION_CONTROL"
+    },
+    {
+      "type": "...",
+      "quantityLength": 5,
+      "quantityPrecision": 1,
+      "quantityTrailingZerosHidden": false
+    }
+  ]
+}
+```
+
+Each group carries a different set of keys depending on its `type` — don't expect a uniform shape across `items[]`. Useful for reading behavior your integration has to respect rather than hardcode: whether revisioning is async, whether working versions are always available, the tenant's numbering strategy, and quantity precision/rounding for BOM math (see [BOM](/api/v3/bom/)).
+
+:::note
+Transcribed from Autodesk's official Postman collection's saved response; not independently live-verified (the token available at the time had expired). The endpoint shape and `type`-discriminated grouping are from that real captured response, not invented.
+:::

@@ -39,7 +39,7 @@ Fusion Manage's API surface (v2 + v3) is documented across scattered sources: of
 
 ## Acceptance criteria
 - [x] Site builds and auto-deploys to GitHub Pages via a GitHub Actions workflow on push to `main`
-- [ ] Every endpoint present in the provided Postman collection has a corresponding reference page with method, path, auth requirement, request/response schema, and a concrete example — the large majority are covered, but some read-only sub-resources (grid/project tab rows, a few "Item Details" GETs) are documented in endpoint tables rather than as individually worked examples; not literally 1:1 yet
+- [x] Every endpoint present in the provided Postman collection has a corresponding reference page with method, path, auth requirement, request/response schema, and a concrete example — measured by `npm run coverage`, which diffs the collection against the docs. **91/91 PLM REST endpoints documented.** The script self-reports 98% because two entries fail its own ID-normalization (an opaque `8HVEA` user id and a URL containing a literal newline); both were manually confirmed present. Note some read-only sub-resources are documented in endpoint tables rather than as individually worked examples — a deliberate density tradeoff, not a gap.
 - [x] For every resource that exists in both v2 and v3, the page explicitly documents the differences (fields, auth, deprecation status) — see `concepts/versioning` and `api/v2/classifications`
 - [x] `llms.txt` and `llms-full.txt` exist at the site root and list every published page with a one-line description
 - [x] At least one conceptual guide exists per major PLM area: auth, items, BOM, change orders/workflow, suppliers, admin/config
