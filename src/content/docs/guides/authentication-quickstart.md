@@ -3,13 +3,13 @@ title: Authentication Quickstart
 description: Get a bearer token and make your first authenticated Fusion Manage API call — the fastest path for each client type.
 ---
 
-Three ways to get a token exist, and which one is right depends entirely on what you're building. Full detail on all of them (plus the legacy `localStorage` fallback) lives in `concepts/authentication` — this page just picks the fast path for the common case and shows a working example.
+Three ways to get a token exist, and which one is right depends entirely on what you're building. Full detail on all of them (plus the legacy `localStorage` fallback) lives in [Authentication](/concepts/authentication/) — this page just picks the fast path for the common case and shows a working example.
 
 ## Which flow do you need?
 
 - **Building a browser extension, content script, or anything that runs inside an already-logged-in Fusion Manage tab?** → Use the session-cookie exchange below. This is the recommended, production-verified default.
-- **Building a standalone backend service, desktop add-in, or MCP server that never runs inside a PLM browser session?** → Use APS 3-legged OAuth (see `concepts/authentication`, flow 2).
-- **Building admin tooling that needs to act as another user (bulk operations, impersonation)?** → Use APS 2-legged client-credentials (see `api/v3/admin-impersonation`). Don't use this for anything else — it's a fundamentally different credential type.
+- **Building a standalone backend service, desktop add-in, or MCP server that never runs inside a PLM browser session?** → Use APS 3-legged OAuth (see [Authentication](/concepts/authentication/), flow 2).
+- **Building admin tooling that needs to act as another user (bulk operations, impersonation)?** → Use APS 2-legged client-credentials (see [Admin Impersonation](/api/v3/admin-impersonation/)). Don't use this for anything else — it's a fundamentally different credential type.
 
 The rest of this page covers the first case.
 
@@ -34,7 +34,7 @@ const { accessToken, expiresIn } = await resp.json();
 chrome.runtime.sendMessage({ type: 'AUTH_TOKEN_SYNC', payload: { token: accessToken, expiresIn } });
 ```
 
-Refresh proactively — e.g. 5 minutes before `expiresIn` elapses — rather than waiting for a 401. See `concepts/authentication` for the full relay architecture and 401-recovery flow.
+Refresh proactively — e.g. 5 minutes before `expiresIn` elapses — rather than waiting for a 401. See [Authentication](/concepts/authentication/) for the full relay architecture and 401-recovery flow.
 
 ## Make your first authenticated call
 
@@ -52,10 +52,10 @@ const data = await res.json();
 console.log(data.items.map((w) => w.title));
 ```
 
-If this returns `401`, the token has almost certainly expired — re-run the token exchange above rather than treating it as a permissions problem (see `concepts/errors`).
+If this returns `401`, the token has almost certainly expired — re-run the token exchange above rather than treating it as a permissions problem (see [Errors](/concepts/errors/)).
 
 ## Next steps
 
-- `api/v3/workspaces` — list workspaces and their sub-resources
-- `api/v3/search` — find items without knowing an ID
-- `guides/working-with-items` — create/update/archive an item end to end
+- [Workspaces](/api/v3/workspaces/) — list workspaces and their sub-resources
+- [Search](/api/v3/search/) — find items without knowing an ID
+- [Working with Items](/guides/working-with-items/) — create/update/archive an item end to end

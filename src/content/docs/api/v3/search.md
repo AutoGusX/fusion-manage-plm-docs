@@ -26,7 +26,7 @@ query=(CLASS:SYSTEM_NAME="WORK_INSTRUCTIONS" AND (CLASS:ADDITIONAL_DESCRIPTION="
 A "bulk" search variant exists too — request it with `Accept: application/vnd.autodesk.plm.items.bulk+json`.
 
 :::tip[Confirmed live — 2026-07-08]
-`GET /api/v3/search-results?query=ITEM_DETAILS:TITLE=*Power*&revision=1&limit=5&offset=0&page=1` returned `200` with real matches against a live tenant, confirming the `ITEM_DETAILS:{FIELD_ID}={value}` query grammar works. Response uses the same `offset`/`limit`/`totalCount`/`first`/`next`/`last` envelope as v3 workspace listing (see `concepts/pagination`), plus an `items[]` array of match objects (each with `workspaceLongName`, `creator`, `urn`, etc.).
+`GET /api/v3/search-results?query=ITEM_DETAILS:TITLE=*Power*&revision=1&limit=5&offset=0&page=1` returned `200` with real matches against a live tenant, confirming the `ITEM_DETAILS:{FIELD_ID}={value}` query grammar works. Response uses the same `offset`/`limit`/`totalCount`/`first`/`next`/`last` envelope as v3 workspace listing (see [Pagination](/concepts/pagination/)), plus an `items[]` array of match objects (each with `workspaceLongName`, `creator`, `urn`, etc.).
 
 **Zero-match quirk confirmed:** a query with no matches returns `204 No Content` with an **empty response body** — not `200` with an empty `items[]` array, and not even a `totalCount` field. Code consuming this endpoint must treat 204 as "zero results," not as an error or an unexpected response.
 :::

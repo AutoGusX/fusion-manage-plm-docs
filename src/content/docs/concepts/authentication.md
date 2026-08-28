@@ -21,7 +21,7 @@ GET https://{tenant}.autodeskplm360.net/api/v3/token
 - **Constraint:** this call must happen from a same-origin context (e.g. a content script running on the PLM page). A browser extension's background/service-worker origin (`chrome-extension://...`) does **not** have the session cookie and will get a 401 — relay the token to the background context via message passing instead of fetching it there directly.
 - **Token lifetime:** ~3600 seconds (~60 minutes). Refresh proactively — e.g. 5 minutes before expiry — rather than waiting for a 401.
 
-This is production-verified (against a live tenant, 2026) and is the recommended approach for any UI extension. See the `guides/authentication-quickstart` guide for a minimal working example.
+This is production-verified (against a live tenant, 2026) and is the recommended approach for any UI extension. See the [Authentication Quickstart](/guides/authentication-quickstart/) guide for a minimal working example.
 
 ## 2. APS 3-legged OAuth (external / server-side clients)
 
@@ -58,7 +58,7 @@ POST https://developer.api.autodesk.com/authentication/v2/token
 grant_type=client_credentials
 ```
 
-The resulting token is combined with an `X-User-Id` header to impersonate a specific user on subsequent calls. See `api/v3/admin-impersonation` for the full flow — don't conflate this with flows 1 and 2 above, since it's a fundamentally different credential (app-level, not user-session-derived).
+The resulting token is combined with an `X-User-Id` header to impersonate a specific user on subsequent calls. See [Admin Impersonation](/api/v3/admin-impersonation/) for the full flow — don't conflate this with flows 1 and 2 above, since it's a fundamentally different credential (app-level, not user-session-derived).
 
 ## 4. Legacy fallback: `localStorage['O2AuthToken']`
 
@@ -82,5 +82,5 @@ Content-Type: application/json
 A 401 almost always means an expired token, not a permissions problem — refresh and retry rather than treating it as a hard failure. If a session-derived token (flow 1) starts failing, the user's underlying PLM browser session has likely expired too; they need to reload a Fusion Manage tab to re-authenticate before token refresh will succeed again.
 
 :::tip[Confirmed live — 2026-07-08]
-Live-tested directly against a real tenant: both v1 and v3 endpoints (including the token/session model) work correctly on `{tenant}.autodeskplm360.net`. The `{tenant}.autodeskplm.com` host described by some documentation was never confirmed and should be treated as incorrect (or at best an alternate/legacy alias) — see `concepts/versioning`.
+Live-tested directly against a real tenant: both v1 and v3 endpoints (including the token/session model) work correctly on `{tenant}.autodeskplm360.net`. The `{tenant}.autodeskplm.com` host described by some documentation was never confirmed and should be treated as incorrect (or at best an alternate/legacy alias) — see [API Versions](/concepts/versioning/).
 :::

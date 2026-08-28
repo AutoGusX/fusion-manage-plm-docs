@@ -3,7 +3,7 @@ title: Admin Impersonation
 description: The separate APS 2-legged client-credentials flow used to act as another user for admin operations, via the X-User-Id header.
 ---
 
-A fundamentally different credential type from everything in `concepts/authentication` flows 1 and 2 — this is an **app-level** credential (client ID + secret, no user session involved at all), used specifically for admin tooling that needs to act as a user other than whoever is logged in. Sourced from a production Chrome extension's admin-utilities feature set.
+A fundamentally different credential type from everything in [Authentication](/concepts/authentication/) flows 1 and 2 — this is an **app-level** credential (client ID + secret, no user session involved at all), used specifically for admin tooling that needs to act as a user other than whoever is logged in. Sourced from a production Chrome extension's admin-utilities feature set.
 
 ## Get the token
 

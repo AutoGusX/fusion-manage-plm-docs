@@ -15,7 +15,7 @@ Tested directly against a real tenant with real items and Change Orders:
 | `views/11` on a real Change Order | `200`, populated `affectedItems[]` pointing to real parts |
 | `views/2` on the same Change Order | `403 VIEW_ASSOCIATED_WORKFLOW denied` |
 
-**Confirmed:** `views/2` = Change Orders linked to an item (item → CO direction, see `api/v3/items`'s "Related Changes"). `views/11` = affected items listed on a Change Order (CO → item direction). A separate internal note claiming the opposite for `views/11` was incorrect, at least for this tenant. Autodesk's official Postman collection independently corroborates this: it labels the `views/11` GET "Get Managed Items" and the `views/2` GET "Get Item Related Changes," matching the directions above exactly.
+**Confirmed:** `views/2` = Change Orders linked to an item (item → CO direction, see [Items](/api/v3/items/)'s "Related Changes"). `views/11` = affected items listed on a Change Order (CO → item direction). A separate internal note claiming the opposite for `views/11` was incorrect, at least for this tenant. Autodesk's official Postman collection independently corroborates this: it labels the `views/11` GET "Get Managed Items" and the `views/2` GET "Get Item Related Changes," matching the directions above exactly.
 
 Example response shape from `GET /api/v3/workspaces/{coWsId}/items/{coId}/views/11`:
 ```json
@@ -62,7 +62,7 @@ Full add/update/remove cycle tested against a real Change Order:
 | `PUT .../views/11/affected-items/{itemId}` with `{ "linkedFields": [] }` | `204` |
 | `DELETE .../views/11/affected-items/{itemId}` | `204` |
 
-**Correction to Autodesk's own official example:** the add-items array requires **fully-qualified absolute URLs**, not the relative paths shown in the official Postman collection. This same requirement was also confirmed on the Grid tab's add-rows endpoint (see `api/v3/views-fields-tableaus`) — treat it as a general rule for any endpoint expecting a bulk array of item/field links, not a one-off quirk of this endpoint.
+**Correction to Autodesk's own official example:** the add-items array requires **fully-qualified absolute URLs**, not the relative paths shown in the official Postman collection. This same requirement was also confirmed on the Grid tab's add-rows endpoint (see [Views, Fields, and Tableaus](/api/v3/views-fields-tableaus/)) — treat it as a general rule for any endpoint expecting a bulk array of item/field links, not a one-off quirk of this endpoint.
 :::
 
 ## Relationships tab (views/10) — item-to-item relationships
@@ -88,7 +88,7 @@ Returns `200` with `{ "workspaces": [ { "link", "urn", "title", "type": "/relati
 - **Update** — `PUT /api/v3/workspaces/{ws}/items/{itemId}/views/10/relationships/{relationshipId}`, same body shape.
 - **Remove** — `DELETE /api/v3/workspaces/{ws}/items/{itemId}/views/10/relationships/{relationshipId}`
 
-The `content-location` header pattern (pointing to a `linkable-items` or similar sub-resource) recurs elsewhere in this API — see `api/v3/views-fields-tableaus` for the Project tab, which uses the same convention for linking an existing item into a tab.
+The `content-location` header pattern (pointing to a `linkable-items` or similar sub-resource) recurs elsewhere in this API — see [Views, Fields, and Tableaus](/api/v3/views-fields-tableaus/) for the Project tab, which uses the same convention for linking an existing item into a tab.
 
 :::tip[Confirmed live end-to-end — 2026-07-13]
 Full CRUD cycle tested against a real tenant, relating an Items-workspace item to a real Requirements-workspace item (a valid pair per step 1):

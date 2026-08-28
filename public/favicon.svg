@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Fusion Manage PLM Docs">
+  <title>Fusion Manage PLM Docs</title>
+  <rect width="32" height="32" rx="7" fill="#0696D7"/>
+  <!-- A parent node over two children: a BOM/product-structure motif that stays
+       legible at 16px. Plain shapes only — no Autodesk trademarks. -->
+  <rect x="12" y="6" width="8" height="6" rx="1.5" fill="#fff"/>
+  <rect x="4" y="20" width="8" height="6" rx="1.5" fill="#fff"/>
+  <rect x="20" y="20" width="8" height="6" rx="1.5" fill="#fff"/>
+  <path d="M16 12v4M8 16h16M8 16v4M24 16v4"
+        stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

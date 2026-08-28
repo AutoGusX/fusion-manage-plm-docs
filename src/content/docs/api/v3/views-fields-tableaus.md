@@ -3,7 +3,7 @@ title: Views, Fields, Tableaus, Grid/Project Tabs, and Picklists
 description: Workspace field/view discovery, tableau CRUD, grid and project tab rows, and picklist lookups — confirmed from Autodesk's official Postman collection.
 ---
 
-Field discovery is a prerequisite for most write operations elsewhere on this site (`api/v3/items`, `api/v3/bom`) — read this page before constructing a create/update body. The view-1 fields embedded in an item's own detail response lack `editability`/`derived`/`derivedFieldSource`/validator metadata that `GET /api/v3/workspaces/{ws}/fields` exposes — use the workspace-level fields endpoint for anything that needs to check whether a field is required, derived, or writable.
+Field discovery is a prerequisite for most write operations elsewhere on this site ([Items](/api/v3/items/), [BOM](/api/v3/bom/)) — read this page before constructing a create/update body. The view-1 fields embedded in an item's own detail response lack `editability`/`derived`/`derivedFieldSource`/validator metadata that `GET /api/v3/workspaces/{ws}/fields` exposes — use the workspace-level fields endpoint for anything that needs to check whether a field is required, derived, or writable.
 
 :::tip[Confirmed live — 2026-07-13: discover view numbers, don't guess them]
 ```
@@ -46,7 +46,7 @@ Create body shape — each column names a field by its **view-0** self-link (vie
 
 ## Grid tab
 
-A workspace-configurable grid embedded on an item's detail page (distinct from BOM rows — see `api/v3/bom`):
+A workspace-configurable grid embedded on an item's detail page (distinct from BOM rows — see [BOM](/api/v3/bom/)):
 
 | Operation | Endpoint |
 |---|---|
@@ -56,7 +56,7 @@ A workspace-configurable grid embedded on an item's detail page (distinct from B
 | Update a row | `PUT /api/v3/workspaces/{ws}/items/{itemId}/views/{gridViewId}/rows/{rowId}`, body is a single `{ "rowData": [...] }` |
 | Delete a row | `DELETE /api/v3/workspaces/{ws}/items/{itemId}/views/{gridViewId}/rows/{rowId}` |
 
-Each `rowData[]` entry is `{ "__self__": "<view-scoped field link>", "value": "...", "title": "...", "type": { "link": "/api/v3/field-types/{n}", "title": "...", "deleted": false } }` — richer than the `{__self__, value}` minimal shape used for item creation (see `api/v3/items`); the grid endpoints appear to want the fuller field-metadata shape.
+Each `rowData[]` entry is `{ "__self__": "<view-scoped field link>", "value": "...", "title": "...", "type": { "link": "/api/v3/field-types/{n}", "title": "...", "deleted": false } }` — richer than the `{__self__, value}` minimal shape used for item creation (see [Items](/api/v3/items/)); the grid endpoints appear to want the fuller field-metadata shape.
 
 :::tip[Confirmed live end-to-end — 2026-07-13, with the same absolute-URL correction as Managed Items]
 Full add/update/delete cycle tested on a real Change Order's Grid tab (view `13`, discovered via the `views` endpoint above):
@@ -66,7 +66,7 @@ Full add/update/delete cycle tested on a real Change Order's Grid tab (view `13`
 - `PUT .../rows/{rowId}` with the same absolute-URL shape → `204`.
 - `DELETE .../rows/{rowId}` → `204`.
 
-Confirms the absolute-URL requirement (see `api/v3/relationships-and-affected-items`) applies here too — treat it as a general rule for bulk array-body endpoints across this API, not a one-off.
+Confirms the absolute-URL requirement (see [Relationships and Affected Items](/api/v3/relationships-and-affected-items/)) applies here too — treat it as a general rule for bulk array-body endpoints across this API, not a one-off.
 :::
 
 ## Project tab
@@ -80,7 +80,7 @@ Task/schedule entries on an item, confirmed from Autodesk's official Postman col
 | Add a linked item | Same endpoint, with a `content-location` header pointing at `/api/v3/workspaces/{ws}/items/{itemId}/views/16/linkable-items/{targetItemId}` and an otherwise-empty body |
 | Remove an entry | `DELETE /api/v3/workspaces/{ws}/items/{itemId}/views/16/project-items/{entryId}` |
 
-View `16` recurs across the examples seen — likely a fixed view number for the Project tab, similar to `views/5` for BOM (see `api/v3/bom`), though not confirmed as universal across all tenants; discover it via `GET /api/v3/workspaces/{ws}/views` (above) rather than assuming.
+View `16` recurs across the examples seen — likely a fixed view number for the Project tab, similar to `views/5` for BOM (see [BOM](/api/v3/bom/)), though not confirmed as universal across all tenants; discover it via `GET /api/v3/workspaces/{ws}/views` (above) rather than assuming.
 
 :::tip[Confirmed live end-to-end — 2026-07-13]
 Add and remove both tested against a real Engineering Projects item: `POST .../views/16` with the plain manual-task body shown above returned `201`, `Location: .../views/16/project-items/{id}` (the new task's `duration` was computed automatically from `startDate`/`endDate`), and `DELETE .../views/16/project-items/{id}` returned `204`. Unlike Managed Items and Grid rows, this endpoint's body is a flat object, not an array of link strings — it worked with the relative-path-free plain JSON body as originally documented, no absolute-URL correction needed here.
@@ -88,7 +88,7 @@ Add and remove both tested against a real Engineering Projects item: `POST .../v
 
 ## Picklists and lookups
 
-A real v1/v3 split — see `concepts/versioning` for the full explanation:
+A real v1/v3 split — see [API Versions](/concepts/versioning/) for the full explanation:
 
 | Operation | Endpoint |
 |---|---|

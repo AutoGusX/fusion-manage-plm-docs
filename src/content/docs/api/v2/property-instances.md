@@ -33,7 +33,7 @@ GET /api/v3/lookups/CUSTOM_LOOKUP_0CWS_{PROPERTY_NAME_UPPERCASE}_{classification
 
 Response shape varies by tenant — a production client defensively checks for `items`, `values`, `lookupValues`, or `results` as the array key, or a bare array at the top level. Don't assume one shape without checking.
 
-See `api/v3/search` for the `CLASS:{propertyName}="{value}"` query-grammar prefix, which searches by these same classification property values without needing to resolve instances/lookups first.
+See [Search](/api/v3/search/) for the `CLASS:{propertyName}="{value}"` query-grammar prefix, which searches by these same classification property values without needing to resolve instances/lookups first.
 
 :::note
 Not yet independently live-verified — transcribed from a production client's code and comments, not re-checked against a live tenant.

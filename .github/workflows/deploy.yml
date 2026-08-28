@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: withastro/action@v6
+      # Dead internal links don't fail an Astro build, so check explicitly.
+      # withastro/action leaves its output in dist/.
+      - name: Check internal links
+        run: node scripts/check-links.mjs
 
   deploy:
     needs: build

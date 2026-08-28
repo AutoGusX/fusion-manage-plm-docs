@@ -3,7 +3,7 @@ title: Items
 description: Create, update, and archive items on v3 — confirmed request shapes, link-scoping rules, and the PUT/PATCH asymmetry, verified live against a real tenant.
 ---
 
-Read access (`GET /api/v3/workspaces/{ws}/items/{itemId}`) is covered in `concepts/versioning` and `api/v3/workspaces`. This page covers the write operations, which have several non-obvious, easy-to-get-wrong requirements confirmed by testing against a live tenant.
+Read access (`GET /api/v3/workspaces/{ws}/items/{itemId}`) is covered in [API Versions](/concepts/versioning/) and [Workspaces](/api/v3/workspaces/). This page covers the write operations, which have several non-obvious, easy-to-get-wrong requirements confirmed by testing against a live tenant.
 
 ## Create
 
@@ -87,7 +87,7 @@ Content-Type: application/xml
 </dmsVersionItem>
 ```
 
-This is a **separate v1, XML-bodied endpoint** from the JSON-bodied workflow-transition endpoint on `api/v3/workflow` — "lifecycle transitions" move an item between revision/release states (the `<release>` letter), while "workflow transitions" move an item along its configured workflow steps. Don't conflate the two; they use different verbs, different hosts-paths, and different body formats.
+This is a **separate v1, XML-bodied endpoint** from the JSON-bodied workflow-transition endpoint on [Workflow](/api/v3/workflow/) — "lifecycle transitions" move an item between revision/release states (the `<release>` letter), while "workflow transitions" move an item along its configured workflow steps. Don't conflate the two; they use different verbs, different hosts-paths, and different body formats.
 
 To discover available transitions rather than guessing IDs: `GET /api/v3/workspaces/{ws}/transitions` (all lifecycle transitions defined on the workspace, `Accept: application/vnd.autodesk.plm.transitions.bulk+json`) or `GET /api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` (transitions available on this specific item right now).
 
@@ -100,6 +100,6 @@ From Autodesk's official collection (not yet individually live-tested, but low-r
 | Owners | `GET /api/v3/workspaces/{ws}/items/{itemId}/owners` |
 | Change log | `GET /api/v3/workspaces/{ws}/items/{itemId}/logs?offset=&limit=&desc=timeStamp` |
 | Revision history | `GET /api/v3/workspaces/{ws}/items/{itemId}/versions` |
-| Related changes (COs linked to this item) | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/2` — see `api/v3/relationships-and-affected-items` |
+| Related changes (COs linked to this item) | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/2` — see [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | Item detail tabs | `GET /api/v3/workspaces/{ws}/items/{itemId}/tabs` |
 | A specific field's metadata | `GET /api/v3/workspaces/{ws}/views/{viewId}/fields/{fieldId}` |

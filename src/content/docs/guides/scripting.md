@@ -3,7 +3,7 @@ title: Scripting
 description: Enumerate a workspace's or tenant's custom scripts and pull their source.
 ---
 
-Full endpoint reference lives in `api/v3/scripts`. This subsystem is 100% v3 — no v1 fallback exists for any of it.
+Full endpoint reference lives in [Scripts](/api/v3/scripts/). This subsystem is 100% v3 — no v1 fallback exists for any of it.
 
 ## 1. List scripts
 

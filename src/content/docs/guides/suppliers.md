@@ -3,7 +3,7 @@ title: Suppliers
 description: List a part's approved suppliers and pull their quotes, with correct lead-time math.
 ---
 
-Full endpoint reference lives in `api/v3/suppliers`.
+Full endpoint reference lives in [Suppliers](/api/v3/suppliers/).
 
 ## 1. List approved suppliers for a part
 

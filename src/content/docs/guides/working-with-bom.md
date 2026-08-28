@@ -3,7 +3,7 @@ title: Working with BOM
 description: Read a BOM, add/update/remove a line, and run a where-used query.
 ---
 
-Full endpoint reference lives in `api/v3/bom` — this page walks through the common sequence.
+Full endpoint reference lives in [BOM](/api/v3/bom/) — this page walks through the common sequence.
 
 ## 1. Find the BOM view
 
@@ -19,7 +19,7 @@ You'll need a `bomViewId` for the read calls below.
 ```
 GET /api/v3/workspaces/{ws}/items/{itemId}/bom?depth={n}&revisionBias=release&viewDefId={bomViewId}&rootId={itemId}
 ```
-For a flat list instead of a hierarchy, use `bom-items` instead of `bom` with the same query params. Both need `Accept: application/vnd.autodesk.plm.bom.bulk+json` (hierarchical) or `application/vnd.autodesk.plm.bom.flat.bulk+json` (flat) — see `api/v3/bom`.
+For a flat list instead of a hierarchy, use `bom-items` instead of `bom` with the same query params. Both need `Accept: application/vnd.autodesk.plm.bom.bulk+json` (hierarchical) or `application/vnd.autodesk.plm.bom.flat.bulk+json` (flat) — see [BOM](/api/v3/bom/).
 
 ## 3. Add a line
 

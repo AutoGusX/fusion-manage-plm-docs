@@ -64,7 +64,7 @@ Body: [
   { "op": "replace", "path": "/attachments/{attachmentId2}/status/name", "value": "Delete" }
 ]
 ```
-This is a distinct mechanism from item-level soft-delete (`?deleted=true` query param — see `api/v3/items`); attachments use a status-name JSON-Patch instead.
+This is a distinct mechanism from item-level soft-delete (`?deleted=true` query param — see [Items](/api/v3/items/)); attachments use a status-name JSON-Patch instead.
 :::
 
 ## Manifest / CORS note (browser clients)

@@ -3,7 +3,7 @@ title: Admin and Config
 description: Common admin tasks — impersonating a user, looking up a workspace by its stable name, auditing config changes, and managing group access.
 ---
 
-Full endpoint reference lives in `api/v3/admin-impersonation`, `api/v3/users-groups-roles`, and `api/v3/workspaces`.
+Full endpoint reference lives in [Admin Impersonation](/api/v3/admin-impersonation/), [Users, Groups, and Roles](/api/v3/users-groups-roles/), and [Workspaces](/api/v3/workspaces/).
 
 ## 1. Look up a workspace without hardcoding its ID
 
@@ -15,7 +15,7 @@ Filter the response by `systemName` client-side rather than assuming a numeric I
 
 ## 2. Act as another user (admin impersonation)
 
-Get an app-level token via the separate 2-legged client-credentials flow, then combine it with an `X-User-Id` header — see `api/v3/admin-impersonation` for the full flow and its caveats. Don't use your own session-derived token for this; it's a fundamentally different credential type.
+Get an app-level token via the separate 2-legged client-credentials flow, then combine it with an `X-User-Id` header — see [Admin Impersonation](/api/v3/admin-impersonation/) for the full flow and its caveats. Don't use your own session-derived token for this; it's a fundamentally different credential type.
 
 ## 3. Disable a user
 

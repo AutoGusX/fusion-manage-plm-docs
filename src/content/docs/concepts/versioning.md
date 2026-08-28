@@ -26,11 +26,11 @@ The confirmed-working path is **v3-only**, and matches Autodesk's own official e
 - **Delete/Undelete:** `DELETE` is unsupported (`405`) — items are soft-deleted/restored via `PATCH .../items/{itemId}?deleted=true` / `?deleted=false`, confirmed by both live testing and Autodesk's official example (which explicitly includes both the delete and undelete calls).
 - **A separate, distinct lifecycle-transition endpoint exists in v1**: `PUT /api/rest/v1/workspaces/{ws}/items/{id}/lifecycles/transitions/{transitionId}`, `Content-Type: application/xml`, body `<dmsVersionItem><release>G</release></dmsVersionItem>`. This is **not** the same as the JSON-bodied workflow-transition endpoint (`workflows/{workflowId}/transitions`) — "lifecycle transitions" govern revision/release state, "workflow transitions" govern workflow step. Not independently live-tested (it mutates an item's release state) — treat as high-confidence but unverified.
 
-See `api/v3/items` for the full confirmed shapes and constraints.
+See [Items](/api/v3/items/) for the full confirmed shapes and constraints.
 :::
 
 :::tip[Confirmed live — CO/item relationship view direction]
-**Resolved (2026-07-08).** Live-tested against a real tenant with real items and Change Orders: `views/2` on a plain item returned `204` (valid, empty); `views/11` on the same item returned `403 VIEW_WORKFLOW_ITEMS denied`. Conversely, `views/11` on two different real Change Orders returned `200` with a populated `affectedItems[]` array pointing to real parts, while `views/2` on those same COs returned `403 VIEW_ASSOCIATED_WORKFLOW denied`. This confirms the `client.py` reading: **`views/2`** = Change Orders linked to an item (item → CO direction), **`views/11`** = affected items on a Change Order (CO → item direction). The other internal note claiming the opposite was incorrect for this tenant — see `api/v3/relationships-and-affected-items`.
+**Resolved (2026-07-08).** Live-tested against a real tenant with real items and Change Orders: `views/2` on a plain item returned `204` (valid, empty); `views/11` on the same item returned `403 VIEW_WORKFLOW_ITEMS denied`. Conversely, `views/11` on two different real Change Orders returned `200` with a populated `affectedItems[]` array pointing to real parts, while `views/2` on those same COs returned `403 VIEW_ASSOCIATED_WORKFLOW denied`. This confirms the `client.py` reading: **`views/2`** = Change Orders linked to an item (item → CO direction), **`views/11`** = affected items on a Change Order (CO → item direction). The other internal note claiming the opposite was incorrect for this tenant — see [Relationships and Affected Items](/api/v3/relationships-and-affected-items/).
 :::
 
 :::tip[Correction — v3 roles endpoint exists]

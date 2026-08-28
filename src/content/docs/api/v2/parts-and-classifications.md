@@ -42,7 +42,7 @@ Notably, `classifications.link` (`"parts/2/classifications"`) and `__self__` (`"
 GET /api/v2/parts/{partId}/classifications
 ```
 
-Response: `{ "classifications": [ /* root classification refs */ ] }`. Each entry is a **root** classification — the top of a classification subtree that applies in this workspace. Feed a root's `id` into `GET /api/v2/classifications/{rootId}/graphs/adjacency-set` (see `api/v2/classifications`) to expand that specific subtree, instead of walking the tenant-wide tree from `rootId=1`.
+Response: `{ "classifications": [ /* root classification refs */ ] }`. Each entry is a **root** classification — the top of a classification subtree that applies in this workspace. Feed a root's `id` into `GET /api/v2/classifications/{rootId}/graphs/adjacency-set` (see [Classifications](/api/v2/classifications/)) to expand that specific subtree, instead of walking the tenant-wide tree from `rootId=1`.
 
 ## Why this matters
 

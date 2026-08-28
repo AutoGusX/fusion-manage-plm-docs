@@ -35,7 +35,7 @@ A workspace detail response (confirmed live shape) links out to all its sub-reso
 | Purpose | Endpoint |
 |---|---|
 | Item Details sections | `GET /api/v3/workspaces/{ws}/sections`, `Accept: application/vnd.autodesk.plm.sections.bulk+json` |
-| Item Details fields | `GET /api/v3/workspaces/{ws}/fields` — carries `editability`, `derived`, and a `validators` link per field (needed for create/clone — see `api/v3/items`) |
+| Item Details fields | `GET /api/v3/workspaces/{ws}/fields` — carries `editability`, `derived`, and a `validators` link per field (needed for create/clone — see [Items](/api/v3/items/)) |
 | A specific field's metadata | `GET /api/v3/workspaces/{ws}/views/{viewId}/fields/{fieldId}` |
 
 ## Workflow definitions
@@ -45,8 +45,8 @@ A workspace detail response (confirmed live shape) links out to all its sub-reso
 | Workflow states | `GET /api/v3/workspaces/{ws}/workflows/{workflowId}/states` |
 | Workflow transitions | `GET /api/v3/workspaces/{ws}/workflows/{workflowId}/transitions` |
 
-See `api/v3/workflow` for item-level (as opposed to workspace-level/definitional) workflow calls.
+See [Workflow](/api/v3/workflow/) for item-level (as opposed to workspace-level/definitional) workflow calls.
 
 ## Scripts
 
-`GET /api/v3/workspaces/{ws}/scripts` — see `api/v3/scripts` for the full scripts subsystem (tenant-wide listing, source retrieval, running a script on an item).
+`GET /api/v3/workspaces/{ws}/scripts` — see [Scripts](/api/v3/scripts/) for the full scripts subsystem (tenant-wide listing, source retrieval, running a script on an item).
