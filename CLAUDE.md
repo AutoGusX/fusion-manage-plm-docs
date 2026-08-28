@@ -60,6 +60,9 @@ examples (see below). Preserve that distinction obsessively:
   (`[Items](/api/v3/items/)`). Astro does *not* base-prefix links in markdown, so
   a rehype plugin in `astro.config.mjs` applies the base at build time and `BASE`
   is defined exactly once. Don't hardcode `/fusion-manage-plm-docs/` in content.
+  The one exception is the hero `actions` in `index.mdx`: those are frontmatter,
+  not markdown, so the plugin never sees them and the base must be written out.
+  They 404'd once for exactly this reason; `check:links` now guards it.
 - Never commit a real tenant name, bearer token, or customer record title. Grep
   for `eyJhbGci`, the tenant name, and real record IDs before every commit.
   Examples use `{tenant}` / `acmecorp` and `{ws}` / `{itemId}` placeholders.

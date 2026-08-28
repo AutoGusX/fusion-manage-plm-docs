@@ -32,6 +32,18 @@ Fusion Manage's API surface (v1, v2, and v3) is documented across scattered offi
 	</Card>
 </CardGrid>
 
-:::caution
-This is an early, in-progress reference. Pages marked **⚠ Needs live verification** describe behavior reconstructed from prior projects' code and docs, not yet re-checked against a live tenant. Treat them as a strong starting point, not ground truth.
-:::
+## How much to trust a given page
+
+Unofficial and community-maintained, so every page is explicit about where its
+information came from:
+
+- A **`Confirmed live`** callout means that behaviour was exercised against a
+  real tenant on the date shown, and the response is quoted as observed.
+- Anything else is transcribed from Autodesk's official Postman collection or
+  read out of a production client's source, and says so. Treat it as a strong
+  starting point rather than ground truth.
+- **`Attempted, inconclusive`** callouts record things that were tried and
+  didn't resolve, including what was tried — so nobody repeats the dead end.
+
+Several live-confirmed findings here contradict Autodesk's own official
+examples — see [API Versions](/concepts/versioning/) for the reconciliation.

@@ -18,6 +18,10 @@
 - [ ] Confirm the exact `X-User-Id` admin-impersonation request combination — only described conceptually in the source examined, never seen verbatim (spec: specs/0001-fusion-manage-plm-documentation-site.md)
 
 ## Done
+- [x] Five feature prototypes built for review (2026-08-28) — endpoint index, verification badges, OpenAPI spec, docs MCP server, tenant playground. All enabled and live; each independently removable, with the full removal procedure executed on a scratch branch to prove it. See `prototypes/README.md`.
+- [x] Added `npm run check:freshness` (2026-08-28), partially closing the spec's staleness risk: reports the age of each page's most recent live verification, reading dates already in the prose. A quarterly review now has a worklist rather than an intention.
+- [x] Added repo `CLAUDE.md` (2026-08-28) so future sessions inherit the API findings that contradict Autodesk's official examples, the link/base convention, and the live-testing hygiene rules.
+- [x] Fixed a stale homepage claim (2026-08-28): it told readers to look for a "⚠ Needs live verification" marker that no longer existed anywhere in the docs. Replaced with an accurate description of the current callout conventions.
 - [x] **All 8 spec acceptance criteria met (2026-08-28).** Closed the last one (1:1 Postman endpoint coverage) with `npm run coverage`: 91/91 PLM REST endpoints documented, after finding and documenting one genuine gap (`general-settings`).
 - [x] Bug-fix pass (2026-08-28) — three bugs that a passing build was hiding: 65 cross-references were backtick spans rather than links (the site had *zero* internal links); markdown links aren't base-prefixed by Astro so they'd have 404'd (fixed with a rehype plugin, base now defined once); and `/favicon.svg` was referenced on every page but never existed (confirmed 404 live). Added `npm run check:links`, wired into CI — it caught the favicon bug on first run.
 - [x] Deep live-testing pass on a real CO, a real Engineering Project, and a disposable Documents item (2026-07-13):
