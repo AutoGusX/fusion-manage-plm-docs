@@ -29,7 +29,7 @@ The primary modern surface.
 | `GET` | `/api/v3/roles?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/roles?offset=&limit=` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
 | `GET` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
-| `GET` | `/api/v3/scripts/{scriptId}` | [Scripting](/guides/scripting/) |
+| `GET` | `/api/v3/scripts/{scriptId}` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/search-results` | [Pagination](/concepts/pagination/) |
 | `GET` | `/api/v3/search-results?query={grammar}&revision={1` | [Search](/api/v3/search/) |
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*CO-00123*&revision=1&limit=10&offset=0&page=1` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |

@@ -7,7 +7,7 @@ description: Read classification-bound property values and their display metadat
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-orange-low);color:var(--sl-color-orange-high)">Derived from client source — not yet live-verified</span></p>
 <!-- verification-badge:end -->
 
-Sourced from a production Fusion Manage API client (`plm.js`, BOM Builder Fork extension) — not yet independently live-tested.
+Sourced from a production Fusion Manage API client (`plm.js`, BOM Builder Fork extension), and confirmed live on 2026-08-31.
 
 ## Property instances for a classification
 
@@ -17,14 +17,32 @@ GET /api/v2/property-instances?classification={classificationId}&inherited=true&
 
 Response: `{ "propertyInstances": [ /* ... */ ] }` (or nested under `data.propertyInstances`, depending on tenant — check both). `inherited=true` includes properties inherited from parent classifications, not just ones defined directly on this classification.
 
-:::caution
-The property-instance list itself does **not** carry the friendly display name or data type — those live on each instance's `/properties` sub-resource. If you need human-readable labels (not the system id) or need to resolve picklist types, fetch each instance's properties separately:
+:::caution[Confirmed live — 2026-08-31: the N+1 is unavoidable]
+The list carries a `displayName` key, but it is **`null`** — and there is no type
+information at all. What you get per instance is essentially an `id` plus a
+`properties` sub-resource link and a pile of `*Overridden`/`*Suppressed` flags:
+
+```json
+{ "id": 182,
+  "properties": { "link": "property-instances/182/properties" },
+  "displayName": null, "description": null, "rank": null, … }
+```
+
+The real metadata is one call further down:
 
 ```
 GET /api/v2/property-instances/{instanceId}/properties
 ```
+```json
+{ "properties": [ { "id": 1, "name": "PREFIX", "displayName": "Prefix",
+                    "type": "text", "defaultValue": "000",
+                    "required": false, "readOnly": false } ] }
+```
 
-A production client fetches these in parallel (one call per instance) rather than expecting the list endpoint to inline them — budget for N+1 calls if you need display names for every property on a classification.
+So a `displayName: null` in the list is not a data problem — it is the shape.
+Budget one extra call per instance (fetch them in parallel) if you need labels or
+types. Note the sub-resource links are **relative** (`property-instances/182/properties`),
+like the rest of v2 — resolve them against `/api/v2/` yourself.
 :::
 
 ## Resolving a classification-driven picklist's values

@@ -2759,6 +2759,62 @@
         }
       }
     },
+    "/api/v3/workspaces/{ws}/scripts": {
+      "get": {
+        "tags": [
+          "Scripts"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/scripts",
+        "description": "Documented in **Scripts** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/scripts/",
+        "externalDocs": {
+          "description": "Scripts",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/scripts/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/scripts/{scriptId}": {
+      "get": {
+        "tags": [
+          "Scripts"
+        ],
+        "summary": "GET /api/v3/scripts/{scriptId}",
+        "description": "Documented in **Scripts** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/scripts/",
+        "externalDocs": {
+          "description": "Scripts",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/scripts/"
+        },
+        "parameters": [
+          {
+            "name": "scriptId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v3/search-results": {
       "get": {
         "tags": [
@@ -4482,34 +4538,6 @@
         }
       }
     },
-    "/api/v3/workspaces/{ws}/scripts": {
-      "get": {
-        "tags": [
-          "Workspaces"
-        ],
-        "summary": "GET /api/v3/workspaces/{ws}/scripts",
-        "description": "Documented in **Workspaces** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/workspaces/",
-        "externalDocs": {
-          "description": "Workspaces",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/workspaces/"
-        },
-        "parameters": [
-          {
-            "name": "ws",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
     "/api/rest/v1/workspaces/{id}/items": {
       "get": {
         "tags": [
@@ -4897,34 +4925,6 @@
           },
           {
             "name": "workflowId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/scripts/{scriptId}": {
-      "get": {
-        "tags": [
-          "Scripting"
-        ],
-        "summary": "GET /api/v3/scripts/{scriptId}",
-        "description": "Documented in **Scripting** — https://autogusx.github.io/fusion-manage-plm-docs/guides/scripting/",
-        "externalDocs": {
-          "description": "Scripting",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/guides/scripting/"
-        },
-        "parameters": [
-          {
-            "name": "scriptId",
             "in": "path",
             "required": true,
             "schema": {

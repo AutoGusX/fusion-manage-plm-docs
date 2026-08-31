@@ -17,5 +17,12 @@ Sourced from a full grep of a production Fusion Manage API client (`plm.js`, BOM
 | Run a script on an item | `POST {itemLink}/scripts/{scriptId}` with body `{}`, where `itemLink` is `/api/v3/workspaces/{wsId}/items/{dmsId}`. Optionally follow with a `GET {itemLink}` to fetch the item's post-run state. |
 
 :::note
-None of the endpoints on this page have been independently live-verified against a tenant yet — they're transcribed from production client code, not yet re-checked. Treat them as high-confidence but unverified.
+**Confirmed live (2026-08-31):** `GET /api/v3/scripts`, `GET /api/v3/workspaces/{ws}/scripts`, and `GET /api/v3/scripts/{scriptId}` all return `200`.
+
+Two things worth knowing:
+
+- **`/api/v3/scripts/{id}` returns the source** in a `code` field, alongside `uniqueName`, `scriptType` (e.g. `ACTION`), and `version`. That's the whole export mechanism — list, then fetch each id.
+- **A workspace-scoped script id resolves at the tenant-level detail endpoint.** An id discovered via `/workspaces/{ws}/scripts` was fetched successfully from `/api/v3/scripts/{id}`, so you don't need to keep track of which workspace a script came from to read it.
+
+Running a script on an item (`POST {itemLink}/scripts/{scriptId}`) has **not** been live-tested — it executes tenant code with real side effects.
 :::
