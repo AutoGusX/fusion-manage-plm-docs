@@ -194,6 +194,13 @@
       }
     },
     {
+      "name": "Troubleshooting",
+      "description": "Reverse index from the error or status code you actually got to what it really means and how to fix it — every entry observed against a live tenant.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/"
+      }
+    },
+    {
       "name": "API Versions: v1, v2, and v3",
       "description": "What v1, v2, and v3 actually mean in Fusion Manage, which one to use for which operation, and the known discrepancies between documentation and working code.",
       "externalDocs": {
@@ -4494,6 +4501,130 @@
           "url": "https://autogusx.github.io/fusion-manage-plm-docs/concepts/pagination/"
         },
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{ws}/items/{id}/lifecycles/transitions/{tid}": {
+      "put": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "PUT /api/rest/v1/workspaces/{ws}/items/{id}/lifecycles/transitions/{tid}",
+        "description": "Documented in **Troubleshooting** — https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/",
+        "externalDocs": {
+          "description": "Troubleshooting",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{id}": {
+      "patch": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "PATCH /api/v3/workspaces/{ws}/items/{id}",
+        "description": "Documented in **Troubleshooting** — https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/",
+        "externalDocs": {
+          "description": "Troubleshooting",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{ws}/items/{id}/lifecycles/transitions": {
+      "get": {
+        "tags": [
+          "Troubleshooting"
+        ],
+        "summary": "GET /api/rest/v1/workspaces/{ws}/items/{id}/lifecycles/transitions",
+        "description": "Documented in **Troubleshooting** — https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/",
+        "externalDocs": {
+          "description": "Troubleshooting",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/concepts/troubleshooting/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "in": "path",
