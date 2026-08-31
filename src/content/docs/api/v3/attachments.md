@@ -7,9 +7,6 @@ description: The full attachment lifecycle — list, upload (3-step S3 flow), ch
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-blue-low);color:var(--sl-color-blue-high)">From Autodesk's official collection — not yet live-verified</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 ## List and get
 
 | Purpose | Endpoint |

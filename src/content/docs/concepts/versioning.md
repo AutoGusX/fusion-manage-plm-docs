@@ -7,9 +7,6 @@ description: What v1, v2, and v3 actually mean in Fusion Manage, which one to us
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 Fusion Manage exposes three API surfaces that are easy to conflate. This page is the reconciliation point every other page links back to — read it before trusting any single endpoint page.
 
 ## The three surfaces

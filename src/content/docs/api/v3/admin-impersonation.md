@@ -7,9 +7,6 @@ description: The separate APS 2-legged client-credentials flow used to act as an
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-orange-low);color:var(--sl-color-orange-high)">Derived from client source — not yet live-verified</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 A fundamentally different credential type from everything in [Authentication](/concepts/authentication/) flows 1 and 2 — this is an **app-level** credential (client ID + secret, no user session involved at all), used specifically for admin tooling that needs to act as a user other than whoever is logged in. Sourced from a production Chrome extension's admin-utilities feature set.
 
 ## Get the token

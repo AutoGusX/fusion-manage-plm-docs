@@ -3,6 +3,10 @@ title: Troubleshooting
 description: Reverse index from the error or status code you actually got to what it really means and how to fix it — every entry observed against a live tenant.
 ---
 
+<!-- verification-badge:begin -->
+<p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
+<!-- verification-badge:end -->
+
 This API's errors are frequently misleading: several `500`s are really "you
 omitted one field", several `403`s are really "not applicable here", and a `303`
 is success. This page goes from **what you saw** to **what it means**.

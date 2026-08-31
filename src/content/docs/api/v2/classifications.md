@@ -7,9 +7,6 @@ description: The classification tree — v2 CRUD, plus a v3 sibling endpoint for
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 ## Read
 
 | Purpose | Endpoint |

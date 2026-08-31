@@ -7,9 +7,6 @@ description: Change-order affected items (Managed Items tab) and item-to-item re
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 ## Managed Items tab (views/11) — affected items on a Change Order
 
 :::tip[Confirmed live — 2026-07-08]

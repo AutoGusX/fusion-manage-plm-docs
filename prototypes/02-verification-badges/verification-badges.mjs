@@ -80,6 +80,8 @@ const LEVEL_BY_PAGE = {
 	'api/v3/users-groups-roles.md': 'live',
 	'api/v2/classifications.md': 'live',
 	'api/v2/parts-and-classifications.md': 'live',
+	// Every entry on this page is an error observed against a live tenant.
+	'concepts/troubleshooting.md': 'live',
 
 	// Straight from Autodesk's official collection; endpoint shapes not yet
 	// exercised here.
@@ -115,12 +117,18 @@ function badgeHtml(level) {
 	);
 }
 
-/** Remove any previously injected badge, so this is idempotent. */
+/**
+ * Remove any previously injected badge, so this is idempotent.
+ *
+ * Newline handling is `(?:\r?\n)*`, not `\n*`, on purpose: git checks these
+ * files out with CRLF on Windows, and a `\n`-only pattern stops at the first
+ * `\r` and leaves the rest of each blank line behind. That silently accumulated
+ * seven blank lines between the badge and the first paragraph before it was
+ * caught by dumping the raw bytes — `cat -A` did not show the `\r`.
+ */
 function stripBadge(text) {
-	const re = new RegExp(
-		`${BEGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${END.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n*`,
-		'g',
-	);
+	const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const re = new RegExp(`${esc(BEGIN)}[\\s\\S]*?${esc(END)}(?:\\r?\\n)*`, 'g');
 	return text.replace(re, '');
 }
 
@@ -161,7 +169,7 @@ for (const file of walk(DOCS)) {
 		// HTML block, so inline code and links in it render as literal text.
 		writeFileSync(
 			file,
-			`${frontmatter}\n${badgeHtml(level)}\n\n${cleanBody.replace(/^\n+/, '')}`,
+			`${frontmatter}\n${badgeHtml(level)}\n\n${cleanBody.replace(/^(?:\r?\n)+/, '')}`,
 		);
 		applied++;
 	}

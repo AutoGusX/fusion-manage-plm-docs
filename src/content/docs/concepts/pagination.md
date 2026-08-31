@@ -7,9 +7,6 @@ description: The page/size, offset/limit, and combined limit/offset/page convent
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-green-low);color:var(--sl-color-green-high)">Verified against a live tenant</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 Fusion Manage does not use one consistent pagination convention — the parameter names depend on which endpoint (and which API version) you're calling. Check the specific endpoint's reference page rather than assuming one style applies everywhere.
 
 ## `page` / `size` (v1 list and search endpoints)

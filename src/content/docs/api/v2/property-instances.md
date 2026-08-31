@@ -7,9 +7,6 @@ description: Read classification-bound property values and their display metadat
 <p style="margin:0 0 1rem"><span style="display:inline-block;padding:.25rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;line-height:1.4;background:var(--sl-color-orange-low);color:var(--sl-color-orange-high)">Derived from client source — not yet live-verified</span></p>
 <!-- verification-badge:end -->
 
-
-
-
 Sourced from a production Fusion Manage API client (`plm.js`, BOM Builder Fork extension) — not yet independently live-tested.
 
 ## Property instances for a classification
