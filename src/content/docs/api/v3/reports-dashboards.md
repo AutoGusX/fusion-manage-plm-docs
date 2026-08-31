@@ -34,6 +34,30 @@ No v3 reports endpoint exists in this client — reports appear to be v1-only.
 | Add a bookmark | `POST /api/v3/users/@me/bookmarks` — body `{ "dmsId": ..., "comment": "..." }` (comment optional) |
 | Remove a bookmark | `DELETE /api/v3/users/@me/bookmarks/{dmsId}` |
 
+:::tip[Confirmed live end-to-end — 2026-08-31]
+Full add/list/remove cycle run against the calling user's own bookmarks and
+reverted. One trap:
+
+**Bookmarks are stored as "inbox items", and add and delete key off different
+ids.** `POST` returns `201` with
+`Location: /api/v3/inbox-items/{inboxItemId}` — but `DELETE` expects the
+**`dmsId` of the bookmarked item**, not that inbox-item id:
+
+```
+POST   /api/v3/users/@me/bookmarks           {"dmsId": {dmsId}}
+       -> 201, Location: /api/v3/inbox-items/{inboxItemId}
+DELETE /api/v3/users/@me/bookmarks/{dmsId}   -> 204   ✅ (the dmsId, not the inbox-item id)
+```
+
+Following the `Location` id, which is the natural instinct, targets the wrong
+resource. The listed bookmarks also carry `__self__: /api/v3/inbox-items/{id}`,
+which reinforces the wrong id — key your delete off the `dmsId` you added.
+
+Note the response's `__self__` resolves `@me` to the real user
+(`/api/v3/users/{email}/bookmarks`), so `@me` is a genuine alias, not a separate
+endpoint.
+:::
+
 ## Recently-viewed and outstanding work
 
 ```
