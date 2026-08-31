@@ -103,20 +103,42 @@ Four things worth knowing, all observed rather than assumed:
   a **Tomcat HTML error page**, not JSON. A client that assumes JSON on this
   endpoint will fail while parsing the error rather than reporting it. This is
   the only endpoint found so far that does this.
-- **The `<release>` value did not drive the result.** `<release>A</release>` on a
-  transition configured with `incrementRelease: false` / `incrementVersion: true`
-  produced `[REV:1]` — the transition's own configuration won. Whether the value
-  is honoured by a release-incrementing transition was not established (see
-  below), so treat `<release>` as "required to be present" rather than "sets the
-  revision".
+- **Whether `<release>` does anything depends on the transition.** Resolved
+  2026-08-31 by testing both kinds:
+
+  | Transition | Body | Result |
+  |---|---|---|
+  | `incrementRelease: false` | `<release>A</release>` | `[REV:1]` — value **ignored**, version incremented |
+  | `incrementRelease: true` | `<release>Q</release>` | `[REV:Q]` — value **honoured verbatim** |
+  | `incrementRelease: true` | `<dmsVersionItem></dmsVersionItem>` | `400` — the element is **required** |
+
+  So on a release-incrementing transition `<release>` is what actually sets the
+  revision letter, and you must supply it; on a version-incrementing one it is
+  inert but still has to be present. Read `incrementRelease` from the transition
+  before deciding whether the letter you send matters.
 - **An invalid transition for the item's current state returns `409`**, not a
   validation message naming the problem.
 - **Check what's actually available first:**
   `GET /api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions`
-  returns `200` with `{"list": null}` when the item has no valid lifecycle
-  transitions from its current state. That `null` is the signal — it is what
-  explained the `409` above, since the freshly-transitioned item had no legal
-  next move. There is no v3 equivalent (`/items/{id}/transitions` returns `404`).
+
+  Populated, it returns each option wrapped in a `LifecycleTransition` object
+  carrying `transitionId`, `transitionName`, `incrementVersion`,
+  `incrementRelease`, `obsoleteItem`, and `fromLifecycle`/`toLifecycle`:
+  ```json
+  { "list": { "data": [ { "LifecycleTransition": {
+      "transitionId": 1, "transitionName": "To Pre-Release",
+      "incrementVersion": true, "incrementRelease": false,
+      "fromLifecycle": { "lifecycleName": "Unreleased" } } } ] } }
+  ```
+  When nothing is legal from the current state it returns `200` with
+  `{"list": null}` — that `null` is the signal, and it is what produces the `409`
+  above if you push on anyway. There is no v3 equivalent
+  (`/items/{id}/transitions` returns `404`).
+
+  Worth noting the legal set is **not** just the next step in a chain: from a
+  brand-new working item, three transitions were available at once — one
+  version-incrementing and two release-incrementing — so an item can jump
+  straight to a released revision without passing through pre-release.
 :::
 
 To discover transition IDs rather than guessing: `GET /api/v3/workspaces/{ws}/transitions` lists all lifecycle transitions defined on the workspace (send `Accept: application/vnd.autodesk.plm.transitions.bulk+json`, or you get a thin response — see [Workspaces](/api/v3/workspaces/)). Each entry carries `incrementRelease` and `incrementVersion`, which tell you what it will actually do. Note this is a *different* endpoint from `GET /api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions`, which lists **workflow** transitions.

@@ -35,6 +35,20 @@ A "bulk" search variant exists too — request it with `Accept: application/vnd.
 **Zero-match quirk confirmed:** a query with no matches returns `204 No Content` with an **empty response body** — not `200` with an empty `items[]` array, and not even a `totalCount` field. Code consuming this endpoint must treat 204 as "zero results," not as an error or an unexpected response.
 :::
 
+:::caution[Observed 2026-08-31 — results can include soft-deleted items]
+An item archived via `PATCH …?deleted=true` (confirmed `deleted: true` on a direct
+`GET`) was still returned by `search-results` afterwards.
+
+It was not consistent: eight items were archived in the same session and only one
+kept appearing, so this looks like index lag rather than a rule that search
+includes deleted items — but the mechanism wasn't established, so treat the
+inconsistency itself as the finding.
+
+**Don't assume search results are live or exclude archived items.** If deleted
+state matters — a picker, a sync, a count — re-read each hit's `deleted` flag
+rather than trusting its presence in the result set.
+:::
+
 Documented (not independently re-verified) broken/unreliable behaviors from `SEARCH_GRAMMAR.md`: `!=` returns 0 results rather than excluding matches; `NOT(...)` silently drops items where the field is null rather than including them.
 
 ## v1 structured search
