@@ -82,6 +82,10 @@ export default defineConfig({
 					label: 'Guides',
 					items: [{ autogenerate: { directory: 'guides' } }],
 				},
+				{
+					label: 'Recipes',
+					items: [{ autogenerate: { directory: 'recipes' } }],
+				},
 				// --- PROTOTYPE 01 (endpoint index): remove this group to disable ---
 				{
 					label: 'Reference',

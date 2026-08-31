@@ -255,6 +255,27 @@
       "externalDocs": {
         "url": "https://autogusx.github.io/fusion-manage-plm-docs/index/"
       }
+    },
+    {
+      "name": "Recipe: bulk-create items from a spreadsheet",
+      "description": "Map columns to real field IDs, validate before you write, and create items in a loop that fails safely partway through.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/bulk-create-items-from-a-spreadsheet/"
+      }
+    },
+    {
+      "name": "Recipe: clone an assembly with its BOM",
+      "description": "There is no clone endpoint — build one from item create plus BOM rows, with the field-inclusion rules that decide whether it succeeds.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/"
+      }
+    },
+    {
+      "name": "Recipe: release an item through a change order",
+      "description": "The canonical PLM flow end to end — find the change order, add the affected item, drive the workflow, and confirm the release actually happened.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+      }
     }
   ],
   "paths": {
@@ -5028,6 +5049,464 @@
             "name": "rowId",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{newId}": {
+      "patch": {
+        "tags": [
+          "Recipe: bulk-create items from a spreadsheet"
+        ],
+        "summary": "PATCH /api/v3/workspaces/{ws}/items/{newId}",
+        "description": "Documented in **Recipe: bulk-create items from a spreadsheet** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/bulk-create-items-from-a-spreadsheet/",
+        "externalDocs": {
+          "description": "Recipe: bulk-create items from a spreadsheet",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/bulk-create-items-from-a-spreadsheet/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{sourceId}": {
+      "get": {
+        "tags": [
+          "Recipe: clone an assembly with its BOM"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/items/{sourceId}",
+        "description": "Documented in **Recipe: clone an assembly with its BOM** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/",
+        "externalDocs": {
+          "description": "Recipe: clone an assembly with its BOM",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{sourceId}/bom-items": {
+      "get": {
+        "tags": [
+          "Recipe: clone an assembly with its BOM"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/items/{sourceId}/bom-items",
+        "description": "Documented in **Recipe: clone an assembly with its BOM** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/",
+        "externalDocs": {
+          "description": "Recipe: clone an assembly with its BOM",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revisionBias",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewDefId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rootId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{newId}/bom-items": {
+      "post": {
+        "tags": [
+          "Recipe: clone an assembly with its BOM"
+        ],
+        "summary": "POST /api/v3/workspaces/{ws}/items/{newId}/bom-items",
+        "description": "Documented in **Recipe: clone an assembly with its BOM** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/",
+        "externalDocs": {
+          "description": "Recipe: clone an assembly with its BOM",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/clone-an-assembly-with-its-bom/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/transitions": {
+      "get": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "GET /api/v3/workspaces/{coWs}/items/{coId}/workflows/1/transitions",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "coWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "POST /api/v3/workspaces/{coWs}/items/{coId}/workflows/1/transitions",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "coWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{itemWs}/items/{itemId}": {
+      "get": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "GET /api/v3/workspaces/{itemWs}/items/{itemId}",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "itemWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{itemWs}/items/{itemId}/lifecycles/transitions": {
+      "get": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "GET /api/rest/v1/workspaces/{itemWs}/items/{itemId}/lifecycles/transitions",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "itemWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{itemWs}/items/{itemId}/lifecycles/transitions/{tid}": {
+      "put": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "PUT /api/rest/v1/workspaces/{itemWs}/items/{itemId}/lifecycles/transitions/{tid}",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "itemWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/history": {
+      "get": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "GET /api/v3/workspaces/{coWs}/items/{coId}/workflows/1/history",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "coWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{itemWs}/items/{itemId}/logs": {
+      "get": {
+        "tags": [
+          "Recipe: release an item through a change order"
+        ],
+        "summary": "GET /api/v3/workspaces/{itemWs}/items/{itemId}/logs",
+        "description": "Documented in **Recipe: release an item through a change order** — https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/",
+        "externalDocs": {
+          "description": "Recipe: release an item through a change order",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/recipes/release-item-via-change-order/"
+        },
+        "parameters": [
+          {
+            "name": "itemWs",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "desc",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }

@@ -32,6 +32,7 @@ The primary modern surface.
 | `GET` | `/api/v3/scripts/{scriptId}` | [Scripting](/guides/scripting/) |
 | `GET` | `/api/v3/search-results` | [Pagination](/concepts/pagination/) |
 | `GET` | `/api/v3/search-results?query={grammar}&revision={1` | [Search](/api/v3/search/) |
+| `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*CO-00123*&revision=1&limit=10&offset=0&page=1` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*Power*&revision=1&limit=5&offset=0&page=1` | [Search](/api/v3/search/) |
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*your` | [Change Orders and Workflow](/guides/change-orders-and-workflow/) |
 | `GET` | `/api/v3/tenant` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -60,11 +61,15 @@ The primary modern surface.
 | `PUT` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `DELETE` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `GET` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/fields` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
+| `GET` | `/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/history` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
+| `POST` | `/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/transitions` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `GET` | `/api/v3/workspaces/{coWsId}/items/{coId}/views/11` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
+| `GET` | `/api/v3/workspaces/{itemWs}/items/{itemId}/logs?offset=0&limit=100&desc=timeStamp` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `POST` | `/api/v3/workspaces/{workspaceId}/items` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/fields` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items?offset={n}&limit={n}` | [Workspaces](/api/v3/workspaces/) |
+| `GET` | `/api/v3/workspaces/{ws}/items?offset=0&limit=50` | [Recipe: bulk-create items from a spreadsheet](/recipes/bulk-create-items-from-a-spreadsheet/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Fusion Components (Manufacturing GraphQL)](/api/v3/fusion-components/) |
 | `PUT` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Items](/api/v3/items/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Classifications](/api/v2/classifications/) |
@@ -106,6 +111,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` | [Items](/api/v3/items/) |
+| `GET` | `/api/v3/workspaces/{ws}/items/{sourceId}/bom-items?depth=1&revisionBias=release&viewDefId={bomViewId}&rootId={sourceId}` | [Recipe: clone an assembly with its BOM](/recipes/clone-an-assembly-with-its-bom/) |
 | `GET` | `/api/v3/workspaces/{ws}/sections` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `POST` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -168,4 +174,4 @@ Legacy, but still load-bearing for several operations.
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
 
-_135 endpoints across 3 surfaces._
+_141 endpoints across 3 surfaces._
