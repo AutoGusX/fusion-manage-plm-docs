@@ -67,7 +67,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/items?offset={n}&limit={n}` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Fusion Components (Manufacturing GraphQL)](/api/v3/fusion-components/) |
 | `PUT` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Items](/api/v3/items/) |
-| `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Items](/api/v3/items/) |
+| `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Classifications](/api/v2/classifications/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}?deleted=false` | [Items](/api/v3/items/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}?deleted=true` | [Items](/api/v3/items/) |
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments` | [Attachments](/api/v3/attachments/) |

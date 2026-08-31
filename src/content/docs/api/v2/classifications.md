@@ -68,6 +68,62 @@ See [Property Instances](/api/v2/property-instances/) for reading property value
 
 Confirmed live (2026-07-13) against a real Documents-workspace item: a workspace bound to the classification system has a dedicated section with `"type": "CLASSIFICATION"` (distinct from the ordinary `FIELDCONTAINER` type — see [Workspaces](/api/v3/workspaces/) for the sections endpoint). On the item itself, that section carries `classificationId` and `classificationName` directly (e.g. `118` / `"Documents"`, the default for that workspace), plus one or more dynamically-named fields following the pattern seen in [Property Instances](/api/v2/property-instances/)'s lookup convention — e.g. `0CWS_DOCUMENT_CLASS_NAME` — rather than static field IDs like `TITLE`/`DESCRIPTION`.
 
-:::caution[Attempted, inconclusive — 2026-07-13]
-Tried reassigning an item's classification by `PATCH`-ing the item with an updated `classificationId` on that section (`{"sections":[{"link":"...sections/543","classificationId":206}]}`) — this returned a `500 INTERNAL_SERVER_ERROR`, not a normal validation error. That's a signal this isn't the right mechanism (or isn't supported via this endpoint at all), not a transient failure to retry. The item itself was unaffected — verified intact and unchanged afterward. How to actually reclassify an item via API remains unresolved; it may require the Fusion Manage UI, a different endpoint entirely, or a specific field-write shape not yet found.
+## Classifying an item
+
+:::tip[Confirmed live — 2026-08-31, previously recorded as unresolved]
+Assigning a classification **does** work through the ordinary item `PATCH`. An
+earlier pass recorded this as a dead end after getting a `500`; the missing piece
+was an empty `fields` array.
+
+```
+PATCH /api/v3/workspaces/{ws}/items/{itemId}
+```
+```json
+{
+  "sections": [
+    {
+      "link": "/api/v3/workspaces/{ws}/items/{itemId}/views/1/sections/{classificationSectionId}",
+      "classificationId": 141,
+      "fields": []
+    }
+  ]
+}
+```
+Returns `204`, and the item's `classificationId`/`classificationName` change.
+
+Three things this depends on, each of which returns an unhelpful error if wrong:
+
+- **`fields: []` is required.** Omit it and you get a bare
+  `500 INTERNAL_SERVER_ERROR` — not a validation message. This single omission is
+  what made this look unsupported for weeks.
+- **The section link must be item-scoped** (include `/items/{itemId}/views/1/`),
+  matching the general `PATCH` rule in [Items](/api/v3/items/). Workspace-scoped
+  links also return `500` here rather than the clearer
+  `"Could not find section …"` that item updates give.
+- **`classificationId` is not a top-level item field.** Sending it at the top
+  level returns `400 "Invalid field classificationId"`.
+:::
+
+:::caution[Confirmed live — classification is effectively write-once]
+Assignment succeeds only while the item still carries its workspace's **default**
+class. Once it has been classified, every further change returns `500` — including
+setting it back to the default.
+
+Verified explicitly, and worth spelling out because the failure looks like a bug
+rather than a rule: class `141` and class `19` each returned `204` on a *fresh*
+item, and the identical requests returned `500` against an item that had already
+been reclassified. Then, on an item sitting at `141`, both `142` and a revert to
+the default returned `500`.
+
+So: **treat classification as set-once at creation time.** If you need a different
+class, create a new item. Whether the Fusion Manage UI can reclassify (via some
+path the API doesn't expose) was not tested.
+:::
+
+:::note[Tenant scripts can block this independently]
+On this tenant the Documents workspace rejected the same correctly-shaped request
+with `400 "There has been a problem running a custom action."` — a workspace
+`onEdit` script failing, not an API problem. The identical request shape worked on
+the Items workspace. If you get that message, look at the workspace's scripts
+(see [Scripts](/api/v3/scripts/)) before suspecting your payload.
 :::

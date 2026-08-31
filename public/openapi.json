@@ -498,6 +498,110 @@
         }
       }
     },
+    "/api/v3/workspaces/{ws}/items/{itemId}": {
+      "patch": {
+        "tags": [
+          "Classifications"
+        ],
+        "summary": "PATCH /api/v3/workspaces/{ws}/items/{itemId}",
+        "description": "Documented in **Classifications** — https://autogusx.github.io/fusion-manage-plm-docs/api/v2/classifications/",
+        "externalDocs": {
+          "description": "Classifications",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v2/classifications/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Fusion Components (Manufacturing GraphQL)"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/items/{itemId}",
+        "description": "Documented in **Fusion Components (Manufacturing GraphQL)** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/fusion-components/",
+        "externalDocs": {
+          "description": "Fusion Components (Manufacturing GraphQL)",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/fusion-components/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "PUT /api/v3/workspaces/{ws}/items/{itemId}",
+        "description": "Documented in **Items** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/",
+        "externalDocs": {
+          "description": "Items",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v2/parts": {
       "get": {
         "tags": [
@@ -1486,110 +1590,6 @@
         "externalDocs": {
           "description": "Fusion Components (Manufacturing GraphQL)",
           "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/fusion-components/"
-        },
-        "parameters": [
-          {
-            "name": "ws",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/workspaces/{ws}/items/{itemId}": {
-      "get": {
-        "tags": [
-          "Fusion Components (Manufacturing GraphQL)"
-        ],
-        "summary": "GET /api/v3/workspaces/{ws}/items/{itemId}",
-        "description": "Documented in **Fusion Components (Manufacturing GraphQL)** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/fusion-components/",
-        "externalDocs": {
-          "description": "Fusion Components (Manufacturing GraphQL)",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/fusion-components/"
-        },
-        "parameters": [
-          {
-            "name": "ws",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Items"
-        ],
-        "summary": "PATCH /api/v3/workspaces/{ws}/items/{itemId}",
-        "description": "Documented in **Items** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/",
-        "externalDocs": {
-          "description": "Items",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/"
-        },
-        "parameters": [
-          {
-            "name": "ws",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Items"
-        ],
-        "summary": "PUT /api/v3/workspaces/{ws}/items/{itemId}",
-        "description": "Documented in **Items** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/",
-        "externalDocs": {
-          "description": "Items",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/"
         },
         "parameters": [
           {

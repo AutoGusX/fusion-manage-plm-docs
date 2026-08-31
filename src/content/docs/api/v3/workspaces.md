@@ -45,6 +45,32 @@ A workspace detail response (confirmed live shape) links out to all its sub-reso
 | Item Details fields | `GET /api/v3/workspaces/{ws}/fields` — carries `editability`, `derived`, and a `validators` link per field (needed for create/clone — see [Items](/api/v3/items/)) |
 | A specific field's metadata | `GET /api/v3/workspaces/{ws}/views/{viewId}/fields/{fieldId}` |
 
+:::caution[Confirmed live — 2026-08-31: the bulk `Accept` header changes the response *shape*, not just its size]
+`vnd.autodesk.plm.*.bulk+json` reads like a performance hint. It is not — on
+`/sections` it decides which fields you get at all.
+
+Without it, each entry has only `link`, `urn`, `title`, `deleted`:
+```json
+[ { "link": "/api/v3/workspaces/{ws}/sections/543", "title": "Classification", "deleted": false } ]
+```
+With `Accept: application/vnd.autodesk.plm.sections.bulk+json`, the same call also
+returns `name`, `sectionType`, `displayOrder`, `collapsed`, and the section's
+`fields[]`:
+```json
+[ { "name": "Classification", "sectionType": "CLASSIFICATION", "displayOrder": 2, "fields": [] } ]
+```
+
+This matters concretely: `sectionType` is the only way to find a workspace's
+classification section (see [Classifications](/api/v2/classifications/)), and
+without the header you cannot see it in the list at all — you would have to
+`GET` every section individually to discover which one it is. That N+1 is
+avoidable purely by sending the right `Accept`.
+
+Treat a missing field in any `/sections`, `/fields`, `/users`, `/groups`, or
+`/transitions` list as "maybe I omitted the bulk header" before concluding the
+API doesn't expose it.
+:::
+
 ## Workflow definitions
 
 | Purpose | Endpoint |
