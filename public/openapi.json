@@ -1716,6 +1716,42 @@
         }
       }
     },
+    "/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "GET /api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions",
+        "description": "Documented in **Items** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/",
+        "externalDocs": {
+          "description": "Items",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/items/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v3/workspaces/{ws}/transitions": {
       "get": {
         "tags": [

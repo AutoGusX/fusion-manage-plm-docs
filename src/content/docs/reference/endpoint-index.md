@@ -164,7 +164,8 @@ Legacy, but still load-bearing for several operations.
 | `GET` | `/api/rest/v1/workspaces/{id}/items` | [Pagination](/concepts/pagination/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items` | [Items](/api/v3/items/) |
 | `GET` | `/api/rest/v1/workspaces/{ws}/items?includeRelationships=true` | [BOM](/api/v3/bom/) |
+| `GET` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions` | [Items](/api/v3/items/) |
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
 
-_134 endpoints across 3 surfaces._
+_135 endpoints across 3 surfaces._

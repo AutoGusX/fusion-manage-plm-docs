@@ -83,20 +83,46 @@ Both return `204 No Content`. The item still exists and is `GET`-able afterward,
 
 ## Lifecycle transitions (distinct from workflow transitions)
 
-**From Autodesk's official Postman collection, not yet independently live-tested** (it mutates an item's release state, so wasn't exercised against a live tenant in this pass):
-
 ```
 PUT /api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}
 Content-Type: application/xml
 
 <dmsVersionItem>
-<release>G</release>
+<release>A</release>
 </dmsVersionItem>
 ```
 
-This is a **separate v1, XML-bodied endpoint** from the JSON-bodied workflow-transition endpoint on [Workflow](/api/v3/workflow/) — "lifecycle transitions" move an item between revision/release states (the `<release>` letter), while "workflow transitions" move an item along its configured workflow steps. Don't conflate the two; they use different verbs, different hosts-paths, and different body formats.
+This is a **separate v1, XML-bodied endpoint** from the JSON-bodied workflow-transition endpoint on [Workflow](/api/v3/workflow/) — "lifecycle transitions" move an item between revision/release states, while "workflow transitions" move an item along its configured workflow steps. Don't conflate the two; they use different verbs, different paths, and different body formats.
 
-To discover available transitions rather than guessing IDs: `GET /api/v3/workspaces/{ws}/transitions` (all lifecycle transitions defined on the workspace, `Accept: application/vnd.autodesk.plm.transitions.bulk+json`) or `GET /api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` (transitions available on this specific item right now).
+:::tip[Confirmed live — 2026-08-31]
+Exercised end-to-end against a disposable item. It works, and returns **`200`** —
+unlike the v3 workflow transition, which returns `303`.
+
+The item's revision advanced from `[REV:w]` (working) to `[REV:1]`.
+
+Four things worth knowing, all observed rather than assumed:
+
+- **The XML body is required.** An empty body returns `400` — and the response is
+  a **Tomcat HTML error page**, not JSON. A client that assumes JSON on this
+  endpoint will fail while parsing the error rather than reporting it. This is
+  the only endpoint found so far that does this.
+- **The `<release>` value did not drive the result.** `<release>A</release>` on a
+  transition configured with `incrementRelease: false` / `incrementVersion: true`
+  produced `[REV:1]` — the transition's own configuration won. Whether the value
+  is honoured by a release-incrementing transition was not established (see
+  below), so treat `<release>` as "required to be present" rather than "sets the
+  revision".
+- **An invalid transition for the item's current state returns `409`**, not a
+  validation message naming the problem.
+- **Check what's actually available first:**
+  `GET /api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions`
+  returns `200` with `{"list": null}` when the item has no valid lifecycle
+  transitions from its current state. That `null` is the signal — it is what
+  explained the `409` above, since the freshly-transitioned item had no legal
+  next move. There is no v3 equivalent (`/items/{id}/transitions` returns `404`).
+:::
+
+To discover transition IDs rather than guessing: `GET /api/v3/workspaces/{ws}/transitions` lists all lifecycle transitions defined on the workspace (send `Accept: application/vnd.autodesk.plm.transitions.bulk+json`, or you get a thin response — see [Workspaces](/api/v3/workspaces/)). Each entry carries `incrementRelease` and `incrementVersion`, which tell you what it will actually do. Note this is a *different* endpoint from `GET /api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions`, which lists **workflow** transitions.
 
 ## Related read endpoints
 
