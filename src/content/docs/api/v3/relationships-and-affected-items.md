@@ -84,6 +84,19 @@ GET /api/v3/workspaces/{ws}/views/10/related-workspaces
 Returns `200` with `{ "workspaces": [ { "link", "urn", "title", "type": "/relation" }, ... ] }` — the set of workspaces this workspace is actually configured to relate to. On the tenant tested, the Items workspace (57) is related to Requirements (143) and Supplier Packages (147) — **not** to itself, and not to Documents. Check this before attempting a write; guessing a workspace pair returns the `400` documented below.
 :::
 
+:::note[Confirmed live — 2026-08-31: this endpoint is read-only]
+Configuring *which* workspaces may relate to each other is **not exposed by this
+API**. `POST`, `PUT`, and `DELETE` against `related-workspaces` all return
+`405 Method Not Allowed`, and no workspace-level relationship-config endpoint was
+found (`/workspaces/{ws}/relationships`, `/workspaces/{ws}/config`,
+`/workspaces/{ws}/views/10/config` all `404`).
+
+So if a workspace pair isn't already configured, an integration cannot create the
+pairing — that is a Fusion Manage admin task. Discover what's permitted with the
+`GET` above and design around it. (Established by method-probing, which is
+non-destructive — no relationship configuration was created or altered.)
+:::
+
 ### Step 2 — read, add, update, remove
 
 - **Read** — `GET /api/v3/workspaces/{ws}/items/{itemId}/views/10`

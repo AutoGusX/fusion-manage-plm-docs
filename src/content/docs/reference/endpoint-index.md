@@ -45,7 +45,7 @@ The primary modern surface.
 | `GET` | `/api/v3/users?sort=displayName&activeOnly={bool}&mappedOnly={bool}&offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `PATCH` | `/api/v3/users/{userId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `POST` | `/api/v3/users/{userId}/groups` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
-| `GET` | `/api/v3/users/@me` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `GET` | `/api/v3/users/@me` | [Admin Impersonation](/api/v3/admin-impersonation/) |
 | `GET` | `/api/v3/users/@me/available-charts` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/v3/users/@me/bookmarks` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `POST` | `/api/v3/users/@me/bookmarks` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |

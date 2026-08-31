@@ -806,6 +806,25 @@
         }
       }
     },
+    "/api/v3/users/@me": {
+      "get": {
+        "tags": [
+          "Admin Impersonation"
+        ],
+        "summary": "GET /api/v3/users/@me",
+        "description": "Documented in **Admin Impersonation** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/admin-impersonation/",
+        "externalDocs": {
+          "description": "Admin Impersonation",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/admin-impersonation/"
+        },
+        "parameters": [],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v3/workspaces/{ws}/items/{itemId}/attachments": {
       "get": {
         "tags": [
@@ -2849,25 +2868,6 @@
             }
           }
         ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/users/@me": {
-      "get": {
-        "tags": [
-          "Users, Groups, and Roles"
-        ],
-        "summary": "GET /api/v3/users/@me",
-        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
-        "externalDocs": {
-          "description": "Users, Groups, and Roles",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
-        },
-        "parameters": [],
         "responses": {
           "2XX": {
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."

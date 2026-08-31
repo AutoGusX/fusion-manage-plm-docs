@@ -35,8 +35,23 @@ Authorization: Bearer {access_token}
 X-User-Id: {targetUserId}
 ```
 
-:::caution
-The exact combined request (which specific endpoint accepts `X-User-Id`, and whether it's needed on every call or just ones that create/modify records "as" another user) wasn't found verbatim in the source examined — only described conceptually, in the context of an admin "Copy Workspace Views" feature that needs to create views owned by a specific target user rather than the admin running the tool. Confirm the exact header/endpoint combination before relying on this for a new integration.
+:::caution[Confirmed live — 2026-08-31: `X-User-Id` is silently ignored by a user token]
+Tested with an ordinary **3-legged user** token: sending
+`X-User-Id: {anotherUserId}` on `GET /api/v3/users/@me` returned `200` and
+resolved as **the token's own user**, not the named one. Same result with
+lowercase `x-user-id`.
+
+There is no error, no warning, and no effect. That is the dangerous part: an
+admin tool built on a user token will appear to work while operating as the wrong
+user, and nothing in the response says so.
+
+Impersonation therefore depends on the credential, not the header — the header
+alone does nothing. It presumably requires the 2-legged client-credentials token
+above, which **could not be verified here** (no client secret was available). So:
+- Do not assume `X-User-Id` works because the request succeeded. Assert the
+  effective user (e.g. re-read `users/@me`) before trusting an impersonated write.
+- The specific endpoints that honour it, and whether it is needed per-call or
+  per-session, remain unconfirmed.
 :::
 
 Don't reuse this flow for anything other than genuine admin/impersonation use cases — it bypasses per-user session auth entirely, so scope its use narrowly and treat the client secret as a high-value credential (the source extension explicitly warns against ever committing it).
