@@ -78,10 +78,14 @@ The primary modern surface.
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments` | [Attachments](/api/v3/attachments/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments` | [Attachments](/api/v3/attachments/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments?asc=name` | [Attachments](/api/v3/attachments/) |
-| `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attachmentId}` | [Attachments](/api/v3/attachments/) |
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attachmentId}` | [Attachments](/api/v3/attachments/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attachmentId}` | [Attachments](/api/v3/attachments/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attachmentId}/history` | [Attachments](/api/v3/attachments/) |
+| `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}` | [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/) |
+| `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups` | [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/) |
+| `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups` | [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/) |
+| `PUT` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups/{n}` | [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/) |
+| `DELETE` | `/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups/{n}` | [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/) |
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/bom-items` | [BOM](/api/v3/bom/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/bom-items?depth={n}&revisionBias=release&viewDefId={bomViewId}&rootId={itemId}` | [BOM](/api/v3/bom/) |
 | `PATCH` | `/api/v3/workspaces/{ws}/items/{itemId}/bom-items/{rowId}` | [BOM](/api/v3/bom/) |
@@ -174,4 +178,4 @@ Legacy, but still load-bearing for several operations.
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
 
-_141 endpoints across 3 surfaces._
+_145 endpoints across 3 surfaces._

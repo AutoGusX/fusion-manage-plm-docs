@@ -144,6 +144,11 @@ Check every entry's `result`; don't infer success from the HTTP status alone.
 This is a distinct mechanism from item-level soft-delete (`?deleted=true` query param — see [Items](/api/v3/items/)); attachments use a status-name JSON-Patch instead.
 :::
 
+## Viewing files and markups
+
+CAD attachments can be opened in the APS Viewer, and the markup layers Fusion Manage stores on them can be read,
+created, edited, and deleted. See [Attachment viewer and markups](/api/v3/attachment-markups-and-viewer/).
+
 ## Manifest / CORS note (browser clients)
 
 If uploading directly from a browser (Chrome extension, SPA), the client's manifest/CSP needs to allow the S3 bucket domain (e.g. `https://*.s3.amazonaws.com` or the specific bucket host returned in the pre-signed URL) for the step-2 `PUT` to succeed.

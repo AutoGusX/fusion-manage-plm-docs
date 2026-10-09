@@ -75,6 +75,13 @@
       }
     },
     {
+      "name": "Attachment viewer and markups",
+      "description": "How to view a CAD attachment with the APS Viewer and read, create, edit, and delete the markup layers Fusion Manage stores on it — the viewable endpoint, the markups REST shape, and the anchor coordinate space.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+      }
+    },
+    {
       "name": "Attachments",
       "description": "The full attachment lifecycle — list, upload (3-step S3 flow), check-in/check-out, version history, and delete — from a detailed Word add-in spec and Autodesk's official Postman collection.",
       "externalDocs": {
@@ -846,6 +853,238 @@
           "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/admin-impersonation/"
         },
         "parameters": [],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}": {
+      "get": {
+        "tags": [
+          "Attachment viewer and markups"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}",
+        "description": "Documented in **Attachment viewer and markups** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/",
+        "externalDocs": {
+          "description": "Attachment viewer and markups",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups": {
+      "get": {
+        "tags": [
+          "Attachment viewer and markups"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups",
+        "description": "Documented in **Attachment viewer and markups** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/",
+        "externalDocs": {
+          "description": "Attachment viewer and markups",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Attachment viewer and markups"
+        ],
+        "summary": "POST /api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups",
+        "description": "Documented in **Attachment viewer and markups** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/",
+        "externalDocs": {
+          "description": "Attachment viewer and markups",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups/{n}": {
+      "put": {
+        "tags": [
+          "Attachment viewer and markups"
+        ],
+        "summary": "PUT /api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups/{n}",
+        "description": "Documented in **Attachment viewer and markups** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/",
+        "externalDocs": {
+          "description": "Attachment viewer and markups",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Attachment viewer and markups"
+        ],
+        "summary": "DELETE /api/v3/workspaces/{ws}/items/{itemId}/attachments/{attId}/markups/{n}",
+        "description": "Documented in **Attachment viewer and markups** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/",
+        "externalDocs": {
+          "description": "Attachment viewer and markups",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/attachment-markups-and-viewer/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "2XX": {
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."

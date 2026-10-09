@@ -78,6 +78,7 @@ const LEVEL_BY_PAGE = {
 	'api/v3/relationships-and-affected-items.md': 'live',
 	'api/v3/views-fields-tableaus.md': 'live',
 	'api/v3/users-groups-roles.md': 'live',
+	'api/v3/attachment-markups-and-viewer.md': 'live',
 	'api/v2/classifications.md': 'live',
 	'api/v2/parts-and-classifications.md': 'live',
 	// Every entry on this page is an error observed against a live tenant.
