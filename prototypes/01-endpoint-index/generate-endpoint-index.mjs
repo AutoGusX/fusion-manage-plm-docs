@@ -41,12 +41,13 @@ function surfaceOf(path) {
 	if (path.startsWith('/api/v3/')) return 'v3';
 	if (path.startsWith('/api/v2/')) return 'v2';
 	if (path.startsWith('/api/rest/v1/')) return 'v1';
+	if (path.startsWith('/plm360-ft/v1/')) return 'config';
 	return 'other';
 }
 
 /** Coarse resource bucket, for sorting within a surface. */
 function resourceOf(path) {
-	const seg = path.replace(/^\/api\/(rest\/)?v\d\//, '').split('/')[0] || '—';
+	const seg = path.replace(/^\/(api\/(rest\/)?|plm360-ft\/)v\d\//, '').split('/')[0] || '—';
 	return seg.replace(/[?{].*$/, '');
 }
 
@@ -60,7 +61,7 @@ for (const file of walk(DOCS)) {
 	const title = frontmatterTitle(txt, rel);
 
 	for (const m of txt.matchAll(
-		new RegExp(`\\b(${METHODS})\\b\\s+(/api/[^\\s\`|)>,"']+)`, 'g'),
+		new RegExp(`\\b(${METHODS})\\b\\s+(/(?:api|plm360-ft)/[^\\s\`|)>,"']+)`, 'g'),
 	)) {
 		const method = m[1];
 		// Trim trailing punctuation that isn't part of a path/query.
@@ -79,6 +80,7 @@ const SURFACES = [
 	['v3', 'v3 — `/api/v3/…`', 'The primary modern surface.'],
 	['v2', 'v2 — `/api/v2/…`', 'The classification / parts-attribute subsystem.'],
 	['v1', 'v1 — `/api/rest/v1/…`', 'Legacy, but still load-bearing for several operations.'],
+	['config', 'Configuration — `/plm360-ft/v1/…`', 'Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant in the `adsk-plm-tenant` header.'],
 	['other', 'Other', 'Adjacent APIs on different hosts.'],
 ];
 

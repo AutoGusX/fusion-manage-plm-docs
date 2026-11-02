@@ -79,6 +79,10 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'api/v2' } }],
 				},
 				{
+					label: 'API reference—configuration',
+					items: [{ autogenerate: { directory: 'api/config' } }],
+				},
+				{
 					label: 'Guides',
 					items: [{ autogenerate: { directory: 'guides' } }],
 				},

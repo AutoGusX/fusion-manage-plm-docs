@@ -24,7 +24,7 @@ The primary modern surface.
 | `GET` | `/api/v3/groups/{groupId}/users` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}/workspaces` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/groups/{groupId}/workspaces/{workspaceId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
-| `GET` | `/api/v3/lookups/{lookupId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
+| `GET` | `/api/v3/lookups/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/lookups/CUSTOM_LOOKUP_0CWS_{PROPERTY_NAME_UPPERCASE}_{classificationId}?asc=title&filter=&limit=200&offset=0` | [Property Instances](/api/v2/property-instances/) |
 | `GET` | `/api/v3/roles?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/roles?offset=&limit=` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
@@ -51,6 +51,7 @@ The primary modern surface.
 | `GET` | `/api/v3/users/@me/bookmarks` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `POST` | `/api/v3/users/@me/bookmarks` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `DELETE` | `/api/v3/users/@me/bookmarks/{dmsId}` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
+| `GET` | `/api/v3/users/@me/dashboard-charts` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/v3/users/@me/outstanding-work` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/v3/users/@me/recently-viewed` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/v3/workspaces` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
@@ -67,7 +68,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{itemWs}/items/{itemId}/logs?offset=0&limit=100&desc=timeStamp` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `POST` | `/api/v3/workspaces/{workspaceId}/items` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}` | [Workspaces](/api/v3/workspaces/) |
-| `GET` | `/api/v3/workspaces/{ws}/fields` | [Items](/api/v3/items/) |
+| `GET` | `/api/v3/workspaces/{ws}/fields` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/workspaces/{ws}/items?offset={n}&limit={n}` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/items?offset=0&limit=50` | [Recipe: bulk-create items from a spreadsheet](/recipes/bulk-create-items-from-a-spreadsheet/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}` | [Fusion Components (Manufacturing GraphQL)](/api/v3/fusion-components/) |
@@ -178,4 +179,50 @@ Legacy, but still load-bearing for several operations.
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
 
-_145 endpoints across 3 surfaces._
+## Configuration — `/plm360-ft/v1/…`
+
+Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant in the `adsk-plm-tenant` header.
+
+| Method | Path | Documented in |
+|---|---|---|
+| `GET` | `/plm360-ft/v1/bom-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/categories` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/category-icons` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/field-data-types` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/field-data-types/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/item-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/item-fields?filter[section.id]={sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/item-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/linked-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/picklists` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/picklists?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/reports` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/sections?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/sourcing-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/validators` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspace-types` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/workspaces` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces?offset=0&limit=100` | [Recipe: create a missing field](/recipes/create-a-missing-field/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}:get-pending-configuration-tasks` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
+
+_185 endpoints across 4 surfaces._

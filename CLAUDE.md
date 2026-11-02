@@ -53,6 +53,13 @@ examples (see below). Preserve that distinction obsessively:
   instead of assuming view IDs are fixed.
 - At least five different error envelope shapes exist. Don't write a parser that
   assumes one.
+- Configuration writes live on a **separate, undocumented API**:
+  `https://api.aps.usa.autodesk.com/plm360-ft/v1/...`, tenant in the
+  `adsk-plm-tenant` header (not host or path). Its `PATCH` needs the **full
+  object**, and fields must carry their data type's **implicit validators**.
+  `POST {}` lists every required field, so use that to learn new shapes. See
+  `api/config/configuration-api.md`. For live config tests, use a scratch
+  workspace (`WS_ZZ_*`) and delete it afterwards, since workspace delete cascades.
 
 ## Site conventions
 

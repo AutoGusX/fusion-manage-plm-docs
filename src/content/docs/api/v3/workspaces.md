@@ -34,6 +34,13 @@ A workspace detail response (confirmed live shape) links out to all its sub-reso
 ```
 `systemName` (e.g. `WS_CHANGE_ORDERS`, `WS_ITEMS_AND_BOMS_2`) is a stable, tenant-independent identifier worth using for lookup instead of hardcoding numeric workspace IDs, which vary per tenant.
 
+:::note[Changing workspace configuration]
+Everything on this page is read-only. To create, update, or delete workspaces,
+sections, fields, and picklists, use the separate
+[Configuration API](/api/config/configuration-api/) (confirmed live 2026-11-02).
+Its changes show up in these v3 endpoints immediately.
+:::
+
 ## Sections and fields
 
 | Purpose | Endpoint |
