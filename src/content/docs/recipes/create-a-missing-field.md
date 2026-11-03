@@ -116,7 +116,9 @@ which is enough to show a useful message.
 
 Picklist fields also need `displayLength` and `picklist: { "systemName": … }`. If
 the picklist doesn't exist yet, create it and its values first. See
-[Picklists](/api/config/configuration-api/#picklists).
+[Picklists](/api/config/configuration-api/#picklists). Value adds aren't
+deduplicated (a repeat add returned `201`, confirmed live 2026-11-02) and a value
+can't be removed through the API, so read the current values before adding any.
 
 ## 6. Use it straight away
 
@@ -130,7 +132,11 @@ session and read or write the field through
   only. Offer the action, but expect a non-admin to be refused, and fall back to
   telling them which fields to ask an admin for.
 - **Availability.** This API is undocumented. If the first call returns `404`,
-  hide the offer and show the manual instructions.
+  hide the offer and show the manual instructions. Once a route has answered,
+  though, treat a later gateway `404` as possibly transient: picklist value
+  routes returned them for 30 to 60 seconds at a time on 2026-11-02 (see
+  [Error envelope](/api/config/configuration-api/#error-envelope)).
 - **Never overwrite.** Only create fields that are absent. A field `PATCH`
   replaces the whole definition, so editing an existing field the admin has
-  tuned can silently undo their changes.
+  tuned can silently undo their changes. That includes `validators`: the array
+  you send replaces the field's list rather than adding to it.

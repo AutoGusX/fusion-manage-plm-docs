@@ -1,6 +1,6 @@
 ---
 title: Configuration API (v1)
-description: The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item fields, and picklists. Confirmed live 2026-11-02.
+description: The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.
 ---
 
 <!-- verification-badge:begin -->
@@ -79,15 +79,31 @@ These apply to every resource below.
   allowed, and `adsk-plm-tenant` is in the allowed-headers list. Browser apps can
   call it directly. `OPTIONS` is answered for CORS only and returns no `Allow`
   header, so it can't be used to discover methods.
+  **Confirmed live — 2026-11-02:** a preflight from a tenant origin for `PATCH`
+  with `authorization`, `adsk-plm-tenant`, and `content-type` returns `200`.
+  `access-control-expose-headers` lists only `retry-after` and `x-request-id`, so
+  **a browser can't read the `Location` header** on a create. Take the new ID
+  from the response body (sections, picklist values) or the `fieldId`/`systemName`
+  you sent (fields, picklists), not from `Location`.
 - **`PATCH` needs the whole object.** A partial body such as
   `{"description": "..."}` returns `400` with `id must not be null`. Field `PATCH`
   similarly demands `workspace` and `fieldId`. `GET` the resource, change what you
-  need, and send it all back. This is the opposite of v3's item `PATCH`.
+  need, and send it all back. This is the opposite of v3's item `PATCH`. For
+  fields, first change a blank `defaultValue` to `null` (see
+  [Blank default values on number fields](#blank-default-values-on-number-fields)).
 - **Empty bodies are self-documenting.** `POST {}` returns every missing required
   field in one `400`. This is the fastest way to learn a payload shape. The
   required-field lists below were found this way.
 - **Status codes:** create returns `201` with a `Location` header. Update returns
   `200` with the full object. Delete returns `204`.
+- **`null` and `""` both mean empty.** A record created through this API comes back
+  with `null` for `description`, `displayOrder`, `defaultValue`, and `derived`.
+  The same keys on a record created in the admin UI hold `""`, a number, or
+  `false`. A tool that compares configuration across workspaces or tenants should
+  treat `null` and `""` alike, or every API-created record shows up as changed.
+- **No rate-limit headers.** No response carried `Retry-After` or any
+  `ratelimit` header. Responses do set AWS load-balancer sticky cookies
+  (`AWSALB`, `AWSALBCORS`).
 - **No published spec.** `openapi.json`, `swagger.json`, `v3/api-docs`,
   `api-docs`, and `docs` all return `404`, both at the root and under `/v1`.
 
@@ -118,6 +134,28 @@ A path that doesn't exist at all returns the APS gateway's envelope instead:
 `{ "developerMessage": "The requested resource does not exist.", "moreInfo": "…", "errorCode": "" }`.
 A few unknown paths return an empty `404` body. Don't parse the body to decide
 whether a route exists.
+
+Some refusals carry only `detail`, with no `errors[]`. Changing a field to an
+incompatible data type returns `400` with `"detail": "Data loss is not allowed"`
+(see [Changing a field](#changing-a-field)). Show `detail` when `errors[]` is
+absent.
+
+:::caution[Attempted, inconclusive: intermittent gateway 404s on picklist routes]
+On 2026-11-02, `GET /plm360-ft/v1/picklists/{systemName}/values` returned the
+gateway's "The requested resource does not exist." `404` in windows of roughly
+30 to 60 seconds. `POST` on the same route did too, and once so did
+`GET /plm360-ft/v1/picklists/{systemName}`. It happened four times, usually
+right after a value write, including one that had just returned `201`. During
+those windows, sections, item fields, validators, and workspaces kept answering
+`200`. It isn't deterministic: two values added back to back straight after the
+picklist was created gave no `404`s. The cause is unknown.
+
+Until it's explained, treat a gateway-envelope `404` on a route you know exists
+as transient. Retry with backoff for up to 60 to 90 seconds. Before retrying a
+`POST`, re-read the collection to check whether the first attempt landed: value
+adds aren't deduplicated (see [Picklists](#picklists)), so a blind retry can
+create a duplicate.
+:::
 
 ### Pagination and filtering
 
@@ -200,6 +238,13 @@ links to the workspace's other config collections:
 A new Basic workspace starts with **no sections and no fields**, but with its
 default tabs already present.
 
+:::tip[Confirmed live — 2026-11-02: what an update body needs]
+A workspace `PATCH` returned `200` with the `GET` response sent back unchanged
+apart from `description`. It also returned `200` with `urn`, `url`, and every
+`*Url` key removed and `type` and `category` reduced to `{ "id": … }`. The link
+keys are output only, so a tool can strip them before sending.
+:::
+
 ## Sections
 
 | Purpose | Endpoint |
@@ -217,12 +262,36 @@ Create requires `name`, `workspace`, and `type`:
 ```
 
 :::tip[Confirmed live — 2026-11-02]
-Create returned `201`. A full-body `PATCH` (rename plus `collapse: true`) returned
-`200`. `DELETE` on a section that still contains fields returns `400` with
+Create returned `201` with `Location: …/v1/sections/{sectionId}`. Left out of
+the create body, `displayOrder` and `description` come back `null`. A full-body
+`PATCH` (rename plus `collapse: true`) returned `200`, and a second one set
+`displayOrder` and `description`. `DELETE` on a section that still contains
+fields returns `400` with
 `sectionId: must not be referenced by any other resource`. Delete or move its
-fields first. Deleting an empty section wasn't tested, because the workspace
-delete removed it.
+fields first. `DELETE` on an **empty** section returns `204`, and a follow-up
+`GET` returns `404` "No section found with id …".
 :::
+
+A section `GET` returns:
+
+```json
+{
+  "id": 2400,
+  "name": "Details",
+  "description": "",
+  "displayOrder": 1,
+  "workflowLocking": false,
+  "collapse": false,
+  "type": "FIELDCONTAINER",
+  "workspace": { "id": 1200, "urn": "…", "url": "/v1/workspaces/1200" },
+  "itemFieldsUrl": "/v1/item-fields?filter[section.id]=2400",
+  "urn": "urn:adsk.plm:tenant.workspace.section:ACMECORP.1200.2400",
+  "url": "/v1/sections/2400"
+}
+```
+
+`POST /plm360-ft/v1/sections` with `{}` lists `name`, `workspace`, and `type` as
+required.
 
 Only `FIELDCONTAINER` was seen and tested. Other section types (classification,
 matrix) weren't tried.
@@ -277,6 +346,107 @@ Create requires `workspace`, `fieldId`, `name`, `dataType`, `visible`,
 
 The server assigns `displayOrder`. A field `PATCH` sent without one came back
 with a different value, so don't rely on the order you send.
+
+A field `GET` returns every key below. This one was created in the admin UI. A
+field created through the API returns `null` for `description`, `displayOrder`,
+`defaultValue`, and `derived`.
+
+```json
+{
+  "workspace": { "id": 1200, "urn": "…", "url": "/v1/workspaces/1200" },
+  "fieldId": "PART_COUNT",
+  "name": "Part count",
+  "description": "",
+  "displayOrder": 1,
+  "label": null,
+  "length": 10,
+  "precision": null,
+  "displayLength": 100,
+  "defaultValue": "",
+  "uom": null,
+  "formula": null,
+  "derived": false,
+  "visible": "ALWAYS",
+  "editable": "ALWAYS",
+  "picklistFieldId": null,
+  "dataType": { "id": 30, "urn": "…", "url": "/v1/field-data-types/30" },
+  "picklist": null,
+  "descriptorOrder": null,
+  "workflowMailOrder": null,
+  "newline": false,
+  "matrix": false,
+  "matrixColumnName": null,
+  "matrixRowName": null,
+  "matrixEnd": false,
+  "preview": false,
+  "pivotPicklist": null,
+  "sourceField": null,
+  "section": { "id": 2400, "urn": "…", "url": "/v1/sections/2400" },
+  "validators": [
+    { "id": 5700, "validator": { "id": "long", "urn": "…", "url": "/v1/validators/long" }, "values": [] }
+  ],
+  "urn": "urn:adsk.plm:tenant.workspace.item-field:ACMECORP.1200.PART_COUNT",
+  "url": "/v1/workspaces/1200/item-fields/PART_COUNT"
+}
+```
+
+Each validator entry has its own instance `id`, unique to that field.
+
+- **Create:** send entries without it, so strip it when copying a field to another
+  workspace or tenant.
+- **`PATCH`:** a validator type the field **already has** must keep its instance
+  `id`. Re-sending it without the `id` returns `400` with
+  `validators[0]: must not add a new validator of any type already assigned to the field`.
+  A type the field doesn't have yet goes without an `id` (`200`), and leaving a
+  type out removes it.
+
+**Confirmed live — 2026-11-02:** a `PATCH` that re-sent a field's existing `long`
+validator without its `id` got that `400`. The same `PATCH` with the `id` returned
+`200`, and the instance `id` was unchanged afterwards.
+
+### Blank default values on number fields
+
+Fields created in the admin UI store `"defaultValue": ""`. The API refuses that on
+number types. **Confirmed live — 2026-11-02:**
+
+- Creating a float field with `"defaultValue": ""` returned `400`
+  `defaultValue: must be a valid floating point number`.
+- `PATCH`ing a UI-created long field with its own unchanged `GET` body returned `400`
+  `defaultValue: must be a valid long integer number`. A body you just read can't
+  always be sent back as is.
+- The same requests with `"defaultValue": null` returned `201` and `200`.
+
+Send `null`, not `""`, for an empty `defaultValue`. Once it's `null`, the API
+can't set it back to `""`; the two mean the same thing to users.
+
+### Changing a field
+
+:::tip[Confirmed live — 2026-11-02: what a field PATCH can and can't change]
+All on a workspace with no records, using a full-body `PATCH`:
+
+| Change | Result |
+|---|---|
+| Move to another section (change `section.id`) | `200`. The field moved |
+| Rename | `200` |
+| Send `validators: []` on a field that had `required` | `200`. `required` was removed |
+| Change `fieldId` | `400`, `fieldId: must match in path and body`. `fieldId` is immutable |
+| Single-line text (4) to integer (1) | `400`, `"detail": "Data loss is not allowed"` and no `errors[]` |
+| Single-line text (4) to paragraph (8), with a `maxlength` validator | `200` |
+| `length` 40 to 10, and 40 to 80 | `200` both ways |
+:::
+
+**`validators` is replaced, not merged.** The array you send becomes the field's
+complete validator list. To add one validator, send the existing ones plus the
+new one.
+
+:::caution[Attempted, inconclusive: narrowing a field that holds data]
+The length shrink and both data-type changes were tried on a workspace with no
+records. Whether a shorter `length` is refused, or truncates existing values,
+on a workspace with data is unknown. The "Data loss is not allowed" refusal came
+back with no records present, so it looks like a rule based on type pairs rather
+than a check of actual values. Only the two type changes in the table were
+tried.
+:::
 
 ### Implicit validators are required
 
@@ -357,8 +527,10 @@ weren't tested.
 | List picklists | `GET /plm360-ft/v1/picklists?offset={n}&limit={n}` |
 | Get a picklist | `GET /plm360-ft/v1/picklists/{systemName}` |
 | Create a picklist | `POST /plm360-ft/v1/picklists` |
+| Update a picklist | `PATCH /plm360-ft/v1/picklists/{systemName}` |
 | Delete a picklist | `DELETE /plm360-ft/v1/picklists/{systemName}` |
 | List values | `GET /plm360-ft/v1/picklists/{systemName}/values` |
+| Get a value | `GET /plm360-ft/v1/picklists/{systemName}/values/{id}` |
 | Add a value | `POST /plm360-ft/v1/picklists/{systemName}/values` |
 
 Picklist create requires `systemName`, `name`, `type`, `filterByOwnership`,
@@ -381,13 +553,68 @@ incrementing `id`, and the picklist appeared at once in v3 as
 returned `204` and removed its values with it.
 :::
 
+:::tip[Confirmed live — 2026-11-02: updates, values, and duplicates]
+- A full-body picklist `PATCH` (rename) returned `200`. `PUT` on the same path
+  returns the gateway `404`.
+- `GET …/values/{id}` returns the single value: `id`, `value`, `picklist`, `urn`,
+  and `url`. Value IDs are per picklist and start at `1`.
+- `POST …/values` with `{}` returns `400` listing `value` (must not be blank) and
+  `picklist` (must not be null).
+- **A duplicate value is accepted.** Adding a value that already exists returned
+  `201` with a new `id`. The server doesn't deduplicate, and the API can't remove
+  a value (below). Check the current values before adding one, and never retry a
+  failed add without re-reading them first.
+:::
+
+A picklist `GET` returns `systemName`, `name`, `description`, `type`,
+`filterByOwnership`, `includeInactive`, `includeDeleted`,
+`showLatestRevisionOnly`, `showDeleted`, `reportId`, `workspace`, `urn`,
+`valuesUrl`, and `url`. The last four were `null` on a `MANUAL` picklist.
+
 :::caution[Attempted, inconclusive: editing or removing a single value]
-`PATCH /plm360-ft/v1/picklists/{systemName}/values/{id}` and
-`DELETE /plm360-ft/v1/picklists/{systemName}/values/{id}` both return the gateway's
-`404` "The requested resource does not exist", even for a value whose `url` field
-points at exactly that path. The value-level write route may live elsewhere or
-may not exist. Only `MANUAL` picklists were tried; workspace-backed picklists
-(`workspace`, `reportId`) weren't.
+`PATCH /plm360-ft/v1/picklists/{systemName}/values/{id}`,
+`PUT /plm360-ft/v1/picklists/{systemName}/values/{id}`,
+`DELETE /plm360-ft/v1/picklists/{systemName}/values/{id}`, and `PATCH` on the
+`/values` collection all return the gateway's `404` "The requested resource does
+not exist". That includes a value whose `url` field points at exactly that path
+and whose `GET` returns `200`. The value-level write route may live elsewhere or
+may not exist. On 2026-11-02, the `PUT` was sent straight after a `200` `GET`
+of the same value. Even so, the intermittent `404`s described under
+[Error envelope](#error-envelope) mean these `404`s don't prove the routes are
+absent. Only
+`MANUAL` picklists were tried; workspace-backed picklists (`workspace`,
+`reportId`) weren't.
+:::
+
+## Grid fields
+
+| Purpose | Endpoint |
+|---|---|
+| List a workspace's grid fields | `GET /plm360-ft/v1/grid-fields?filter[workspace.id]={ws}` |
+| Get a grid field | `GET /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+| Create a grid field | `POST /plm360-ft/v1/grid-fields` |
+| Update a grid field | `PATCH /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+| Delete a grid field | `DELETE /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+
+Grid fields use the same two path shapes as item fields: a flat collection for
+create and list, and a single field under its workspace. `POST {}` lists
+`workspace`, `fieldId`, `name`, `dataType`, `visible`, and `editable` as
+required. There's no `section`, `matrix`, `newline`, or `preview`.
+
+```json
+{ "workspace": { "id": 1200 }, "fieldId": "LINE_NOTE", "name": "Line note", "dataType": { "id": 4 }, "length": 20, "displayLength": 20, "visible": "ALWAYS", "editable": "ALWAYS", "validators": [] }
+```
+
+A grid field response has the item-field core (`fieldId`, `name`, `length`,
+`dataType`, `picklist`, `validators`, and so on) plus `sortByOrder`,
+`sortDescending`, `assigned`, `aggregationType`, `aggregationCaption`, and
+`groupableBySorting`.
+
+:::tip[Confirmed live — 2026-11-02: create, update, and delete]
+A single-line text grid field was created (`201`, `Location:
+…/v1/workspaces/{ws}/grid-fields/{fieldId}`). A full-body `PATCH` renamed it
+(`200`), and `DELETE` returned `204`. A follow-up `GET` returned `404`. Other data
+types and the grid-specific keys (`aggregationType`, sorting) weren't tried.
 :::
 
 ## Read-only and lightly tested collections
@@ -401,15 +628,16 @@ may not exist. Only `MANUAL` picklists were tried; workspace-backed picklists
 | `GET /plm360-ft/v1/category-icons` | Icon catalogue |
 | `GET /plm360-ft/v1/workspaces/{ws}/tabs` | Tabs with `key` and `displayOrder`. The per-tab `url` it returns gives `404` |
 | `GET /plm360-ft/v1/workspaces/{ws}/relationships` | Relationship config, for example `"type": "BOM"` with `fromWorkspace`/`toWorkspace`. Writes not tried |
-| `GET /plm360-ft/v1/grid-fields` | Grid field definitions across workspaces. Accepts `filter[workspace.id]` |
+| `GET /plm360-ft/v1/grid-fields` | Grid field definitions across workspaces. Accepts `filter[workspace.id]`. Writes: see [Grid fields](#grid-fields) |
 | `GET /plm360-ft/v1/linked-fields` | Linked field definitions |
 | `GET /plm360-ft/v1/sourcing-fields` | Sourcing field definitions |
 | `GET /plm360-ft/v1/reports` | Report definitions. Its `nextUrl` points at `/api/v4/reports`, a surface not yet explored |
 | `GET /plm360-ft/v1/workspaces/{ws}:get-pending-configuration-tasks` | `204` when nothing is pending. `POST` returns `404`. What a pending task looks like is unknown |
 
-`GET /plm360-ft/v1/bom-fields` without a filter returns `404`, even though every
-workspace links to `bom-fields?filter[workspace.id]={ws}`. The filtered form
-wasn't tried.
+`GET /plm360-ft/v1/bom-fields` returns the gateway `404` with or without a filter,
+even though every workspace links to `bom-fields?filter[workspace.id]={ws}`.
+The filtered form was confirmed `404` on 2026-11-02. BOM field configuration
+isn't readable here yet.
 
 These guessed names all returned `404` under `/v1`: `workflows`,
 `workflow-states`, `workflow-transitions`, `scripts`, `users`, `groups`, `roles`,
@@ -420,10 +648,15 @@ isn't reachable here yet.
 
 ## Not yet tested
 
-- Grid, BOM, linked, and sourcing field **writes**
+- BOM, linked, and sourcing field **writes**. Grid field writes were confirmed
+  for single-line text only
 - Derived, formula, and linking-picklist fields
-- Changing a field's `dataType` or `fieldId` after creation, or a workspace's `systemName`
-- Deleting an empty section on its own
+- Data-type changes other than text to integer (refused) and text to paragraph
+  (accepted), and any type change on a workspace with records
+- Shrinking a field's `length` on a workspace that holds data
+- Changing a workspace's `systemName`
+- Why picklist value routes return intermittent `404`s (see
+  [Error envelope](#error-envelope))
 - Tokens from a non-admin user or a third-party APS app (see [Authentication](#authentication))
 - Regional hosts other than `usa`
 

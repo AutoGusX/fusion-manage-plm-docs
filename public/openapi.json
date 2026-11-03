@@ -48,7 +48,7 @@
   "tags": [
     {
       "name": "Configuration API (v1)",
-      "description": "The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item fields, and picklists. Confirmed live 2026-11-02.",
+      "description": "The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.",
       "externalDocs": {
         "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/"
       }

@@ -191,6 +191,8 @@ Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant i
 | `GET` | `/plm360-ft/v1/field-data-types` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/field-data-types/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/plm360-ft/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/grid-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `POST` | `/plm360-ft/v1/item-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/item-fields?filter[section.id]={sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/item-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
@@ -198,9 +200,12 @@ Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant i
 | `POST` | `/plm360-ft/v1/picklists` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/picklists?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `POST` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PUT` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/reports` | [Configuration API (v1)](/api/config/configuration-api/) |
@@ -219,10 +224,13 @@ Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant i
 | `PATCH` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/workspaces/{ws}:get-pending-configuration-tasks` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/plm360-ft/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 
-_185 endpoints across 4 surfaces._
+_193 endpoints across 4 surfaces._
