@@ -45,7 +45,8 @@ Both are the only endpoints in this API that path-scope by the uppercased tenant
 
 The v3 API only reads configuration. The undocumented
 [Configuration API](/api/config/configuration-api/) writes it. It's on a different
-host (`api.aps.usa.autodesk.com/plm360-ft/v1`) and identifies the tenant with an
+host (for example `api.aps.usa.autodesk.com/plm360/v1`; read the exact base URL
+from the tenant's `ADSK_API_BASE_URL` and `ADSK_FLC_CONTEXT` configuration keys) and identifies the tenant with an
 `adsk-plm-tenant` header instead. It was confirmed live on 2026-11-02 with an
 admin's token. For the most useful application, an app that offers to create the
 fields it needs, see [Recipe: create a missing field](/recipes/create-a-missing-field/).

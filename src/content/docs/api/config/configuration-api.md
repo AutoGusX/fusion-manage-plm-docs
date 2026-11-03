@@ -1,6 +1,6 @@
 ---
 title: Configuration API (v1)
-description: The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.
+description: The undocumented v1 API (plm360 or plm360-ft, per tenant) behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.
 ---
 
 <!-- verification-badge:begin -->
@@ -25,8 +25,78 @@ without notice. Probe for what you need at startup and degrade gracefully if it
 ## Base URL and tenant
 
 ```
-https://api.aps.usa.autodesk.com/plm360-ft/v1/{resource}
+{ADSK_API_BASE_URL}{ADSK_FLC_CONTEXT}/v1/{resource}
 ```
+
+**Don't hardcode the base URL.** Both halves vary by tenant, and the admin UI
+doesn't hardcode them either. It reads two tenant configuration keys from v3 on
+the tenant host first, then joins them:
+
+```
+GET https://{tenant}.autodeskplm360.net/api/v3/configurations/ADSK_API_BASE_URL
+GET https://{tenant}.autodeskplm360.net/api/v3/configurations/ADSK_FLC_CONTEXT
+```
+
+Each returns the value in `value`:
+
+```json
+{
+  "__self__": "/api/v3/configurations/adsk_flc_context",
+  "urn": "urn:adsk.plm:tenant.configuration:ACMECORP.adsk_flc_context",
+  "name": "adsk_flc_context",
+  "value": "/plm360",
+  "scope": null,
+  "type": "CONFIG",
+  "config": true,
+  "feature": false
+}
+```
+
+The rest of this page writes paths as `/{context}/v1/…`, where `{context}` is the
+`ADSK_FLC_CONTEXT` value without its leading slash.
+
+:::tip[Confirmed live — 2026-11-03: the context differs between tenants]
+Two tenants, one token, both in the US region:
+
+| Key | Production tenant | Sandbox tenant |
+|---|---|---|
+| `ADSK_API_BASE_URL` | `https://api.aps.usa.autodesk.com` | `https://api.aps.usa.autodesk.com` |
+| `ADSK_FLC_CONTEXT` | `/plm360` | `/plm360-ft` |
+| `ADSK_REGION` | `US` | `US` |
+| `ENVIRONMENT` | `production` | `sandbox` |
+
+The joined URL returned `200` on both tenants. Each refuses the other's context
+with `400` **"The specified tenant is invalid"**, the same error as an unknown
+tenant name, even though the tenant name is right. If you get that error for a
+tenant you know exists, check the context before anything else. Configuration API
+pages before 2026-11-03 described only `/plm360-ft`, because they were tested on
+a sandbox tenant.
+:::
+
+**Confirmed live — 2026-11-03, the `configurations` endpoint:**
+
+- `GET /api/v3/configurations/{key}` needs only the usual v3 bearer token. The key
+  is case-insensitive: `adsk_api_base_url` returns the same record, and
+  `__self__` and `name` always come back lowercase.
+- An unknown key returns `404` with
+  `"message": "Configured key NO_SUCH_KEY is not available"`.
+- No token returns `401` `SEC_UNAUTHORIZED`.
+- Responses carry `Cache-Control: max-age=3600`. Reading the keys once per session
+  is enough.
+- `GET /api/v3/configurations` (no key) returns a bare array of every key, with
+  each value in `title`: 131 and 137 entries on the two tenants tested. It
+  includes unrelated settings, so read only the keys you need.
+
+:::caution[Attempted, inconclusive: tenants outside the US]
+Both tenants tested were in the US region. The guess is that a tenant in another
+region, Germany for example, returns a different `ADSK_API_BASE_URL` and
+`ADSK_REGION`, and a client that reads the keys handles that automatically. That
+hasn't been observed. On 2026-11-03, `api.aps.aus.autodesk.com` resolved in DNS
+and `api.aps.eu.autodesk.com` didn't, so the EMEA host isn't simply `eu`
+substituted for `usa`. Read the key rather than building the host from
+`ADSK_REGION`. The `adsk-plm-tenant` header rules below were tested on the US host
+only.
+:::
 
 The tenant is **not** in the host or the path. It goes in a header:
 
@@ -46,9 +116,6 @@ Accept: application/json
 Response URNs always carry the uppercased tenant, for example
 `urn:adsk.plm:tenant.workspace:ACMECORP.{ws}`.
 :::
-
-Only the `usa` regional host was tested. Whether an EMEA tenant answers on a
-different regional host is unknown.
 
 ## Authentication
 
@@ -141,10 +208,10 @@ incompatible data type returns `400` with `"detail": "Data loss is not allowed"`
 absent.
 
 :::caution[Attempted, inconclusive: intermittent gateway 404s on picklist routes]
-On 2026-11-02, `GET /plm360-ft/v1/picklists/{systemName}/values` returned the
+On 2026-11-02, on a `/plm360-ft` tenant, `GET /{context}/v1/picklists/{systemName}/values` returned the
 gateway's "The requested resource does not exist." `404` in windows of roughly
 30 to 60 seconds. `POST` on the same route did too, and once so did
-`GET /plm360-ft/v1/picklists/{systemName}`. It happened four times, usually
+`GET /{context}/v1/picklists/{systemName}`. It happened four times, usually
 right after a value write, including one that had just returned `201`. During
 those windows, sections, item fields, validators, and workspaces kept answering
 `200`. It isn't deterministic: two values added back to back straight after the
@@ -166,7 +233,7 @@ Most lists return a wrapper:
 ```
 
 `limit` defaults to `100`. `nextUrl` is present only when more pages exist, and it's
-relative to `/plm360-ft`. Scope a list with `filter[path]=value`, for example
+relative to the context root (for example `/plm360-ft/v1/…` on a sandbox tenant). Scope a list with `filter[path]=value`, for example
 `filter[workspace.id]={ws}` or `filter[section.id]={sectionId}`.
 
 Some metadata lists (`field-data-types`, `validators`, `categories`,
@@ -177,11 +244,11 @@ wrapper and ignore `limit`.
 
 | Purpose | Endpoint |
 |---|---|
-| List workspaces | `GET /plm360-ft/v1/workspaces?offset={n}&limit={n}` |
-| Get a workspace | `GET /plm360-ft/v1/workspaces/{ws}` |
-| Create a workspace | `POST /plm360-ft/v1/workspaces` |
-| Update a workspace | `PATCH /plm360-ft/v1/workspaces/{ws}` |
-| Delete a workspace | `DELETE /plm360-ft/v1/workspaces/{ws}` |
+| List workspaces | `GET /{context}/v1/workspaces?offset={n}&limit={n}` |
+| Get a workspace | `GET /{context}/v1/workspaces/{ws}` |
+| Create a workspace | `POST /{context}/v1/workspaces` |
+| Update a workspace | `PATCH /{context}/v1/workspaces/{ws}` |
+| Delete a workspace | `DELETE /{context}/v1/workspaces/{ws}` |
 
 :::tip[Confirmed live — 2026-11-02: full create, update, and delete]
 A scratch workspace was created (`201`), had a section and fields added, and was
@@ -210,8 +277,8 @@ Create requires `name`, `systemName`, `type`, `category`, `controlled`,
 }
 ```
 
-`type.id` comes from `GET /plm360-ft/v1/workspace-types` (`1` is "Basic
-Workspace"). `category.id` comes from `GET /plm360-ft/v1/categories`. A response
+`type.id` comes from `GET /{context}/v1/workspace-types` (`1` is "Basic
+Workspace"). `category.id` comes from `GET /{context}/v1/categories`. A response
 links to the workspace's other config collections:
 
 ```json
@@ -238,6 +305,23 @@ links to the workspace's other config collections:
 A new Basic workspace starts with **no sections and no fields**, but with its
 default tabs already present.
 
+:::caution[Confirmed live — 2026-11-03: what a new workspace doesn't get]
+A workspace copied field by field from another tenant came out without three
+things:
+
+- **Role permissions.** v3 calls that read records, such as
+  `GET /api/v3/workspaces/{ws}/sections`, returned `403`
+  `access VIEW_ITEMS denied. WS: {ws}` for the tenant admin who created it. The
+  workspace record and its field list were readable. This API has no permissions
+  route (see [Read-only and lightly tested collections](#read-only-and-lightly-tested-collections)),
+  so add the workspace to a role in the admin UI before anyone uses it.
+- **Relationships.** The source workspace had a `BOM` relationship to itself.
+  `GET /{context}/v1/workspaces/{ws}/relationships` on the new one returned `204`
+  with no body, not an empty array. Relationship writes are untested.
+- **Category.** Category IDs are per tenant. Match them by name, or choose one in
+  the target.
+:::
+
 :::tip[Confirmed live — 2026-11-02: what an update body needs]
 A workspace `PATCH` returned `200` with the `GET` response sent back unchanged
 apart from `description`. It also returned `200` with `urn`, `url`, and every
@@ -249,11 +333,11 @@ keys are output only, so a tool can strip them before sending.
 
 | Purpose | Endpoint |
 |---|---|
-| List a workspace's sections | `GET /plm360-ft/v1/sections?filter[workspace.id]={ws}` |
-| Get a section | `GET /plm360-ft/v1/sections/{sectionId}` |
-| Create a section | `POST /plm360-ft/v1/sections` |
-| Update a section | `PATCH /plm360-ft/v1/sections/{sectionId}` |
-| Delete a section | `DELETE /plm360-ft/v1/sections/{sectionId}` |
+| List a workspace's sections | `GET /{context}/v1/sections?filter[workspace.id]={ws}` |
+| Get a section | `GET /{context}/v1/sections/{sectionId}` |
+| Create a section | `POST /{context}/v1/sections` |
+| Update a section | `PATCH /{context}/v1/sections/{sectionId}` |
+| Delete a section | `DELETE /{context}/v1/sections/{sectionId}` |
 
 Create requires `name`, `workspace`, and `type`:
 
@@ -290,7 +374,7 @@ A section `GET` returns:
 }
 ```
 
-`POST /plm360-ft/v1/sections` with `{}` lists `name`, `workspace`, and `type` as
+`POST /{context}/v1/sections` with `{}` lists `name`, `workspace`, and `type` as
 required.
 
 Only `FIELDCONTAINER` was seen and tested. Other section types (classification,
@@ -300,12 +384,12 @@ matrix) weren't tried.
 
 | Purpose | Endpoint |
 |---|---|
-| List a workspace's fields | `GET /plm360-ft/v1/item-fields?filter[workspace.id]={ws}` |
-| List a section's fields | `GET /plm360-ft/v1/item-fields?filter[section.id]={sectionId}` |
-| Get a field | `GET /plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` |
-| Create a field | `POST /plm360-ft/v1/item-fields` |
-| Update a field | `PATCH /plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` |
-| Delete a field | `DELETE /plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` |
+| List a workspace's fields | `GET /{context}/v1/item-fields?filter[workspace.id]={ws}` |
+| List a section's fields | `GET /{context}/v1/item-fields?filter[section.id]={sectionId}` |
+| Get a field | `GET /{context}/v1/workspaces/{ws}/item-fields/{fieldId}` |
+| Create a field | `POST /{context}/v1/item-fields` |
+| Update a field | `PATCH /{context}/v1/workspaces/{ws}/item-fields/{fieldId}` |
+| Delete a field | `DELETE /{context}/v1/workspaces/{ws}/item-fields/{fieldId}` |
 
 Two different path shapes, and neither works in the other's place: create and
 list use the flat `/v1/item-fields` collection, and a single field lives under
@@ -344,8 +428,21 @@ Create requires `workspace`, `fieldId`, `name`, `dataType`, `visible`,
 }
 ```
 
-The server assigns `displayOrder`. A field `PATCH` sent without one came back
-with a different value, so don't rely on the order you send.
+A field created through this API without a `displayOrder` gets
+**`displayOrder: null`**. Whether create honours one you send wasn't tested. A field `PATCH` sent without `displayOrder` also came back with a different
+value. To control field order, `PATCH` each field afterwards with an explicit
+`displayOrder` (full body, validator instance IDs kept).
+
+:::caution[Confirmed live — 2026-11-03: null order shows up in v3]
+Six fields created in a new workspace all had `displayOrder: null`. The admin UI
+listed them alphabetically, not in creation order. While they were `null`,
+`GET /api/v3/workspaces/{ws}/fields` on the tenant host returned `500` "HTTP 500
+Internal Server Error". After one full-body `PATCH` per field that set
+`displayOrder` (`200`, value echoed back), the same v3 call returned `200` with all
+six fields. That points at the `null` order as the cause, but it was seen once and
+not reproduced, so treat it as likely rather than proven. Either way, set the
+order before you hand the workspace over.
+:::
 
 A field `GET` returns every key below. This one was created in the admin UI. A
 field created through the API returns `null` for `description`, `displayOrder`,
@@ -393,7 +490,12 @@ field created through the API returns `null` for `description`, `displayOrder`,
 Each validator entry has its own instance `id`, unique to that field.
 
 - **Create:** send entries without it, so strip it when copying a field to another
-  workspace or tenant.
+  workspace or tenant. **Strip it from each entry in `values[]` too.** Validator
+  parameter values carry their own `id`, and a create that keeps it returns `400`
+  `validators[0].values[0].id: must be null`. Send `{ "varId": …, "value": … }`
+  only. **Confirmed live — 2026-11-03:** copying a paragraph field's `maxlength`
+  validator with its value `id` got that `400`. The same body without the value
+  `id` returned `201`, and the new field's `maxlength` value matched the source.
 - **`PATCH`:** a validator type the field **already has** must keep its instance
   `id`. Re-sending it without the `id` returns `400` with
   `validators[0]: must not add a new validator of any type already assigned to the field`.
@@ -453,7 +555,7 @@ tried.
 Some data types require specific validators on the field. Omit them and create
 fails with `validators: must include every validator implicit for the field's
 data type`. The list isn't hardcoded anywhere you need to copy: every validator in
-`GET /plm360-ft/v1/validators` carries `dataTypes[]`, each with an `implicit`
+`GET /{context}/v1/validators` carries `dataTypes[]`, each with an `implicit`
 flag. Build the set from that. On the tenant tested, it came out as:
 
 | Data type (id) | Implicit validator |
@@ -480,10 +582,10 @@ with `byte`. The other rows come from the validator metadata and weren't created
 
 ### Data types
 
-`GET /plm360-ft/v1/field-data-types` returns 31 types. Each carries
+`GET /{context}/v1/field-data-types` returns 31 types. Each carries
 `disabledItem`, `disabledGrid`, `disabledBom`, `disabledLinked`, and
 `disabledSourcing`, which say where the type is allowed. For example auto-number
-(11) is item-only. `GET /plm360-ft/v1/field-data-types/{id}` returns `404`, so
+(11) is item-only. `GET /{context}/v1/field-data-types/{id}` returns `404`, so
 read the list.
 
 | id | Type | id | Type |
@@ -524,14 +626,14 @@ weren't tested.
 
 | Purpose | Endpoint |
 |---|---|
-| List picklists | `GET /plm360-ft/v1/picklists?offset={n}&limit={n}` |
-| Get a picklist | `GET /plm360-ft/v1/picklists/{systemName}` |
-| Create a picklist | `POST /plm360-ft/v1/picklists` |
-| Update a picklist | `PATCH /plm360-ft/v1/picklists/{systemName}` |
-| Delete a picklist | `DELETE /plm360-ft/v1/picklists/{systemName}` |
-| List values | `GET /plm360-ft/v1/picklists/{systemName}/values` |
-| Get a value | `GET /plm360-ft/v1/picklists/{systemName}/values/{id}` |
-| Add a value | `POST /plm360-ft/v1/picklists/{systemName}/values` |
+| List picklists | `GET /{context}/v1/picklists?offset={n}&limit={n}` |
+| Get a picklist | `GET /{context}/v1/picklists/{systemName}` |
+| Create a picklist | `POST /{context}/v1/picklists` |
+| Update a picklist | `PATCH /{context}/v1/picklists/{systemName}` |
+| Delete a picklist | `DELETE /{context}/v1/picklists/{systemName}` |
+| List values | `GET /{context}/v1/picklists/{systemName}/values` |
+| Get a value | `GET /{context}/v1/picklists/{systemName}/values/{id}` |
+| Add a value | `POST /{context}/v1/picklists/{systemName}/values` |
 
 Picklist create requires `systemName`, `name`, `type`, `filterByOwnership`,
 `includeInactive`, and `includeDeleted`:
@@ -572,9 +674,9 @@ A picklist `GET` returns `systemName`, `name`, `description`, `type`,
 `valuesUrl`, and `url`. The last four were `null` on a `MANUAL` picklist.
 
 :::caution[Attempted, inconclusive: editing or removing a single value]
-`PATCH /plm360-ft/v1/picklists/{systemName}/values/{id}`,
-`PUT /plm360-ft/v1/picklists/{systemName}/values/{id}`,
-`DELETE /plm360-ft/v1/picklists/{systemName}/values/{id}`, and `PATCH` on the
+`PATCH /{context}/v1/picklists/{systemName}/values/{id}`,
+`PUT /{context}/v1/picklists/{systemName}/values/{id}`,
+`DELETE /{context}/v1/picklists/{systemName}/values/{id}`, and `PATCH` on the
 `/values` collection all return the gateway's `404` "The requested resource does
 not exist". That includes a value whose `url` field points at exactly that path
 and whose `GET` returns `200`. The value-level write route may live elsewhere or
@@ -590,11 +692,11 @@ absent. Only
 
 | Purpose | Endpoint |
 |---|---|
-| List a workspace's grid fields | `GET /plm360-ft/v1/grid-fields?filter[workspace.id]={ws}` |
-| Get a grid field | `GET /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
-| Create a grid field | `POST /plm360-ft/v1/grid-fields` |
-| Update a grid field | `PATCH /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
-| Delete a grid field | `DELETE /plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+| List a workspace's grid fields | `GET /{context}/v1/grid-fields?filter[workspace.id]={ws}` |
+| Get a grid field | `GET /{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+| Create a grid field | `POST /{context}/v1/grid-fields` |
+| Update a grid field | `PATCH /{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` |
+| Delete a grid field | `DELETE /{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` |
 
 Grid fields use the same two path shapes as item fields: a flat collection for
 create and list, and a single field under its workspace. `POST {}` lists
@@ -621,20 +723,20 @@ types and the grid-specific keys (`aggregationType`, sorting) weren't tried.
 
 | Endpoint | What was observed |
 |---|---|
-| `GET /plm360-ft/v1/validators` | 45 validators with `vars[]` and per-type `implicit` flags. Bare array |
-| `GET /plm360-ft/v1/field-data-types` | 31 types (see above). Bare array |
-| `GET /plm360-ft/v1/workspace-types` | Workspace types with `allowWorkflow`. `/workspace-types/{id}` returns `404` despite being linked |
-| `GET /plm360-ft/v1/categories` | Workspace categories with icons. `/categories/{id}` works |
-| `GET /plm360-ft/v1/category-icons` | Icon catalogue |
-| `GET /plm360-ft/v1/workspaces/{ws}/tabs` | Tabs with `key` and `displayOrder`. The per-tab `url` it returns gives `404` |
-| `GET /plm360-ft/v1/workspaces/{ws}/relationships` | Relationship config, for example `"type": "BOM"` with `fromWorkspace`/`toWorkspace`. Writes not tried |
-| `GET /plm360-ft/v1/grid-fields` | Grid field definitions across workspaces. Accepts `filter[workspace.id]`. Writes: see [Grid fields](#grid-fields) |
-| `GET /plm360-ft/v1/linked-fields` | Linked field definitions |
-| `GET /plm360-ft/v1/sourcing-fields` | Sourcing field definitions |
-| `GET /plm360-ft/v1/reports` | Report definitions. Its `nextUrl` points at `/api/v4/reports`, a surface not yet explored |
-| `GET /plm360-ft/v1/workspaces/{ws}:get-pending-configuration-tasks` | `204` when nothing is pending. `POST` returns `404`. What a pending task looks like is unknown |
+| `GET /{context}/v1/validators` | 45 validators with `vars[]` and per-type `implicit` flags. Bare array |
+| `GET /{context}/v1/field-data-types` | 31 types (see above). Bare array |
+| `GET /{context}/v1/workspace-types` | Workspace types with `allowWorkflow`. `/workspace-types/{id}` returns `404` despite being linked |
+| `GET /{context}/v1/categories` | Workspace categories with icons. `/categories/{id}` works |
+| `GET /{context}/v1/category-icons` | Icon catalogue |
+| `GET /{context}/v1/workspaces/{ws}/tabs` | Tabs with `key` and `displayOrder`. The per-tab `url` it returns gives `404` |
+| `GET /{context}/v1/workspaces/{ws}/relationships` | Relationship config, for example `"type": "BOM"` with `fromWorkspace`/`toWorkspace`. Writes not tried |
+| `GET /{context}/v1/grid-fields` | Grid field definitions across workspaces. Accepts `filter[workspace.id]`. Writes: see [Grid fields](#grid-fields) |
+| `GET /{context}/v1/linked-fields` | Linked field definitions |
+| `GET /{context}/v1/sourcing-fields` | Sourcing field definitions |
+| `GET /{context}/v1/reports` | Report definitions. Its `nextUrl` points at `/api/v4/reports`, a surface not yet explored |
+| `GET /{context}/v1/workspaces/{ws}:get-pending-configuration-tasks` | `204` when nothing is pending. `POST` returns `404`. What a pending task looks like is unknown |
 
-`GET /plm360-ft/v1/bom-fields` returns the gateway `404` with or without a filter,
+`GET /{context}/v1/bom-fields` returns the gateway `404` with or without a filter,
 even though every workspace links to `bom-fields?filter[workspace.id]={ws}`.
 The filtered form was confirmed `404` on 2026-11-02. BOM field configuration
 isn't readable here yet.
@@ -658,7 +760,11 @@ isn't reachable here yet.
 - Why picklist value routes return intermittent `404`s (see
   [Error envelope](#error-envelope))
 - Tokens from a non-admin user or a third-party APS app (see [Authentication](#authentication))
-- Regional hosts other than `usa`
+- Tenants outside the US region: what `ADSK_API_BASE_URL` returns there, and
+  whether the `adsk-plm-tenant` rules are the same (see [Base URL and tenant](#base-url-and-tenant))
+- Whether a null `displayOrder` reliably makes v3's field list return `500`
+- Relationship writes, and whether a copied workspace can get its `BOM`
+  relationship back through this API
 
 See [Recipe: create a missing field](/recipes/create-a-missing-field/) for the
 discovery-and-create flow this enables.

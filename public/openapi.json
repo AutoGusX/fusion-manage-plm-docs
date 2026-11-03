@@ -48,7 +48,7 @@
   "tags": [
     {
       "name": "Configuration API (v1)",
-      "description": "The undocumented plm360-ft v1 API behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.",
+      "description": "The undocumented v1 API (plm360 or plm360-ft, per tenant) behind the Fusion Manage admin UI. It creates, updates, and deletes workspaces, sections, item and grid fields, and picklists. Confirmed live 2026-11-02.",
       "externalDocs": {
         "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/"
       }
@@ -300,6 +300,81 @@
     }
   ],
   "paths": {
+    "/api/v3/configurations/{key}": {
+      "get": {
+        "tags": [
+          "Configuration API (v1)"
+        ],
+        "summary": "GET /api/v3/configurations/{key}",
+        "description": "Documented in **Configuration API (v1)** — https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/",
+        "externalDocs": {
+          "description": "Configuration API (v1)",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/"
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/configurations": {
+      "get": {
+        "tags": [
+          "Configuration API (v1)"
+        ],
+        "summary": "GET /api/v3/configurations",
+        "description": "Documented in **Configuration API (v1)** — https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/",
+        "externalDocs": {
+          "description": "Configuration API (v1)",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/"
+        },
+        "parameters": [],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/sections": {
+      "get": {
+        "tags": [
+          "Configuration API (v1)"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/sections",
+        "description": "Documented in **Configuration API (v1)** — https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/",
+        "externalDocs": {
+          "description": "Configuration API (v1)",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/configuration-api/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v3/workspaces/{ws}/fields": {
       "get": {
         "tags": [
@@ -4816,34 +4891,6 @@
           "Workspaces"
         ],
         "summary": "GET /api/v3/workspaces/{ws}",
-        "description": "Documented in **Workspaces** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/workspaces/",
-        "externalDocs": {
-          "description": "Workspaces",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/workspaces/"
-        },
-        "parameters": [
-          {
-            "name": "ws",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/workspaces/{ws}/sections": {
-      "get": {
-        "tags": [
-          "Workspaces"
-        ],
-        "summary": "GET /api/v3/workspaces/{ws}/sections",
         "description": "Documented in **Workspaces** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/workspaces/",
         "externalDocs": {
           "description": "Workspaces",

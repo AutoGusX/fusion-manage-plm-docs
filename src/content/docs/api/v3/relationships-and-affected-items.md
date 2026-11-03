@@ -96,7 +96,7 @@ non-destructive — no relationship configuration was created or altered.)
 
 :::note[Update 2026-11-02: a read-only config endpoint exists on another API]
 The undocumented [Configuration API](/api/config/configuration-api/) exposes
-`GET /plm360-ft/v1/workspaces/{ws}/relationships`, which returns relationship
+`GET /{context}/v1/workspaces/{ws}/relationships`, which returns relationship
 config entries (for example `"type": "BOM"` with `fromWorkspace` and
 `toWorkspace`). Only the read was tried. Whether it accepts writes is unknown, so
 the conclusion above still stands for v3 and is unresolved for that API.

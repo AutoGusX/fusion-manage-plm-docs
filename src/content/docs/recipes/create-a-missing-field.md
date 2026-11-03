@@ -15,8 +15,25 @@ The JavaScript below composes those calls but hasn't itself been run as one
 program.
 :::
 
+## 0. Find the Configuration API base URL
+
+The host and path vary by tenant, so read them from v3 on the tenant host
+([why](/api/config/configuration-api/#base-url-and-tenant)):
+
 ```js
-const CFG = 'https://api.aps.usa.autodesk.com/plm360-ft/v1';
+async function configBase(tenant, token) {
+  const read = async (key) => {
+    const r = await fetch(`https://${tenant}.autodeskplm360.net/api/v3/configurations/${key}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+    });
+    if (!r.ok) throw new Error(`${key}: ${r.status}`);
+    return (await r.json()).value;
+  };
+  const [host, context] = await Promise.all([read('ADSK_API_BASE_URL'), read('ADSK_FLC_CONTEXT')]);
+  return `${host.replace(/\/$/, '')}${context}/v1`; // e.g. https://api.aps.usa.autodesk.com/plm360/v1
+}
+
+const CFG = await configBase('acmecorp', token);
 const headers = (token, tenant) => ({
   Authorization: `Bearer ${token}`,
   'adsk-plm-tenant': tenant,
@@ -30,7 +47,7 @@ const headers = (token, tenant) => ({
 Numeric workspace IDs vary per tenant. Match on `systemName`:
 
 ```
-GET /plm360-ft/v1/workspaces?offset=0&limit=100
+GET /{context}/v1/workspaces?offset=0&limit=100
 ```
 
 Follow `pagination.nextUrl` until it's absent.
@@ -38,7 +55,7 @@ Follow `pagination.nextUrl` until it's absent.
 ## 2. Check which required fields are missing
 
 ```
-GET /plm360-ft/v1/item-fields?filter[workspace.id]={ws}
+GET /{context}/v1/item-fields?filter[workspace.id]={ws}
 ```
 
 ```js
@@ -55,13 +72,13 @@ change, not a record edit.
 A field must belong to a section:
 
 ```
-GET /plm360-ft/v1/sections?filter[workspace.id]={ws}
+GET /{context}/v1/sections?filter[workspace.id]={ws}
 ```
 
 Reuse an existing `FIELDCONTAINER` section, or create one:
 
 ```
-POST /plm360-ft/v1/sections
+POST /{context}/v1/sections
 { "name": "My App", "workspace": { "id": {ws} }, "type": "FIELDCONTAINER", "displayOrder": 99, "collapse": false, "workflowLocking": false }
 ```
 
@@ -71,7 +88,7 @@ Create fails unless the field carries every validator that's implicit for its
 data type. Read the list once and derive the map:
 
 ```
-GET /plm360-ft/v1/validators
+GET /{context}/v1/validators
 ```
 
 ```js
@@ -84,7 +101,7 @@ for (const v of validators)
 ## 5. Create the field
 
 ```
-POST /plm360-ft/v1/item-fields
+POST /{context}/v1/item-fields
 ```
 
 ```js
@@ -126,11 +143,21 @@ The field appears in v3 without delay, so the app can continue in the same
 session and read or write the field through
 `/api/v3/workspaces/{ws}/fields` and [item updates](/api/v3/items/) as usual.
 
+A field created this way has `displayOrder: null`. In one test that made v3's
+field list return `500` until the order was set (confirmed live 2026-11-03, see
+[Item fields](/api/config/configuration-api/#item-fields)). If your app reads the
+field list straight afterwards, `PATCH` the new field with an explicit
+`displayOrder` first.
+
 ## Things to handle
 
 - **Permissions.** Writes were confirmed with a tenant administrator's token
   only. Offer the action, but expect a non-admin to be refused, and fall back to
   telling them which fields to ask an admin for.
+- **"The specified tenant is invalid" for a real tenant.** That usually means
+  the wrong context path: production and sandbox tenants answer on different ones
+  (`/plm360` and `/plm360-ft`). Build the base URL from the tenant's configuration
+  keys (step 0) instead of hardcoding it.
 - **Availability.** This API is undocumented. If the first call returns `404`,
   hide the offer and show the manual instructions. Once a route has answered,
   though, treat a later gateway `404` as possibly transient: picklist value

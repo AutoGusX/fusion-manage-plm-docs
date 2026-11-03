@@ -19,6 +19,8 @@ The primary modern surface.
 | Method | Path | Documented in |
 |---|---|---|
 | `GET` | `/api/v3/classifications/{classId}/fields` | [Classifications](/api/v2/classifications/) |
+| `GET` | `/api/v3/configurations` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/api/v3/configurations/{key}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/groups?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}/users` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -117,7 +119,7 @@ The primary modern surface.
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{sourceId}/bom-items?depth=1&revisionBias=release&viewDefId={bomViewId}&rootId={sourceId}` | [Recipe: clone an assembly with its BOM](/recipes/clone-an-assembly-with-its-bom/) |
-| `GET` | `/api/v3/workspaces/{ws}/sections` | [Workspaces](/api/v3/workspaces/) |
+| `GET` | `/api/v3/workspaces/{ws}/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `POST` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus/{tableauId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -179,58 +181,58 @@ Legacy, but still load-bearing for several operations.
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
 
-## Configuration — `/plm360-ft/v1/…`
+## Configuration — `/{context}/v1/…`
 
-Undocumented workspace-configuration API on `api.aps.usa.autodesk.com`, tenant in the `adsk-plm-tenant` header.
+Undocumented workspace-configuration API on the APS gateway (for example `api.aps.usa.autodesk.com`). The host and `{context}` (`plm360` or `plm360-ft`) come from the tenant's `ADSK_API_BASE_URL` and `ADSK_FLC_CONTEXT` configuration keys. Tenant in the `adsk-plm-tenant` header.
 
 | Method | Path | Documented in |
 |---|---|---|
-| `GET` | `/plm360-ft/v1/bom-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/categories` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/category-icons` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/field-data-types` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/field-data-types/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/grid-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/item-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/item-fields?filter[section.id]={sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/item-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/linked-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/picklists` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/picklists?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PUT` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/reports` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/sections?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/sourcing-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/validators` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspace-types` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `POST` | `/plm360-ft/v1/workspaces` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces?offset=0&limit=100` | [Recipe: create a missing field](/recipes/create-a-missing-field/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}:get-pending-configuration-tasks` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `PATCH` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `DELETE` | `/plm360-ft/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
-| `GET` | `/plm360-ft/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/bom-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/categories` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/category-icons` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/field-data-types` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/field-data-types/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/grid-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/item-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/item-fields?filter[section.id]={sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/item-fields?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/linked-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/picklists` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/picklists?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PUT` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/reports` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/sections?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/sourcing-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/validators` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspace-types` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/workspaces` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces?offset={n}&limit={n}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces?offset=0&limit=100` | [Recipe: create a missing field](/recipes/create-a-missing-field/) |
+| `GET` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}:get-pending-configuration-tasks` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PATCH` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `DELETE` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 
-_193 endpoints across 4 surfaces._
+_195 endpoints across 4 surfaces._
