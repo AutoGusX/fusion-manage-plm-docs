@@ -1,6 +1,6 @@
 ---
 title: Users, Groups, and Roles
-description: User, group, and role management on v3 — confirmed live and cross-checked against Autodesk's official Postman collection, including a corrected v3-roles claim.
+description: User, group, and role management on v3, including undocumented role and group creation — confirmed live and cross-checked against Autodesk's official Postman collection.
 ---
 
 <!-- verification-badge:begin -->
@@ -52,6 +52,32 @@ A commented-out line in the same official example notes `licenseType: { licenseC
 | Get a group's users | `GET /api/v3/groups/{groupId}/users` |
 | Get a group's workspace access | `GET /api/v3/groups/{groupId}/workspaces` (each entry includes a `permissions` array, e.g. `["Update","Delete","Create","Read"]`) |
 | Remove a group's access to a workspace | `DELETE /api/v3/groups/{groupId}/workspaces/{workspaceId}` |
+| Create a group | `POST /api/v3/groups` — `{ "name": "…", "description": "…" }`. Not in Autodesk's collection; confirmed live 2026-11-03 |
+| Get a group's roles | `GET /api/v3/groups/{groupId}/roles?offset={n}&limit={n}` — confirmed live 2026-11-03 |
+| Add roles to a group | `POST /api/v3/groups/{groupId}/roles` — raw array of role URN strings. Confirmed live 2026-11-03 |
+| Add users to a group | `POST /api/v3/groups/{groupId}/users` — raw array of user URN strings. Confirmed live 2026-11-03 |
+
+:::tip[Confirmed live — 2026-11-03: creating a group and filling it]
+- `POST /api/v3/groups` with `{}` returns `400` `'name' must not be blank`. Send
+  `name` and, optionally, `description`. It returns `201` with
+  `Location: …/api/v3/groups/{groupId}` and no body.
+- The create keys don't match the read keys. A `GET` returns your `name` as
+  **`shortName`** and your `description` as **`longName`**.
+- **A new group isn't empty.** Before anyone was added, `GET …/groups/{groupId}/users`
+  already listed the tenant's three system accounts (`gdpr_user`, `system_user`,
+  `tenant_admin`). Don't treat a non-zero member count as proof that your add
+  worked; look for the user.
+- `POST …/groups/{groupId}/roles` with
+  `["urn:adsk.plm:tenant.role:{TENANT}.{roleId}"]` returned `204`, and the group's
+  role count went from 0 to 1.
+- `POST …/groups/{groupId}/users` with
+  `["urn:adsk.plm:tenant.user:{TENANT}.{userId}"]` returned `204`. `{userId}` is the
+  short ID from `GET /api/v3/users/@me` (`userId`), not the login name.
+- The effect was immediate. Straight after the two adds,
+  `GET /api/v3/workspaces/{ws}/users/@me/permissions` listed the role's
+  permissions, and a v3 read on the workspace that had returned `403` returned
+  `200`.
+:::
 
 ## Roles and permissions
 
@@ -62,8 +88,70 @@ An earlier pass claimed role listing was v1-only, based on one production client
 | Operation | Endpoint |
 |---|---|
 | List roles | `GET /api/v3/roles?offset={n}&limit={n}` — confirmed live |
-| Get permissions definition | `GET /api/rest/v1/permissions` — v1, not yet found on v3 |
-| Get current-user permissions on a workspace or item | `GET /api/v3/workspaces/{wsId}/users/@me/permissions` or `GET /api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions` |
+| Get a role | `GET /api/v3/roles/{roleId}` — confirmed live 2026-11-03 |
+| List a workspace's roles | `GET /api/v3/workspaces/{wsId}/roles` — `204` with no body when there are none. Confirmed live 2026-11-03 |
+| Create a role | `POST /api/v3/roles` — not in Autodesk's collection. Confirmed live 2026-11-03, see below |
+| Add permissions to a role | `POST /api/v3/roles/{roleId}/permissions` — raw array of permission URN strings. Confirmed live 2026-11-03 |
+| List permissions | `GET /api/v3/permissions?limit={n}` — confirmed live 2026-11-03 (the v1 form `GET /api/rest/v1/permissions` also exists) |
+| Get current-user permissions on a workspace or item | `GET /api/v3/workspaces/{wsId}/users/@me/permissions` or `GET /api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions`. `204` with no body means no permissions |
+
+A role belongs to one workspace. A `GET` carries `shortName`, `longName`,
+`isSystemManaged`, `workspaceUrn`, `workspaceRoleUrn`, and `permissions[]`. Each
+permission has a `link`, a `urn`, a key-style `name` such as
+`permission.shortname.view_items`, a display `title`, and a `groupName`. Roles
+only take effect through a group (see [Groups](#groups)).
+
+### Creating a role
+
+Two calls: create the role, then add its permissions.
+
+```
+POST /api/v3/roles
+{ "workspaceId": 1200, "shortName": "Parts [R/W]", "longName": "Parts [R/W]" }
+
+POST /api/v3/roles/{roleId}/permissions
+["urn:adsk.plm:tenant.permission:ACMECORP.5", "urn:adsk.plm:tenant.permission:ACMECORP.6"]
+```
+
+:::caution[Confirmed live — 2026-11-03: permissions in the create body are ignored]
+A role was copied from one tenant to another.
+
+- `POST /api/v3/roles` with `{}` returns `400` listing `'workspaceId' must not be null`
+  and `'shortName' must not be blank`.
+- The create returned `201` with `Location: …/api/v3/roles/{roleId}` and no body.
+- **The body's `permissions` array was silently dropped.** It was sent as
+  `[{ "link": "/api/v3/permissions/5" }, …]`, the shape a `GET` returns, and the new
+  role came back with no permissions. Check the role after creating it.
+
+What `POST /api/v3/roles/{roleId}/permissions` accepts:
+
+| Body | Result |
+|---|---|
+| `["urn:adsk.plm:tenant.permission:{TENANT}.5"]` | `204`, permission added |
+| The same list again, plus new URNs | `204`. The new ones were added, and the repeat wasn't duplicated |
+| `["/api/v3/permissions/5"]` or an absolute URL | `400` `Invalid link URN "…"` |
+| `[5]` | `400` `Invalid link URN "5"` |
+| `[{ "link": "…" }]` or `{}` | `400` `GEN_INVALID_INPUT_SCHEMA` "Incorrect payload" |
+| `Content-Type: text/uri-list` | `415` |
+
+Adds are additive. Removing a permission from a role wasn't tried.
+
+These don't change permissions:
+
+| Request | Result |
+|---|---|
+| `PATCH /api/v3/roles/{roleId}` | `405` |
+| `PUT /api/v3/roles/{roleId}` with a full body and `permissions` | `204`, permissions unchanged |
+| `PUT` or `PATCH` on `…/roles/{roleId}/permissions` | `405` |
+| `POST /api/v3/workspaces/{wsId}/roles` | `405` |
+
+The [Configuration API](/api/config/configuration-api/) has no role or permission
+routes; `roles` and `permissions` return the gateway `404` under both contexts.
+:::
+
+**Copying a role between tenants.** Map permissions by `name`, not by ID. On the
+two tenants tested, the 14 IDs used meant the same permission in both, but one
+tenant had 201 permissions and the other 163, so the lists aren't identical.
 
 ## Tenant-scoped admin endpoints
 

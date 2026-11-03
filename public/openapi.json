@@ -153,7 +153,7 @@
     },
     {
       "name": "Users, Groups, and Roles",
-      "description": "User, group, and role management on v3 — confirmed live and cross-checked against Autodesk's official Postman collection, including a corrected v3-roles claim.",
+      "description": "User, group, and role management on v3, including undocumented role and group creation — confirmed live and cross-checked against Autodesk's official Postman collection.",
       "externalDocs": {
         "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
       }
@@ -3593,6 +3593,23 @@
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/groups",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
       }
     },
     "/api/v3/groups/{groupId}": {
@@ -3629,6 +3646,32 @@
           "Users, Groups, and Roles"
         ],
         "summary": "GET /api/v3/groups/{groupId}/users",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/groups/{groupId}/users",
         "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
         "externalDocs": {
           "description": "Users, Groups, and Roles",
@@ -3715,6 +3758,104 @@
         }
       }
     },
+    "/api/v3/groups/{groupId}/roles": {
+      "get": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "GET /api/v3/groups/{groupId}/roles",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/groups/{groupId}/roles",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/users/@me/permissions": {
+      "get": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "GET /api/v3/workspaces/{ws}/users/@me/permissions",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
     "/api/v3/roles": {
       "get": {
         "tags": [
@@ -3735,6 +3876,213 @@
               "type": "string"
             }
           },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/roles",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/roles/{roleId}": {
+      "get": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "GET /api/v3/roles/{roleId}",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "PATCH /api/v3/roles/{roleId}",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "PUT /api/v3/roles/{roleId}",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{wsId}/roles": {
+      "get": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "GET /api/v3/workspaces/{wsId}/roles",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "wsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/workspaces/{wsId}/roles",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "wsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/roles/{roleId}/permissions": {
+      "post": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "POST /api/v3/roles/{roleId}/permissions",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/permissions": {
+      "get": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "GET /api/v3/permissions",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
           {
             "name": "limit",
             "in": "query",

@@ -21,15 +21,25 @@ The primary modern surface.
 | `GET` | `/api/v3/classifications/{classId}/fields` | [Classifications](/api/v2/classifications/) |
 | `GET` | `/api/v3/configurations` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/configurations/{key}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/api/v3/groups` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/groups/{groupId}/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `GET` | `/api/v3/groups/{groupId}/roles?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}/users` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/groups/{groupId}/users` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/groups/{groupId}/workspaces` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/groups/{groupId}/workspaces/{workspaceId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/lookups/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/lookups/CUSTOM_LOOKUP_0CWS_{PROPERTY_NAME_UPPERCASE}_{classificationId}?asc=title&filter=&limit=200&offset=0` | [Property Instances](/api/v2/property-instances/) |
+| `GET` | `/api/v3/permissions?limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/roles?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/roles?offset=&limit=` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
+| `GET` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `PUT` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `PATCH` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/roles/{roleId}/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/scripts/{scriptId}` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/search-results` | [Pagination](/concepts/pagination/) |
@@ -126,6 +136,7 @@ The primary modern surface.
 | `DELETE` | `/api/v3/workspaces/{ws}/tableaus/{tableauId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus/{tableauId}?page={n}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/v3/workspaces/{ws}/transitions` | [Items](/api/v3/items/) |
+| `GET` | `/api/v3/workspaces/{ws}/users/@me/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/workspaces/{ws}/views` | [BOM](/api/v3/bom/) |
 | `GET` | `/api/v3/workspaces/{ws}/views/{gridViewId}/fields` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/v3/workspaces/{ws}/views/{viewId}/fields/{fieldId}` | [Items](/api/v3/items/) |
@@ -137,8 +148,9 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/workflows/1/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `GET` | `/api/v3/workspaces/{wsId}/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/workspaces/{wsId}/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/workspaces/{wsId}/scripts` | [Scripts](/api/v3/scripts/) |
-| `GET` | `/api/v3/workspaces/{wsId}/users/@me/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 
 ## v2 — `/api/v2/…`
 
@@ -235,4 +247,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 
-_195 endpoints across 4 surfaces._
+_207 endpoints across 4 surfaces._

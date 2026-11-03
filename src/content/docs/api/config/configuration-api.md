@@ -314,7 +314,9 @@ things:
   `access VIEW_ITEMS denied. WS: {ws}` for the tenant admin who created it. The
   workspace record and its field list were readable. This API has no permissions
   route (see [Read-only and lightly tested collections](#read-only-and-lightly-tested-collections)),
-  so add the workspace to a role in the admin UI before anyone uses it.
+  so create a role and put it in a group, through v3 (see
+  [Creating a role](/api/v3/users-groups-roles/#creating-a-role), confirmed live
+  2026-11-03) or in the admin UI, before anyone uses it.
 - **Relationships.** The source workspace had a `BOM` relationship to itself.
   `GET /{context}/v1/workspaces/{ws}/relationships` on the new one returned `204`
   with no body, not an empty array. Relationship writes are untested.
