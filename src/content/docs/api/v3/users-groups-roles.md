@@ -1,6 +1,6 @@
 ---
 title: Users, Groups, and Roles
-description: User, group, and role management on v3, including undocumented role and group creation — confirmed live and cross-checked against Autodesk's official Postman collection.
+description: User, group, and role management on v3 (and the v1 routes it still needs), including undocumented role, group, and user-level writes — confirmed live and cross-checked against Autodesk's official Postman collection.
 ---
 
 <!-- verification-badge:begin -->
@@ -22,26 +22,66 @@ Serves double duty: it's "get my profile," and (per one production client) also 
 | List users | `GET /api/v3/users?sort=displayName&activeOnly={bool}&mappedOnly={bool}&offset={n}&limit={n}` — `Accept: application/vnd.autodesk.plm.users.bulk+json` for the bulk variant |
 | Get a single user by login name | `GET /api/v3/users?filter[loginName]={loginName}` |
 | Get a single user (v1) | `GET /api/rest/v1/users/{userId}` |
-| Add a user | `POST /api/v3/users` — see body note below |
-| Assign groups to a user | `POST /api/v3/users/{userId}/groups` — body is a **raw array of group URN strings**, e.g. `["urn:adsk.plm:tenant.group:{TENANT}.145"]` (confirmed by Autodesk's official example — a production client instead sent an array of group objects; if one shape fails, try the other) |
-| Disable a user | `PATCH /api/v3/users/{userId}`, `Content-Type: application/json-patch+json`, JSON-Patch body: `[{ "op": "replace", "path": "/userStatus", "value": "Deleted" }]` |
-| Unassign a group from a user | `DELETE /api/rest/v1/users/{userId}/groups/{groupId}` |
+| Add a user | `POST /api/v3/users` — `licenseType` is **required**, see [Adding a user](#adding-a-user). Confirmed live 2026-11-03 |
+| Assign groups to a user | `POST /api/v3/users/{userId}/groups` — body is a **raw array of group URN strings**, e.g. `["urn:adsk.plm:tenant.group:{TENANT}.145"]`. `204`. Confirmed live 2026-11-03 |
+| Change a user's status | `PATCH /api/v3/users/{userId}`, `Content-Type: application/json-patch+json`, body `[{ "op": "replace", "path": "/userStatus", "value": "Inactive" }]`. `"Inactive"`, `"Deleted"` and `"Active"` all return `204`, and `"Active"` restores an inactive or deleted user. Confirmed live 2026-11-03 |
+| Change a user's level (licence) | **v1 only**: `GET /api/rest/v1/users/{userId}`, then `PUT` it back with `licenseType` changed — see [Changing a user's level](#changing-a-users-level). Confirmed live 2026-11-03 |
+| Unassign a group from a user | `DELETE /api/rest/v1/users/{userId}/groups/{groupId}` — `204`, group gone. Confirmed live 2026-11-03 |
 
 :::caution
 `unassignGroup` uses the **v1** path while `assignGroups` uses **v3** — a real inconsistency within the same assign/unassign pair, confirmed independently in both a production client and Autodesk's own official Postman collection (its "Remove User From Group" call also hits `DELETE /api/rest/v1/users/{userId}/groups/{groupId}`). Not a typo — don't assume v3 symmetry here.
 :::
 
-**Add User body** — Autodesk's official example omits `licenseType` entirely and adds `notifyUser`:
-```json
-{
-  "email": "person@example.com",
-  "thumbnailPref": "Yes",
-  "uomPref": "Metric",
-  "timezone": "Etc/GMT+1",
-  "notifyUser": false
-}
+### Adding a user
+
 ```
-A commented-out line in the same official example notes `licenseType: { licenseCode }` (`"S"` = Professional, `"P"` = Participant) should **only** be used for trial/demo environments — omit it for normal tenants and let the default license apply. New user ID is parsed from the `Location` response header, not the response body.
+POST /api/v3/users
+{ "email": "person@example.com", "notifyUser": false, "licenseType": { "licenseCode": "S" } }
+```
+
+`201`, no body; the new user ID is the last segment of the `Location` header.
+
+:::caution[Confirmed live — 2026-11-03: contradicts Autodesk's official example]
+Autodesk's example omits `licenseType`, and a commented-out line in it says the licence
+code is only for trial or demo tenants. On a production tenant:
+
+| Body | Result |
+|---|---|
+| `{ "email", "notifyUser" }` (no `licenseType`) | `400` `Must provide e-mail and license type code` |
+| `{ "email", "firstName", "lastName", "notifyUser" }` | `400` `Unexpected attributes in supplied payload` |
+| `{ "email", "notifyUser", "licenseType": { "licenseCode": "S" } }` | `201` |
+
+`"S"` is Professional (listed as "Standard"), `"P"` is Participant; `GET /api/v3/licenses`
+lists the codes. Names can't be sent on create; set them afterwards with the v1 `PUT` below.
+:::
+
+### Changing a user's level
+
+The v3 user resource won't change the licence, and the obvious-looking v3 licence route does
+something else. Use v1:
+
+```
+GET /api/rest/v1/users/{userId}          → { "user": { …, "licenseType": { "value": "S", "label": "Standard" }, … } }
+PUT /api/rest/v1/users/{userId}          body: the "user" object as returned, with
+                                         "licenseType": { "value": "P" }
+```
+
+`204`, and the level sticks on both v1 and v3 reads.
+
+:::caution[Confirmed live — 2026-11-03: what doesn't work]
+| Request | Result |
+|---|---|
+| `PATCH /api/v3/users/{userId}` JSON-Patch on `/licenseType` or `/licenseType/licenseCode` | `400` `Cannot modify the user resource attribute licenseType` |
+| `PATCH /api/v3/users/{userId}/licenses` `{ "licenseCode": "P" }` | `200`, but the user gets licence **`B` "Basic"** with `expirationInSeconds: 1199`, whatever code is sent. It's a temporary licence lease, not the user's level. Don't use it to change levels. |
+| The same route with a JSON-Patch body | `415` |
+| v1 `PUT` with the wrapped `{ "user": { … } }` body | `500` |
+| v1 `PUT` with lookups flattened (`"licenseType": "S"`) | `400` `Cannot construct instance of com.dms.lookup.LookupListItem` |
+| v1 `PUT` on a user with no first or last name | `400` `'firstName' is not specified`, `'lastName' is not specified` |
+
+The v1 `PUT` **replaces** the user, so always send back the record you just read and change
+only `licenseType`. A user created through v3 has no names yet; supply `firstName` and
+`lastName` in the same `PUT`.
+:::
 
 ## Groups
 
@@ -56,6 +96,8 @@ A commented-out line in the same official example notes `licenseType: { licenseC
 | Get a group's roles | `GET /api/v3/groups/{groupId}/roles?offset={n}&limit={n}` — confirmed live 2026-11-03 |
 | Add roles to a group | `POST /api/v3/groups/{groupId}/roles` — raw array of role URN strings. Confirmed live 2026-11-03 |
 | Add users to a group | `POST /api/v3/groups/{groupId}/users` — raw array of user URN strings. Confirmed live 2026-11-03 |
+| Remove a role from a group | `DELETE /api/v3/groups/{groupId}/roles/{roleId}` — `204`, role gone. Confirmed live 2026-11-03 |
+| Delete groups | `DELETE /api/v3/groups` with a raw array of group URNs, e.g. `["urn:adsk.plm:tenant.group:{TENANT}.{groupId}"]` — `204`; the group then `404`s. There's no `DELETE /groups/{groupId}`. Confirmed live 2026-11-03 |
 
 :::tip[Confirmed live — 2026-11-03: creating a group and filling it]
 - `POST /api/v3/groups` with `{}` returns `400` `'name' must not be blank`. Send
@@ -92,6 +134,8 @@ An earlier pass claimed role listing was v1-only, based on one production client
 | List a workspace's roles | `GET /api/v3/workspaces/{wsId}/roles` — `204` with no body when there are none. Confirmed live 2026-11-03 |
 | Create a role | `POST /api/v3/roles` — not in Autodesk's collection. Confirmed live 2026-11-03, see below |
 | Add permissions to a role | `POST /api/v3/roles/{roleId}/permissions` — raw array of permission URN strings. Confirmed live 2026-11-03 |
+| Remove a permission from a role | `DELETE /api/v3/roles/{roleId}/permissions/{permissionId}` — `204`, permission gone. Confirmed live 2026-11-03 |
+| Delete roles | `DELETE /api/v3/roles` with a raw array of role URNs — `204`; the role then `404`s. There's no `DELETE /roles/{roleId}`. Confirmed live 2026-11-03 |
 | List permissions | `GET /api/v3/permissions?limit={n}` — confirmed live 2026-11-03 (the v1 form `GET /api/rest/v1/permissions` also exists) |
 | Get current-user permissions on a workspace or item | `GET /api/v3/workspaces/{wsId}/users/@me/permissions` or `GET /api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions`. `204` with no body means no permissions |
 
@@ -134,7 +178,9 @@ What `POST /api/v3/roles/{roleId}/permissions` accepts:
 | `[{ "link": "…" }]` or `{}` | `400` `GEN_INVALID_INPUT_SCHEMA` "Incorrect payload" |
 | `Content-Type: text/uri-list` | `415` |
 
-Adds are additive. Removing a permission from a role wasn't tried.
+Adds are additive. To remove one, `DELETE /api/v3/roles/{roleId}/permissions/{permissionId}`
+(`OPTIONS` on that path allows only `DELETE`); it returned `204` and the permission was gone
+on the next read (confirmed live 2026-11-03).
 
 These don't change permissions:
 
