@@ -22,6 +22,7 @@ const TITLES = {
 	'api/v3/fusion-components': 'Fusion Components',
 	'api/v3/items': 'Items',
 	'api/v3/relationships-and-affected-items': 'Relationships and Affected Items',
+	'api/v3/record-visibility-and-section-security': 'Record Visibility and Section Security',
 	'api/v3/reports-dashboards': 'Reports and Dashboards',
 	'api/v3/scripts': 'Scripts',
 	'api/v3/search': 'Search',

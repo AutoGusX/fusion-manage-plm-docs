@@ -35,6 +35,7 @@ The primary modern surface.
 | `GET` | `/api/v3/licenses` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/lookups/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/lookups/CUSTOM_LOOKUP_0CWS_{PROPERTY_NAME_UPPERCASE}_{classificationId}?asc=title&filter=&limit=200&offset=0` | [Property Instances](/api/v2/property-instances/) |
+| `GET` | `/api/v3/permissions` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 | `GET` | `/api/v3/permissions?limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `POST` | `/api/v3/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -52,6 +53,7 @@ The primary modern surface.
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*CO-00123*&revision=1&limit=10&offset=0&page=1` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*Power*&revision=1&limit=5&offset=0&page=1` | [Search](/api/v3/search/) |
 | `GET` | `/api/v3/search-results?query=ITEM_DETAILS:TITLE=*your` | [Change Orders and Workflow](/guides/change-orders-and-workflow/) |
+| `GET` | `/api/v3/search-results?query=workspaceId={ws}` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 | `GET` | `/api/v3/tenant` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/tenants/{TENANT_UPPERCASE}/general-settings?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/tenants/{TENANT_UPPERCASE}/setup-logs?offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -113,6 +115,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/designs` | [Fusion Components (Manufacturing GraphQL)](/api/v3/fusion-components/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/logs?offset=&limit=&desc=timeStamp` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/owners` | [Items](/api/v3/items/) |
+| `PUT` | `/api/v3/workspaces/{ws}/items/{itemId}/owners` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/tabs` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/versions` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/views/{gridViewId}/rows` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -136,6 +139,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{sourceId}/bom-items?depth=1&revisionBias=release&viewDefId={bomViewId}&rootId={sourceId}` | [Recipe: clone an assembly with its BOM](/recipes/clone-an-assembly-with-its-bom/) |
 | `GET` | `/api/v3/workspaces/{ws}/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/api/v3/workspaces/{ws}/sections/{id}/permissions` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `POST` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus/{tableauId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -199,6 +203,8 @@ Legacy, but still load-bearing for several operations.
 | `GET` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions` | [Items](/api/v3/items/) |
 | `PUT` | `/api/rest/v1/workspaces/{ws}/items/{itemId}/lifecycles/transitions/{transitionId}` | [Items](/api/v3/items/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items/search` | [Search](/api/v3/search/) |
+| `GET` | `/api/rest/v1/workspaces/{ws}/sections` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
+| `GET` | `/api/rest/v1/workspaces/{ws}/sections/{sectionId}` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 
 ## Configuration — `/{context}/v1/…`
 
@@ -254,4 +260,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 
-_214 endpoints across 4 surfaces._
+_220 endpoints across 4 surfaces._

@@ -117,6 +117,13 @@
       }
     },
     {
+      "name": "Record Visibility and Section Security",
+      "description": "Who can see which records and which item-detail sections — the \"own records only\" permission, record owners (primary and additional), owner search limits, and where section-level group restrictions are stored. Confirmed live 2026-11-04.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+      }
+    },
+    {
       "name": "Relationships and Affected Items",
       "description": "Change-order affected items (Managed Items tab) and item-to-item relationships, via numbered workspace views — with the views/2 vs views/11 direction conclusively resolved.",
       "externalDocs": {
@@ -2253,6 +2260,40 @@
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "PUT /api/v3/workspaces/{ws}/items/{itemId}/owners",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
       }
     },
     "/api/v3/workspaces/{ws}/items/{itemId}/logs": {
@@ -2460,6 +2501,153 @@
             }
           }
         ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/search-results": {
+      "get": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "GET /api/v3/search-results",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{ws}/sections/{sectionId}": {
+      "get": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "GET /api/rest/v1/workspaces/{ws}/sections/{sectionId}",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/workspaces/{ws}/sections": {
+      "get": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "GET /api/rest/v1/workspaces/{ws}/sections",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/workspaces/{ws}/sections/{id}/permissions": {
+      "post": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "POST /api/v3/workspaces/{ws}/sections/{id}/permissions",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [
+          {
+            "name": "ws",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/v3/permissions": {
+      "get": {
+        "tags": [
+          "Record Visibility and Section Security"
+        ],
+        "summary": "GET /api/v3/permissions",
+        "description": "Documented in **Record Visibility and Section Security** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/",
+        "externalDocs": {
+          "description": "Record Visibility and Section Security",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/record-visibility-and-section-security/"
+        },
+        "parameters": [],
         "responses": {
           "2XX": {
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
@@ -3206,42 +3394,6 @@
             "name": "scriptId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/search-results": {
-      "get": {
-        "tags": [
-          "Search"
-        ],
-        "summary": "GET /api/v3/search-results",
-        "description": "Documented in **Search** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/search/",
-        "externalDocs": {
-          "description": "Search",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/search/"
-        },
-        "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "revision",
-            "in": "query",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -4238,34 +4390,6 @@
             "name": "permissionId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "2XX": {
-            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
-          }
-        }
-      }
-    },
-    "/api/v3/permissions": {
-      "get": {
-        "tags": [
-          "Users, Groups, and Roles"
-        ],
-        "summary": "GET /api/v3/permissions",
-        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
-        "externalDocs": {
-          "description": "Users, Groups, and Roles",
-          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
-        },
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
             "schema": {
               "type": "string"
             }
