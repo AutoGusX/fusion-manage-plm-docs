@@ -152,12 +152,24 @@ These apply to every resource below.
   **a browser can't read the `Location` header** on a create. Take the new ID
   from the response body (sections, picklist values) or the `fieldId`/`systemName`
   you sent (fields, picklists), not from `Location`.
-- **`PATCH` needs the whole object.** A partial body such as
-  `{"description": "..."}` returns `400` with `id must not be null`. Field `PATCH`
-  similarly demands `workspace` and `fieldId`. `GET` the resource, change what you
-  need, and send it all back. This is the opposite of v3's item `PATCH`. For
-  fields, first change a blank `defaultValue` to `null` (see
+- **`PATCH` needs the record's identity in the body.** A body without it, such as
+  `{"description": "..."}`, returns `400` with `id must not be null`. Field
+  `PATCH` similarly demands `workspace` and `fieldId`. Pages before 2026-11-13
+  said `PATCH` needed the **whole object**. That was too strong for workspaces
+  and sections:
+  **Confirmed live — 2026-11-13:** `{ "id": {ws}, "description": "" }` on a
+  workspace and `{ "id": {sectionId}, "collapse": false }` on a section both
+  returned `200`, and a before/after `GET` showed no other key changed. The same
+  `id`-plus-changes pattern worked on delegations, BOM units, categories, and
+  reports. Item fields were only ever tested with full bodies, so for them, `GET`
+  the field, change what you need, and send it all back. For fields, first change
+  a blank `defaultValue` to `null` (see
   [Blank default values on number fields](#blank-default-values-on-number-fields)).
+- **The gateway routes each method separately.** A path can answer `PATCH` and
+  `DELETE` while its `GET` returns the gateway's `404` (delegations do exactly
+  this). A gateway `404` on one method doesn't mean the path is missing. Probe
+  with a harmless body (`POST {}`, or `PATCH`/`DELETE` on an ID that doesn't
+  exist): an API-shaped `400`/`404` means the route is live.
 - **Empty bodies are self-documenting.** `POST {}` returns every missing required
   field in one `400`. This is the fastest way to learn a payload shape. The
   required-field lists below were found this way.
@@ -319,7 +331,11 @@ things:
   2026-11-03) or in the admin UI, before anyone uses it.
 - **Relationships.** The source workspace had a `BOM` relationship to itself.
   `GET /{context}/v1/workspaces/{ws}/relationships` on the new one returned `204`
-  with no body, not an empty array. Relationship writes are untested.
+  with no body, not an empty array. Since 2026-11-13, relationships can be
+  written with `PUT` (see [Workspace setup](/api/config/workspace-setup/#relationships)),
+  so a port can restore them. Whether a
+  [workspace clone](/api/config/workspace-setup/#cloning-a-workspace) with
+  `cloneRelationships: true` copies them is untested (the source used had none).
 - **Category.** Category IDs are per tenant. Match them by name, or choose one in
   the target.
 :::
@@ -688,7 +704,29 @@ of the same value. Even so, the intermittent `404`s described under
 absent. Only
 `MANUAL` picklists were tried; workspace-backed picklists (`workspace`,
 `reportId`) weren't.
+
+**Update 2026-11-13:** the admin UI's JavaScript bundle calls `PATCH` and
+`DELETE` on `/v1/picklists/{systemName}/values/{id}`, so the UI expects these
+routes to exist. That's evidence from client source, not a live result. They
+weren't re-probed.
 :::
+
+### Where a picklist is used
+
+```
+GET /{context}/v1/picklists/{systemName}:get-where-used
+```
+
+Returns a bare array grouped by reference type:
+
+```json
+[ { "reference": "ITEM", "fields": [ { "workspaceId": 1200, "fieldId": "DEPARTMENT" } ] } ]
+```
+
+**Confirmed live — 2026-11-13:** `200` on a real picklist, and `404` "No picklist
+found with system name …" for an unknown one. Only the `ITEM` reference type was
+observed. Check this before deleting a picklist, since delete cascades its
+values.
 
 ## Grid fields
 
@@ -728,27 +766,63 @@ types and the grid-specific keys (`aggregationType`, sorting) weren't tried.
 | `GET /{context}/v1/validators` | 45 validators with `vars[]` and per-type `implicit` flags. Bare array |
 | `GET /{context}/v1/field-data-types` | 31 types (see above). Bare array |
 | `GET /{context}/v1/workspace-types` | Workspace types with `allowWorkflow`. `/workspace-types/{id}` returns `404` despite being linked |
-| `GET /{context}/v1/categories` | Workspace categories with icons. `/categories/{id}` works |
+| `GET /{context}/v1/categories` | Workspace categories with icons. `/categories/{id}` works. Writes: see [Workspace setup](/api/config/workspace-setup/#categories) |
 | `GET /{context}/v1/category-icons` | Icon catalogue |
-| `GET /{context}/v1/workspaces/{ws}/tabs` | Tabs with `key` and `displayOrder`. The per-tab `url` it returns gives `404` |
-| `GET /{context}/v1/workspaces/{ws}/relationships` | Relationship config, for example `"type": "BOM"` with `fromWorkspace`/`toWorkspace`. Writes not tried |
+| `GET /{context}/v1/workspaces/{ws}/tabs` | Tabs with `key` and `displayOrder`. The per-tab `url` it returns gives `404`. `PUT`: see [Workspace setup](/api/config/workspace-setup/#tabs) |
+| `GET /{context}/v1/workspaces/{ws}/relationships` | Relationship config. `PUT` is writable: see [Workspace setup](/api/config/workspace-setup/#relationships) |
 | `GET /{context}/v1/grid-fields` | Grid field definitions across workspaces. Accepts `filter[workspace.id]`. Writes: see [Grid fields](#grid-fields) |
 | `GET /{context}/v1/linked-fields` | Linked field definitions |
 | `GET /{context}/v1/sourcing-fields` | Sourcing field definitions |
-| `GET /{context}/v1/reports` | Report definitions. Its `nextUrl` points at `/api/v4/reports`, a surface not yet explored |
-| `GET /{context}/v1/workspaces/{ws}:get-pending-configuration-tasks` | `204` when nothing is pending. `POST` returns `404`. What a pending task looks like is unknown |
+| `GET /{context}/v1/reports` | Report definitions. Full coverage: [Report definitions](/api/config/reports/) |
+| `GET /{context}/v1/aggregation-types` | Sum, Count, Average. Bare array. Confirmed live 2026-11-13 |
+| `GET /{context}/v1/workspaces/{ws}:get-pending-configuration-tasks` | `204` when nothing is pending, otherwise the setup checklist. See [Workspace setup](/api/config/workspace-setup/#pending-setup-tasks) |
+
+More v1 surfaces have their own pages: [Delegations](/api/config/delegations/),
+[Units of measure](/api/config/units-of-measure/) (`bom-uoms` and `uoms`),
+[Report definitions](/api/config/reports/), and
+[Workspace setup](/api/config/workspace-setup/) (workspace and field clone, tabs,
+descriptor, relationships, categories).
 
 `GET /{context}/v1/bom-fields` returns the gateway `404` with or without a filter,
 even though every workspace links to `bom-fields?filter[workspace.id]={ws}`.
-The filtered form was confirmed `404` on 2026-11-02. BOM field configuration
-isn't readable here yet.
+The filtered form was confirmed `404` on 2026-11-02, and again on 2026-11-13 with
+exactly the query the admin UI builds
+(`sort=displayOrder asc&filter[workspace.id]={ws}&limit=max`). `POST` and the
+per-field routes are `404` too. BOM field configuration isn't reachable here yet.
 
 These guessed names all returned `404` under `/v1`: `workflows`,
 `workflow-states`, `workflow-transitions`, `scripts`, `users`, `groups`, `roles`,
 `permissions`, `views`, `units-of-measure`, `lookups`, `tenant`, `settings`,
 `dashboards`, `notifications`, and, under a workspace, `workflow`, `scripts`,
-`permissions`, and `sections`. Workflow, script, and permission configuration
-isn't reachable here yet.
+`permissions`, and `sections`. A wider sweep on 2026-11-13 added `fields`,
+`units`, `charts`, `lifecycles`, `lifecycle-states`, `revision-schemes`,
+`behaviors`, `tabs`, `tableaus`, `relationships`, `classifications`,
+`print-views`, `email-templates`, `escalations`, `configurations`, `licenses`,
+`features`, `currencies`, `languages`, `jobs`, `tasks`, and `approval-lists`.
+Workflow, script, and permission configuration isn't reachable here yet.
+
+### In the admin UI, but not on the gateway
+
+On 2026-11-13 every `/v1/` call in the admin UI's JavaScript bundle
+(`/plm/js/app-react.js`, build 3.32.52) was extracted and probed. These routes
+appear in the UI's source but returned the **gateway's** `404` for every method
+tried, with the same base URL and headers the UI sends. They're probably shipped
+ahead of the gateway config or behind a feature flag. Recheck them before
+concluding they don't exist.
+
+| Route in the UI source | Methods the UI uses |
+|---|---|
+| `/v1/bom-fields`, `/v1/workspaces/{ws}/bom-fields/{fieldId}`, `…:clone` | `GET`, `POST`, `PATCH` |
+| `/v1/matrix-fields`, `/v1/workspaces/{ws}/matrix-fields/{id}` | `POST`, `DELETE` |
+| `/v1/workspaces/{ws}/sections/{sectionId}/groups`, `…/groups/{id}` | `GET`, `POST`, `DELETE` |
+| `/v1/report-filters`, `/v1/report-filters/{id}` | `POST`, `GET`, `PATCH` |
+| `/v1/import-projects`, `/v1/import-projects/{id}` | `GET`, `DELETE` |
+| `/v1/print-views?filter[workspace.id]={ws}` | `GET` |
+| `/v1/static-fields`, `/v1/system-fields` | `GET` |
+| `/v1/field-data-types/{id}/filter-types` | `GET` |
+
+The delegation manager isn't in that bundle (it's behind a feature flag), and
+neither are `bom-uoms` calls, but both are live; see their pages.
 
 ## Not yet tested
 
@@ -759,14 +833,14 @@ isn't reachable here yet.
   (accepted), and any type change on a workspace with records
 - Shrinking a field's `length` on a workspace that holds data
 - Changing a workspace's `systemName`
+- Partial `PATCH` on item fields (workspaces and sections accept it)
 - Why picklist value routes return intermittent `404`s (see
   [Error envelope](#error-envelope))
 - Tokens from a non-admin user or a third-party APS app (see [Authentication](#authentication))
 - Tenants outside the US region: what `ADSK_API_BASE_URL` returns there, and
   whether the `adsk-plm-tenant` rules are the same (see [Base URL and tenant](#base-url-and-tenant))
 - Whether a null `displayOrder` reliably makes v3's field list return `500`
-- Relationship writes, and whether a copied workspace can get its `BOM`
-  relationship back through this API
+- Whether a v1 relationship write shows up in v3 `related-workspaces`
 
 See [Recipe: create a missing field](/recipes/create-a-missing-field/) for the
 discovery-and-create flow this enables.

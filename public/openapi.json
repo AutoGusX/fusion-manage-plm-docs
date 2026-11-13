@@ -54,6 +54,34 @@
       }
     },
     {
+      "name": "Delegations (v1)",
+      "description": "The undocumented v1 delegation API behind Fusion Manage's modern Delegation Manager. Lists delegable workspaces and eligible delegatees, and creates, updates, and deletes delegations. Confirmed live 2026-11-13.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/delegations/"
+      }
+    },
+    {
+      "name": "Report definitions (v1)",
+      "description": "Read, clone, update, delete, and run Fusion Manage report definitions on the undocumented v1 configuration API. Running a report returns HTML or an Excel file. Confirmed live 2026-11-13.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/reports/"
+      }
+    },
+    {
+      "name": "Units of measure (v1)",
+      "description": "BOM units of measure (create, update, delete) and the read-only metric/imperial conversion table on the undocumented v1 configuration API. Confirmed live 2026-11-13.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/units-of-measure/"
+      }
+    },
+    {
+      "name": "Workspace setup (v1)",
+      "description": "Clone workspaces and fields, reorder and rename tabs, set the descriptor, write relationship config, read pending setup tasks, and manage categories on the undocumented v1 configuration API. Confirmed live 2026-11-13.",
+      "externalDocs": {
+        "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/config/workspace-setup/"
+      }
+    },
+    {
       "name": "Classifications",
       "description": "The classification tree — v2 CRUD, plus a v3 sibling endpoint for reading a class's fields, confirmed live and from Autodesk's official Postman collection.",
       "externalDocs": {

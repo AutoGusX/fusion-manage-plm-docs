@@ -102,6 +102,15 @@ config entries (for example `"type": "BOM"` with `fromWorkspace` and
 the conclusion above still stands for v3 and is unresolved for that API.
 :::
 
+:::tip[Update — Confirmed live 2026-11-13: v1 accepts relationship writes]
+`PUT /{context}/v1/workspaces/{ws}/relationships` replaces a workspace's
+relationship set (`BOM`, `PROJECT_ITEMS`, `RELATION`, `WORKFLOW_ITEMS`), and
+`PUT []` clears it. It was confirmed on a scratch workspace. So pairing *can* be
+configured through an API, just not v3. See
+[Workspace setup: relationships](/api/config/workspace-setup/#relationships).
+Whether v3 `related-workspaces` reflects a v1 write wasn't checked.
+:::
+
 ### Step 2 — read, add, update, remove
 
 - **Read** — `GET /api/v3/workspaces/{ws}/items/{itemId}/views/10`

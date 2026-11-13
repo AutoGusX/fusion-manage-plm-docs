@@ -83,6 +83,10 @@ const LEVEL_BY_PAGE = {
 	'api/v2/classifications.md': 'live',
 	'api/v2/parts-and-classifications.md': 'live',
 	'api/config/configuration-api.md': 'live',
+	'api/config/delegations.md': 'live',
+	'api/config/reports.md': 'live',
+	'api/config/units-of-measure.md': 'live',
+	'api/config/workspace-setup.md': 'live',
 	// Every entry on this page is an error observed against a live tenant.
 	'concepts/troubleshooting.md': 'live',
 

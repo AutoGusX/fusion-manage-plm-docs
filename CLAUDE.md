@@ -55,8 +55,12 @@ examples (see below). Preserve that distinction obsessively:
   assumes one.
 - Configuration writes live on a **separate, undocumented API**:
   `https://api.aps.usa.autodesk.com/plm360-ft/v1/...`, tenant in the
-  `adsk-plm-tenant` header (not host or path). Its `PATCH` needs the **full
-  object**, and fields must carry their data type's **implicit validators**.
+  `adsk-plm-tenant` header (not host or path). Its `PATCH` needs the record's
+  `id` in the body (workspaces, sections, delegations, BOM units, categories, and
+  reports accept `id` + changes; item fields were only tested with full bodies),
+  and fields must carry their data type's **implicit validators**. The gateway
+  routes each **method** separately, so a gateway `404` on `GET` doesn't mean the
+  path is dead. The admin UI bundle (`/plm/js/app-react.js`) is the route map.
   `POST {}` lists every required field, so use that to learn new shapes. See
   `api/config/configuration-api.md`. For live config tests, use a scratch
   workspace (`WS_ZZ_*`) and delete it afterwards, since workspace delete cascades.

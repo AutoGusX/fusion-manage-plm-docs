@@ -212,9 +212,25 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 
 | Method | Path | Documented in |
 |---|---|---|
+| `GET` | `/{context}/v1/aggregation-types` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/bom-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/bom-uoms` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `POST` | `/{context}/v1/bom-uoms` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `GET` | `/{context}/v1/bom-uoms/{id}` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `PATCH` | `/{context}/v1/bom-uoms/{id}` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `DELETE` | `/{context}/v1/bom-uoms/{id}` | [Units of measure (v1)](/api/config/units-of-measure/) |
 | `GET` | `/{context}/v1/categories` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/categories` | [Workspace setup (v1)](/api/config/workspace-setup/) |
+| `PATCH` | `/{context}/v1/categories/{id}` | [Workspace setup (v1)](/api/config/workspace-setup/) |
+| `DELETE` | `/{context}/v1/categories/{id}` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/category-icons` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/delegations` | [Delegations (v1)](/api/config/delegations/) |
+| `POST` | `/{context}/v1/delegations` | [Delegations (v1)](/api/config/delegations/) |
+| `GET` | `/{context}/v1/delegations?filter[id]={id}` | [Delegations (v1)](/api/config/delegations/) |
+| `GET` | `/{context}/v1/delegations?offset=0&limit=20&sort=startDate` | [Delegations (v1)](/api/config/delegations/) |
+| `PATCH` | `/{context}/v1/delegations/{id}` | [Delegations (v1)](/api/config/delegations/) |
+| `DELETE` | `/{context}/v1/delegations/{id}` | [Delegations (v1)](/api/config/delegations/) |
+| `PATCH` | `/{context}/v1/delegations/41` | [Delegations (v1)](/api/config/delegations/) |
 | `GET` | `/{context}/v1/field-data-types` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/field-data-types/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/grid-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
@@ -229,19 +245,32 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/picklists/{systemName}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/picklists/{systemName}:get-where-used` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `POST` | `/{context}/v1/picklists/{systemName}/values` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PUT` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/picklists/{systemName}/values/{id}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/report-filters` | [Report definitions (v1)](/api/config/reports/) |
+| `PATCH` | `/{context}/v1/report-filters/{id}` | [Report definitions (v1)](/api/config/reports/) |
 | `GET` | `/{context}/v1/reports` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/reports` | [Report definitions (v1)](/api/config/reports/) |
+| `GET` | `/{context}/v1/reports/{id}` | [Report definitions (v1)](/api/config/reports/) |
+| `PATCH` | `/{context}/v1/reports/{id}` | [Report definitions (v1)](/api/config/reports/) |
+| `DELETE` | `/{context}/v1/reports/{id}` | [Report definitions (v1)](/api/config/reports/) |
+| `POST` | `/{context}/v1/reports/{id}:clone` | [Report definitions (v1)](/api/config/reports/) |
+| `POST` | `/{context}/v1/reports/{id}:run` | [Report definitions (v1)](/api/config/reports/) |
 | `POST` | `/{context}/v1/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/sections?filter[workspace.id]={ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/sections/{sectionId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/sourcing-fields` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/uoms` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `GET` | `/{context}/v1/uoms/{metricName}` | [Units of measure (v1)](/api/config/units-of-measure/) |
+| `GET` | `/{context}/v1/users/{userId}/delegable-workspaces` | [Delegations (v1)](/api/config/delegations/) |
+| `GET` | `/{context}/v1/users/{userId}/delegable-workspaces?offset=0&limit=max` | [Delegations (v1)](/api/config/delegations/) |
 | `GET` | `/{context}/v1/validators` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/{context}/v1/workspace-types` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `POST` | `/{context}/v1/workspaces` | [Configuration API (v1)](/api/config/configuration-api/) |
@@ -250,14 +279,24 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/workspaces/{ws}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/workspaces/{ws}:clone` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/workspaces/{ws}:get-pending-configuration-tasks` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/delegatees?filter[startDate]={iso}&filter[endDate]={iso}` | [Delegations (v1)](/api/config/delegations/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/delegatees?offset=0&limit=max&filter[startDate]=2026-11-13T00:00:00Z&filter[endDate]=2026-11-14T00:00:00Z` | [Delegations (v1)](/api/config/delegations/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/descriptor-eligible-fields` | [Workspace setup (v1)](/api/config/workspace-setup/) |
+| `GET` | `/{context}/v1/workspaces/{ws}/descriptor-fields` | [Workspace setup (v1)](/api/config/workspace-setup/) |
+| `PUT` | `/{context}/v1/workspaces/{ws}/descriptor-fields` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/workspaces/{ws}/grid-fields/{fieldId}:clone` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PATCH` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `DELETE` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `POST` | `/{context}/v1/workspaces/{ws}/item-fields/{fieldId}:clone` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/relationships` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PUT` | `/{context}/v1/workspaces/{ws}/relationships` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
+| `PUT` | `/{context}/v1/workspaces/{ws}/tabs` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 
-_220 endpoints across 4 surfaces._
+_259 endpoints across 4 surfaces._
