@@ -40,14 +40,14 @@ function frontmatterTitle(txt, fallback) {
 function surfaceOf(path) {
 	if (path.startsWith('/api/v3/')) return 'v3';
 	if (path.startsWith('/api/v2/')) return 'v2';
-	if (path.startsWith('/api/rest/v1/')) return 'v1';
+	if (path.startsWith('/api/rest/')) return 'v1';
 	if (path.startsWith('/{context}/v1/')) return 'config';
 	return 'other';
 }
 
 /** Coarse resource bucket, for sorting within a surface. */
 function resourceOf(path) {
-	const seg = path.replace(/^\/(api\/(rest\/)?|\{context\}\/)v\d\//, '').split('/')[0] || '—';
+	const seg = path.replace(/^\/(api\/(rest\/)?|\{context\}\/)(v\d\/)?/, '').split('/')[0] || '—';
 	return seg.replace(/[?{].*$/, '');
 }
 
@@ -79,7 +79,7 @@ const all = [...rows.values()];
 const SURFACES = [
 	['v3', 'v3 — `/api/v3/…`', 'The primary modern surface.'],
 	['v2', 'v2 — `/api/v2/…`', 'The classification / parts-attribute subsystem.'],
-	['v1', 'v1 — `/api/rest/v1/…`', 'Legacy, but still load-bearing for several operations.'],
+	['v1', 'v1 and legacy — `/api/rest/…`', 'Legacy, but still load-bearing for several operations, including workflow definitions and BOM views.'],
 	['config', 'Configuration — `/{context}/v1/…`', 'Undocumented workspace-configuration API on the APS gateway (for example `api.aps.usa.autodesk.com`). The host and `{context}` (`plm360` or `plm360-ft`) come from the tenant\'s `ADSK_API_BASE_URL` and `ADSK_FLC_CONTEXT` configuration keys. Tenant in the `adsk-plm-tenant` header.'],
 	['other', 'Other', 'Adjacent APIs on different hosts.'],
 ];

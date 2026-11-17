@@ -789,6 +789,14 @@ The filtered form was confirmed `404` on 2026-11-02, and again on 2026-11-13 wit
 exactly the query the admin UI builds
 (`sort=displayOrder asc&filter[workspace.id]={ws}&limit=max`). `POST` and the
 per-field routes are `404` too. BOM field configuration isn't reachable here yet.
+The admin UI creates BOM fields through a browser-only form post. BOM **views**
+(which fields a BOM shows) are writable through a legacy JSON route instead; see
+[BOM views](/api/config/bom-views/).
+
+Workflows aren't on this API either, but the workflow editor saves JSON that a
+bearer token can write; see [Workflow definitions](/api/config/workflow-definitions/).
+For which admin screens have an API at all, see
+[Admin UI coverage](/guides/admin-ui-coverage/).
 
 These guessed names all returned `404` under `/v1`: `workflows`,
 `workflow-states`, `workflow-transitions`, `scripts`, `users`, `groups`, `roles`,

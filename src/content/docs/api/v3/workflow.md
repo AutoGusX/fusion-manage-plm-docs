@@ -22,6 +22,21 @@ Not to be confused with **lifecycle transitions** (revision/release state, v1, X
 `GET /api/v3/workspaces/{ws}/workflows/1/transitions` returns `200` with a real array of transition definitions (`name`, `customLabel`, `fromState`, `sendEmail`, etc.) against a real Change Orders workspace.
 :::
 
+:::note[Confirmed live — 2026-11-17: v3 workflow definitions are read-only]
+`OPTIONS` on `…/workflows/1/states` and `…/states/{stateId}` returns
+`Allow: HEAD,GET,OPTIONS`, and on `…/workflows/1/transitions/{transitionId}` the
+same. The collection `…/transitions` also allows `POST`, but that's the
+perform-a-transition route. The [route map](/reference/route-map/) has no write
+for either. To create or change states and transitions, use the legacy JSON
+route on [Workflow definitions](/api/config/workflow-definitions/).
+
+Each state also has escalations and reminders at
+`GET /api/v3/workspaces/{ws}/workflows/1/states/{stateId}/events`. The admin UI
+reads `events[].type` and treats `reminder` as a notification and any other type
+as an escalation. It returned `204` for every state of a Change Orders workflow
+that has none configured.
+:::
+
 ## Item-level
 
 | Purpose | Endpoint |

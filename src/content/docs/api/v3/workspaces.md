@@ -48,6 +48,12 @@ Its changes show up in these v3 endpoints immediately.
 | Item Details sections | `GET /api/v3/workspaces/{ws}/sections`, `Accept: application/vnd.autodesk.plm.sections.bulk+json` |
 | Item Details fields | `GET /api/v3/workspaces/{ws}/fields` — carries `editability`, `derived`, and a `validators` link per field (needed for create/clone — see [Items](/api/v3/items/)) |
 | A specific field's metadata | `GET /api/v3/workspaces/{ws}/views/{viewId}/fields/{fieldId}` |
+| Tabs offered when cloning an item | `GET /api/v3/workspaces/{ws}/clone-options` |
+
+**Confirmed live — 2026-11-17:** `clone-options` returns a bare array, one
+entry per tab the item clone dialog offers, with `key` (`Item Details`),
+`workspaceTabName` (`ITEM_DETAILS`, `PART_ATTACHMENTS`…), `viewId`,
+`displayOrder`, and the tab's `name` in this workspace.
 
 :::caution[Confirmed live — 2026-08-31: the bulk `Accept` header changes the response *shape*, not just its size]
 `vnd.autodesk.plm.*.bulk+json` reads like a performance hint. It is not — on

@@ -87,6 +87,9 @@ const LEVEL_BY_PAGE = {
 	'api/config/reports.md': 'live',
 	'api/config/units-of-measure.md': 'live',
 	'api/config/workspace-setup.md': 'live',
+	'api/config/workflow-definitions.md': 'live',
+	'api/config/bom-views.md': 'live',
+	'reference/route-map.md': 'live',
 	// Every entry on this page is an error observed against a live tenant.
 	'concepts/troubleshooting.md': 'live',
 

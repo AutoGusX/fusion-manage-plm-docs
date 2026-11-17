@@ -47,6 +47,7 @@ The primary modern surface.
 | `POST` | `/api/v3/roles/{roleId}/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/roles/{roleId}/permissions/{permissionId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
+| `POST` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/scripts/{scriptId}` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/search-results` | [Pagination](/concepts/pagination/) |
 | `GET` | `/api/v3/search-results?query={grammar}&revision={1` | [Search](/api/v3/search/) |
@@ -60,6 +61,7 @@ The primary modern surface.
 | `GET` | `/api/v3/tenants/{TENANT_UPPERCASE}/setup-logs?offset=0&limit=10` | [Admin and Config](/guides/admin-and-config/) |
 | `GET` | `/api/v3/tenants/{TENANT_UPPERCASE}/system-logs?offset={n}&limit={n}[&type=item]` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/tenants/{TENANT_UPPERCASE}/system-logs?offset=0&limit=250` | [Admin and Config](/guides/admin-and-config/) |
+| `GET` | `/api/v3/tenants/{TENANT}/setup-logs?offset=0&limit=20` | [Admin UI coverage](/guides/admin-ui-coverage/) |
 | `POST` | `/api/v3/users` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/users?filter[loginName]={loginName}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/users?sort=displayName&activeOnly={bool}&mappedOnly={bool}&offset={n}&limit={n}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -88,6 +90,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{itemWs}/items/{itemId}/logs?offset=0&limit=100&desc=timeStamp` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `POST` | `/api/v3/workspaces/{workspaceId}/items` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}` | [Workspaces](/api/v3/workspaces/) |
+| `GET` | `/api/v3/workspaces/{ws}/clone-options` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/fields` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `GET` | `/api/v3/workspaces/{ws}/items?offset={n}&limit={n}` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/v3/workspaces/{ws}/items?offset=0&limit=50` | [Recipe: bulk-create items from a spreadsheet](/recipes/bulk-create-items-from-a-spreadsheet/) |
@@ -138,6 +141,7 @@ The primary modern surface.
 | `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/workflows/1/transitions` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{sourceId}/bom-items?depth=1&revisionBias=release&viewDefId={bomViewId}&rootId={sourceId}` | [Recipe: clone an assembly with its BOM](/recipes/clone-an-assembly-with-its-bom/) |
+| `POST` | `/api/v3/workspaces/{ws}/scripts` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/workspaces/{ws}/sections` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `POST` | `/api/v3/workspaces/{ws}/sections/{id}/permissions` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
 | `GET` | `/api/v3/workspaces/{ws}/tableaus` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -156,6 +160,8 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/views/5/viewdef/{bomViewId}/fields` | [BOM](/api/v3/bom/) |
 | `GET` | `/api/v3/workspaces/{ws}/workflows/{workflowId}/states` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/workflows/{workflowId}/transitions` | [Workflow](/api/v3/workflow/) |
+| `GET` | `/api/v3/workspaces/{ws}/workflows/1/states` | [Workflow definitions](/api/config/workflow-definitions/) |
+| `GET` | `/api/v3/workspaces/{ws}/workflows/1/states/{stateId}/events` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{ws}/workflows/1/transitions` | [Workflow](/api/v3/workflow/) |
 | `GET` | `/api/v3/workspaces/{wsId}/items/{dmsId}/users/@me/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/workspaces/{wsId}/roles` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
@@ -179,10 +185,11 @@ The classification / parts-attribute subsystem.
 | `POST` | `/api/v2/properties` | [Classifications](/api/v2/classifications/) |
 | `GET` | `/api/v2/property-instances?classification={classificationId}&inherited=true&page=1&size=100` | [Property Instances](/api/v2/property-instances/) |
 | `GET` | `/api/v2/property-instances/{instanceId}/properties` | [Property Instances](/api/v2/property-instances/) |
+| `GET` | `/api/v2/schedulers/eventCategory/WORKFLOW/resource/{stateId}` | [Workflow definitions](/api/config/workflow-definitions/) |
 
-## v1 — `/api/rest/v1/…`
+## v1 and legacy — `/api/rest/…`
 
-Legacy, but still load-bearing for several operations.
+Legacy, but still load-bearing for several operations, including workflow definitions and BOM views.
 
 | Method | Path | Documented in |
 |---|---|---|
@@ -191,11 +198,16 @@ Legacy, but still load-bearing for several operations.
 | `GET` | `/api/rest/v1/reports/{reportId}` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/rest/v1/reports/dashboard` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/rest/v1/roles` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
+| `GET` | `/api/rest/v1/setups/bomAvailableFields.json?workspaceId={ws}` | [BOM views](/api/config/bom-views/) |
 | `GET` | `/api/rest/v1/setups/picklists` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/rest/v1/setups/picklists/{picklistId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
+| `PUT` | `/api/rest/v1/setups/viewdefs.json?workspaceId={ws}` | [BOM views](/api/config/bom-views/) |
+| `GET` | `/api/rest/v1/setups/viewdefs.json?workspaceId={ws}&tab=BOM` | [BOM views](/api/config/bom-views/) |
 | `GET` | `/api/rest/v1/users/{userId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `PUT` | `/api/rest/v1/users/{userId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/rest/v1/users/{userId}/groups/{groupId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `PUT` | `/api/rest/workflows/{ws}` | [Workflow definitions](/api/config/workflow-definitions/) |
+| `GET` | `/api/rest/workflows/{ws}.json` | [Workflow definitions](/api/config/workflow-definitions/) |
 | `GET` | `/api/rest/v1/workspaces` | [Workspaces](/api/v3/workspaces/) |
 | `GET` | `/api/rest/v1/workspaces/{id}/items` | [Pagination](/concepts/pagination/) |
 | `POST` | `/api/rest/v1/workspaces/{ws}/items` | [Items](/api/v3/items/) |
@@ -299,4 +311,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PUT` | `/{context}/v1/workspaces/{ws}/tabs` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 
-_259 endpoints across 4 surfaces._
+_271 endpoints across 4 surfaces._

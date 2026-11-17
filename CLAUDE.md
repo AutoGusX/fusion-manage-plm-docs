@@ -64,6 +64,12 @@ examples (see below). Preserve that distinction obsessively:
   `POST {}` lists every required field, so use that to learn new shapes. See
   `api/config/configuration-api.md`. For live config tests, use a scratch
   workspace (`WS_ZZ_*`) and delete it afterwards, since workspace delete cascades.
+- The tenant host publishes its own route map: `GET /api/application.wadl`
+  (Jersey). v3 `OPTIONS` returns a real `Allow` header (or `404`), so use it to
+  confirm a route without calling it. See `reference/route-map.md`. Workflow
+  definitions and BOM views aren't on v3 or the gateway but are writable as JSON
+  under `/api/rest/…` with a bearer token. Never call the tenant-wide routes
+  listed there (tenant delete, cache clears, reindex, bulk sync).
 
 ## Site conventions
 

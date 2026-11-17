@@ -26,3 +26,17 @@ Two things worth knowing:
 
 Running a script on an item (`POST {itemLink}/scripts/{scriptId}`) has **not** been live-tested — it executes tenant code with real side effects.
 :::
+
+:::caution[From the route map — 2026-11-17: scripts can be created, but not changed or deleted]
+The tenant's [route map](/reference/route-map/) lists `POST /api/v3/scripts` and
+`POST /api/v3/workspaces/{ws}/scripts` (`createScript`), and `OPTIONS` confirms
+both. It has **no `PUT`, `PATCH`, or `DELETE`** for a script, and
+`OPTIONS /api/v3/scripts/{id}` allows only `GET` and `POST` (`runScript`).
+
+So a script created through the API can only be edited or removed in the admin
+UI. `createScript` hasn't been tried for that reason. Which workspace events run
+a script (on create, on edit, on demand) is set on the admin UI's behaviors page,
+which is browser-only (see [Admin UI coverage](/guides/admin-ui-coverage/)).
+Workflow scripts are linked by ID in a
+[workflow definition](/api/config/workflow-definitions/).
+:::
