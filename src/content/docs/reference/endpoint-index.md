@@ -44,6 +44,7 @@ The primary modern surface.
 | `GET` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `PUT` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `PATCH` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `DELETE` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `POST` | `/api/v3/roles/{roleId}/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/roles/{roleId}/permissions/{permissionId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
@@ -198,6 +199,7 @@ Legacy, but still load-bearing for several operations, including workflow defini
 | `GET` | `/api/rest/v1/reports/{reportId}` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/rest/v1/reports/dashboard` | [Reports, Dashboards, Bookmarks, and Recently-Viewed](/api/v3/reports-dashboards/) |
 | `GET` | `/api/rest/v1/roles` | [API Versions: v1, v2, and v3](/concepts/versioning/) |
+| `DELETE` | `/api/rest/v1/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/rest/v1/setups/bomAvailableFields.json?workspaceId={ws}` | [BOM views](/api/config/bom-views/) |
 | `GET` | `/api/rest/v1/setups/picklists` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
 | `GET` | `/api/rest/v1/setups/picklists/{picklistId}` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -311,4 +313,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PUT` | `/{context}/v1/workspaces/{ws}/tabs` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 
-_271 endpoints across 4 surfaces._
+_273 endpoints across 4 surfaces._

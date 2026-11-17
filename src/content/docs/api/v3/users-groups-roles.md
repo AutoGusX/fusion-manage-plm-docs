@@ -195,6 +195,27 @@ The [Configuration API](/api/config/configuration-api/) has no role or permissio
 routes; `roles` and `permissions` return the gateway `404` under both contexts.
 :::
 
+:::caution[Confirmed live — 2026-11-04: added permissions show up late, and roles outlive their workspace]
+Seen on a sandbox tenant with a scratch `WS_ZZ_*` workspace, then cleaned up:
+
+- **Read-back lag.** Reading `GET /api/v3/roles/{roleId}` straight after
+  `POST …/roles/{roleId}/permissions` (`204`) showed none of the 14 permissions
+  just added. A read a few seconds later showed all 14. Re-read with a short
+  backoff before treating a permission as missing.
+- **Deleting a workspace doesn't delete its roles.** After the Configuration API
+  workspace delete, the role still returned `200` with its `workspaceUrn`
+  pointing at the deleted workspace. Delete the roles yourself.
+- **`DELETE /api/v3/roles/{roleId}`** returns `405`. Use the bulk
+  `DELETE /api/v3/roles` above.
+- **`DELETE /api/rest/v1/roles/{roleId}`** (v1) returned `500`, and a read during
+  the delete also returned `500`. But the role was then gone: v3 and v1 reads
+  returned `404`, and it was no longer in the role list. Don't trust the status
+  code; read the role back.
+- **The bulk `DELETE /api/v3/roles`** answered `500` on a second tenant
+  (2026-11-04), and the role was gone on the next read, the same as v1. The
+  `204` above was on another tenant. Either way, read the role back.
+:::
+
 **Copying a role between tenants.** Map permissions by `name`, not by ID. On the
 two tenants tested, the 14 IDs used meant the same permission in both, but one
 tenant had 201 permissions and the other 163, so the lists aren't identical.

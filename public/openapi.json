@@ -4576,6 +4576,32 @@
             "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "DELETE /api/v3/roles/{roleId}",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
       }
     },
     "/api/v3/workspaces/{wsId}/roles": {
@@ -4765,6 +4791,34 @@
           },
           {
             "name": "dmsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Success. Status codes vary by operation and are not uniform across this API (e.g. item create returns 201 with an empty body and a Location header; workflow transitions return 303). See the linked page."
+          }
+        }
+      }
+    },
+    "/api/rest/v1/roles/{roleId}": {
+      "delete": {
+        "tags": [
+          "Users, Groups, and Roles"
+        ],
+        "summary": "DELETE /api/rest/v1/roles/{roleId}",
+        "description": "Documented in **Users, Groups, and Roles** — https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/",
+        "externalDocs": {
+          "description": "Users, Groups, and Roles",
+          "url": "https://autogusx.github.io/fusion-manage-plm-docs/api/v3/users-groups-roles/"
+        },
+        "parameters": [
+          {
+            "name": "roleId",
             "in": "path",
             "required": true,
             "schema": {
