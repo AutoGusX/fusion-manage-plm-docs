@@ -224,9 +224,71 @@ create or port to see what still needs doing.
 
 Categories group workspaces in the navigation.
 
-:::tip[Confirmed live — 2026-11-13: create, update, and delete]
-- **Create:** `POST { "name": "…" }` returned `201` with
-  `displayOrder: null` and `icon: null`. `POST {}` lists only `name`.
+### Create a category (use the full body)
+
+:::caution[A name-only create leaves the category half-built]
+`POST { "name": "…" }` is accepted, but it stores `displayOrder: null` and
+`icon: null`, and that breaks the category on the backend. Create categories
+with the body the admin UI sends: **`name`, `icon`, and `displayOrder`**. Don't
+use the name-only form for anything you plan to keep.
+:::
+
+The request below is what the admin UI sends. It is the same route as before
+(`POST /{context}/v1/categories`), just with the complete body. Captured from
+the admin UI's network traffic on 2026-11-20 (two creates, same shape each
+time). I haven't replayed it independently from a script.
+
+```http
+POST https://api.aps.usa.autodesk.com/plm360-ft/v1/categories
+```
+
+```json
+{
+  "name": "Example category",
+  "icon": { "icon": "/images/home/approval_24.png" },
+  "displayOrder": 32
+}
+```
+
+Response `201`:
+
+```json
+{
+  "id": 888,
+  "name": "Example category",
+  "displayOrder": 32,
+  "icon": {
+    "icon": "/images/home/approval_24.png",
+    "urn": "urn:adsk.plm:tenant.category-icon:{TENANT}./images/home/approval_24.png",
+    "url": "/v1/category-icons//images/home/approval_24.png"
+  },
+  "urn": "urn:adsk.plm:tenant.category:{TENANT}.888",
+  "url": "/v1/categories/888"
+}
+```
+
+| Field | Notes |
+|---|---|
+| `name` | Required. |
+| `icon.icon` | Icon path. Pick from `GET /{context}/v1/category-icons`. The response adds `urn` and `url` for the icon. The `url` has a doubled slash (`category-icons//images/…`) because the path starts with `/`. That's as returned. |
+| `displayOrder` | Position in the navigation. In both captures the UI sent the next free slot (the highest existing value plus one: `32`, then `33`). Read the list first and compute it. |
+
+Notes from the same capture:
+
+- `GET /{context}/v1/categories` returns a bare array. It is **not sorted by
+  `displayOrder`**, so sort client-side. Each item carries `id`, `name`,
+  `displayOrder`, `icon`, `urn`, and `url`.
+- The tenant is in the `adsk-plm-tenant` header, as for the rest of the
+  [configuration API](/api/config/configuration-api/).
+- Unverified: whether `displayOrder` must be unique, and what the server does
+  with a value that's already taken. Not tested.
+
+### Behaviour confirmed earlier
+
+:::tip[Confirmed live — 2026-11-13: name-only create, update, and delete]
+- **Create (name only — superseded by the full body above):**
+  `POST { "name": "…" }` returned `201` with `displayOrder: null` and
+  `icon: null`. `POST {}` lists only `name`.
   **Duplicate names are accepted.**
 - **Update:** partial `PATCH` with `id` in the body. `{ "id", "name" }` renamed
   it, and `{ "id", "displayOrder": 99, "icon": { "icon": "/images/home/adminicon_24.png" } }`
