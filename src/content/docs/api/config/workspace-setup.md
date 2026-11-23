@@ -67,6 +67,14 @@ With all seven flags, the copy got every section (4 of 4), item field (37 of
 relationships, linked fields, or sourcing fields, so whether those flags work is
 untested.
 
+**The empty shell is useful on purpose** (confirmed live 2026-11-20). Sending
+every `clone*` flag as `false` gives a workspace of the source's **type**
+(workflow, revision controlled, revisioning) with its default tabs and nothing
+else. That is a clean start for a workspace whose fields you define yourself,
+without removing dozens of fields you don't want. Seven workspaces were built
+this way and then given sections, fields, a descriptor, tab names,
+relationships, and a workflow by API.
+
 What a clone **never** copies: **role permissions** and the **workflow**. The
 copy's pending tasks still listed "Create roles and assign them to groups" and
 "Upload a workflow", and v3 `workflows/1/states` on the copy returned `204`. A

@@ -105,17 +105,29 @@ So `PUT` is a full replace that keeps the IDs of objects you send back. To make
 a small change, `GET`, edit, and `PUT` the whole thing.
 :::
 
+:::tip[Confirmed live — 2026-11-20 and 2026-11-23: scripts, performers, and a workflow in use]
+From building five workflows by API (the largest had 24 states and 49
+transitions) and driving records through each one:
+
+| What | Result |
+|---|---|
+| `scriptConditionId`, `scriptValidationId`, `scriptActionId` on a transition | Linked and ran. The `GET` reports `0` where no script is linked |
+| `"commentsForApproval": 1` | The transition then needs a comment |
+| `filterNames` with a field ID | Works for a user-picklist field on the workspace (for example `"filterNames": ["APPROVER"]`); only the user named in that field on the record is offered the transition. The `GET`'s `filters` list shows which names are available, so create the fields before the workflow |
+| One workflow permission (`@n`) shared by every transition | Saved; the response carries its real `permissionID` |
+| `PUT` on a workflow **with records in several states** | `GET`, change only the script IDs on 29 transitions, `PUT` back: `200`. Every `stateID` and `transitionID` was unchanged, the records kept their states, and the next transition on an in-progress record ran the newly linked script |
+
+In the `PUT` body for an existing workflow, drop the `scripts` and `filters`
+keys from the `GET` response and send the rest as it came back.
+:::
+
 :::caution[Not yet tested]
-- Changing a workflow that items are already using (states with items in them).
-  The admin UI warns about this; the API's behaviour is unknown.
-- What `commentsForApproval` values mean (the UI sent `""`, the response says
-  `0`; v3 reports `"comments": "OPTIONAL"`).
+- Removing or renaming a state that has records in it. Only script links were
+  changed on a workflow in use.
+- `commentsForApproval` values other than `0` and `1`.
 - State reminders and escalations through the `reminder*` and `escalation*`
   keys. The escalations read (`schedulers/…`) returned `[]` on the scratch
   states; nothing was configured to compare against.
-- Linking scripts: the UI sends `scriptConditionId`, `scriptValidationId`, and
-  `scriptActionId` as script IDs from the `scripts` list. Script links were
-  removed before replay, so they weren't exercised here.
 - Whether the workspace's role permissions pick up new workflow permissions
   automatically. Roles are a separate step (see
   [Users, Groups, and Roles](/api/v3/users-groups-roles/)).
@@ -124,4 +136,12 @@ a small change, `GET`, edit, and `PUT` the whole thing.
 ## Lifecycles
 
 The lifecycle editor (`/lifecycleEditorView.form`) wasn't in the recording, so
-no JSON route for it is known yet.
+no JSON route for it is known yet. Guesses by analogy with workflows
+(`/api/rest/lifecycles/{ws}.json`, `/api/v3/workspaces/{ws}/lifecycles`) return
+`404`, and the route map has no path containing "lifecycle" (checked
+2026-11-23).
+
+This matters for a new **revisioning** workspace: until someone sets its
+lifecycle transitions in the Lifecycle Editor, adding an item to the Managed
+Items tab fails with "cannot be added as no lifecycle transitions are
+available".

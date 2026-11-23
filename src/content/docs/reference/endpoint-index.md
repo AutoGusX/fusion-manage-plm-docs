@@ -120,6 +120,7 @@ The primary modern surface.
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/logs?offset=&limit=&desc=timeStamp` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/owners` | [Items](/api/v3/items/) |
 | `PUT` | `/api/v3/workspaces/{ws}/items/{itemId}/owners` | [Record Visibility and Section Security](/api/v3/record-visibility-and-section-security/) |
+| `POST` | `/api/v3/workspaces/{ws}/items/{itemId}/scripts/{scriptId}` | [Scripts](/api/v3/scripts/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/tabs` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/versions` | [Items](/api/v3/items/) |
 | `GET` | `/api/v3/workspaces/{ws}/items/{itemId}/views/{gridViewId}/rows` | [Views, Fields, Tableaus, Grid/Project Tabs, and Picklists](/api/v3/views-fields-tableaus/) |
@@ -313,4 +314,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PUT` | `/{context}/v1/workspaces/{ws}/tabs` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 
-_273 endpoints across 4 surfaces._
+_274 endpoints across 4 surfaces._

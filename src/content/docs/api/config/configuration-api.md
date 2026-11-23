@@ -637,8 +637,25 @@ must not be null` otherwise), plus the picklist by system name:
 { "dataType": { "id": 20 }, "displayLength": 30, "picklist": { "systemName": "CUSTOM_LOOKUP_DEPARTMENT" } }
 ```
 
-Linking picklists (types 7, 22, 23, 25 to 27), derived fields, and formula fields
-weren't tested.
+Derived fields and most linking picklist types weren't tested.
+
+:::tip[Confirmed live — 2026-11-20: field shapes from a 214-field build]
+- **Names are capped at 50 characters**, for fields and for sections. Longer
+  names are rejected.
+- **Auto-number (type 11):** the formula must be written **without outer
+  parentheses**: `AUTONUMBER('CR-', NUMBER__AUTO_INC, 6)`. The `GET` shows the
+  formula wrapped in parentheses, and sending it that way fails with "formula
+  must be valid". A cross-workspace `:clone` of an auto-number field fails the
+  same way, so create it instead.
+- **Required picklist:** the validator is `dropDownSelection`, not `required`.
+- **User field:** a picklist field on `CUSTOM_LOOKUP_ALL_USERS_VIEW` with
+  `"picklistFieldId": "-1"`.
+- **Link to a record in another workspace:** first create a picklist of
+  `"type": "WORKSPACE"` with `"workspace": { "id": … }`, then a picklist field on
+  it. Scripts can then read the linked record's fields (`item.LINK_FIELD.FIELD`).
+- Create the auto-number field before setting the descriptor; a descriptor
+  `PUT` that names a field that doesn't exist yet fails.
+:::
 
 ## Picklists
 

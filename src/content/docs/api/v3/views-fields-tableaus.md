@@ -81,7 +81,7 @@ Task/schedule entries on an item, confirmed from Autodesk's official Postman col
 |---|---|
 | Get entries | `GET /api/v3/workspaces/{ws}/items/{itemId}/views/16` |
 | Add a manual task | `POST /api/v3/workspaces/{ws}/items/{itemId}/views/16`, body `{ "predecessors": [], "progress": 0, "startDate": "2025-01-01", "endDate": "2025-12-31", "title": "..." }` |
-| Add a linked item | Same endpoint, with a `content-location` header pointing at `/api/v3/workspaces/{ws}/items/{itemId}/views/16/linkable-items/{targetItemId}` and an otherwise-empty body |
+| Add a linked item | Same endpoint, with a `content-location` header pointing at `/api/v3/workspaces/{ws}/items/{itemId}/views/16/linkable-items/{targetItemId}` and a body with `startDate` and `endDate` (confirmed live 2026-11-20: without the dates it returns `400`) |
 | Remove an entry | `DELETE /api/v3/workspaces/{ws}/items/{itemId}/views/16/project-items/{entryId}` |
 
 View `16` recurs across the examples seen — likely a fixed view number for the Project tab, similar to `views/5` for BOM (see [BOM](/api/v3/bom/)), though not confirmed as universal across all tenants; discover it via `GET /api/v3/workspaces/{ws}/views` (above) rather than assuming.
