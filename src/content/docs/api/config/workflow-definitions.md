@@ -117,6 +117,13 @@ transitions) and driving records through each one:
 | One workflow permission (`@n`) shared by every transition | Saved; the response carries its real `permissionID` |
 | `PUT` on a workflow **with records in several states** | `GET`, change only the script IDs on 29 transitions, `PUT` back: `200`. Every `stateID` and `transitionID` was unchanged, the records kept their states, and the next transition on an in-progress record ran the newly linked script |
 
+**A workflow has one lock state.** Sending `lockStateID` true on several
+states saved only one of them (the last in the list), whether the value was the
+string `"true"` or a boolean. Send it on exactly one state. Records in that
+state then report `itemLocked: true` (confirmed live 2026-11-23). An
+administrator's `PATCH` on a locked record was not refused; a non-admin wasn't
+tested.
+
 In the `PUT` body for an existing workflow, drop the `scripts` and `filters`
 keys from the `GET` response and send the rest as it came back.
 :::

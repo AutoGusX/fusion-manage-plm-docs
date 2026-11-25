@@ -65,6 +65,28 @@ Content-Type: application/json
 ]
 ```
 
+:::tip[Confirmed live — 2026-11-23 and 2026-11-24: group owners and the permission that guards them]
+- **A group as additional owner:** add an entry with
+  `"ownerType": "ADDITIONAL_GROUP"`,
+  `"__self__": "…/items/{itemId}/owners/{groupId}"`, and
+  `"detailsLink": "/api/v3/groups/{groupId}"`. `PUT` returned `204` and the
+  group then listed with that `ownerType`.
+- **Writing owners needs "Change Ownership" (permission `524`).** Without it
+  the `PUT` returns `403` "access CHANGE_OWNER denied", even for the record's
+  primary owner. It is a separate permission from "View Records Owned by
+  Others" (`523`), so a role can limit users to their own records and still
+  keep them from re-sharing those records.
+- **Scripts aren't bound by that permission.** A workflow action script that ran
+  `rec.master.groupAdditionalOwners.push(Security.loadGroup('Group name'))` on
+  the items of a change's Managed Items tab (`item.workflowItems[i].item`) added
+  the group, and `splice` on the same array removed one. That gives
+  ownership-based visibility without an on-create script: set the owner group
+  in a workflow step the record has to pass through.
+
+Not tested: what a user who lacks `523` actually sees. Every check here ran as
+an administrator.
+:::
+
 :::caution[Confirmed live — 2026-11-04: the list replaces the owners]
 - The body is a **raw array**, and it replaces the full owner list. Send the
   primary owner back with it.

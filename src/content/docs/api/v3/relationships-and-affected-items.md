@@ -53,6 +53,13 @@ Example response shape from `GET /api/v3/workspaces/{coWsId}/items/{coId}/views/
   }
   ```
 - **Remove** — `DELETE /api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}`
+- **Lifecycle transitions available for a row** — `GET /api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}/transitions`
+  returns an array with each transition's `id`, `name`, `fromState`, and
+  `toState`. Use `/api/v3/workflows/9223372036854775807/transitions/{id}` as the
+  `targetTransition` link in the update. Confirmed live 2026-11-24 on a new
+  revisioning workspace: after the update the row showed `toRelease: "A"`, and
+  the workflow transition into the managed state released the item as revision
+  A. The update worked with `"linkedFields": []`.
 
 Note the add endpoint's path doesn't match the read/update/remove endpoints' path (`affected-items` directly under the item, vs. `views/11/affected-items`) — this is confirmed from the official source, not a typo.
 

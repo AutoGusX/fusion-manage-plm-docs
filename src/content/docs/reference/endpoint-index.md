@@ -46,6 +46,7 @@ The primary modern surface.
 | `PATCH` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/roles/{roleId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `POST` | `/api/v3/roles/{roleId}/permissions` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
+| `POST` | `/api/v3/roles/{roleId}/permissions:batch-delete` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `DELETE` | `/api/v3/roles/{roleId}/permissions/{permissionId}` | [Users, Groups, and Roles](/api/v3/users-groups-roles/) |
 | `GET` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
 | `POST` | `/api/v3/scripts` | [Scripts](/api/v3/scripts/) |
@@ -84,6 +85,7 @@ The primary modern surface.
 | `POST` | `/api/v3/workspaces/{coWs}/items/{coId}/affected-items` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `PUT` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `DELETE` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
+| `GET` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/affected-items/{itemId}/transitions` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `GET` | `/api/v3/workspaces/{coWs}/items/{coId}/views/11/fields` | [Relationships and Affected Items](/api/v3/relationships-and-affected-items/) |
 | `GET` | `/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/history` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
 | `POST` | `/api/v3/workspaces/{coWs}/items/{coId}/workflows/1/transitions` | [Recipe: release an item through a change order](/recipes/release-item-via-change-order/) |
@@ -314,4 +316,4 @@ Undocumented workspace-configuration API on the APS gateway (for example `api.ap
 | `GET` | `/{context}/v1/workspaces/{ws}/tabs` | [Configuration API (v1)](/api/config/configuration-api/) |
 | `PUT` | `/{context}/v1/workspaces/{ws}/tabs` | [Workspace setup (v1)](/api/config/workspace-setup/) |
 
-_274 endpoints across 4 surfaces._
+_276 endpoints across 4 surfaces._

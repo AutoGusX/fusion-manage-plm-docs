@@ -59,6 +59,13 @@ Returns `201` with a `Location` header ending in the new script ID.
 `VALIDATION`, and `ACTION`; all three were then linked to workflow transitions
 and ran.
 
+`POST /api/v3/workspaces/{ws}/scripts` with the same body also returns `201`,
+but it does **not** attach the script to the workspace: a `scriptBehaviorType`
+in the body is ignored, `GET /api/v3/workspaces/{ws}/scripts` stays empty, and
+running it returns `404` "Script {id} is not an on demand behaviour for
+workspace {ws}" (confirmed live 2026-11-23). Behaviors are still set only in
+the admin UI.
+
 There is still no edit or delete. To change a workflow script by API, create a
 **new** script (for example with a `_V2` name) and point the transitions at its
 ID in the [workflow definition](/api/config/workflow-definitions/). This was

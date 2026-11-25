@@ -74,7 +74,47 @@ unexplored.
 - `filter[workspace.id]` and `filter[name]` are **not** supported on the list
   (`400` "The specified filter property … is not supported").
 - `POST {}` lists the create requirements: `access`, `groupingEnabled`, `name`,
-  and `workspace`. A full create wasn't tried; clone instead.
+  and `workspace`. A full create was confirmed later; see below.
+:::
+
+:::tip[Confirmed live — 2026-11-24: a full create works]
+`POST /{context}/v1/reports` with a complete definition returned `201` and the
+new report's `id`. Five grouped chart reports were created this way and each
+one then returned rows from `:run`. The body that worked, for a count of
+records by workflow state:
+
+```json
+{
+  "name": "Changes by state", "description": "Changes by state",
+  "workspace": { "id": 140 }, "access": "PUBLIC",
+  "groupingEnabled": true, "topRows": -1, "logicClause": "AND", "advancedFilter": "",
+  "showGrouped": false, "suppressDuplicateRecords": false,
+  "displayFields": [
+    { "fieldId": "WF_CURRENT_STATE", "fieldTypeId": 1, "displayOrder": 0, "aggregation": null },
+    { "fieldId": "TITLE", "fieldTypeId": 0, "displayOrder": 1, "aggregation": "COUNT" }
+  ],
+  "filters": null,
+  "sorts": [ { "fieldId": "WF_CURRENT_STATE", "fieldTypeId": 1, "sortDescending": false, "listOrder": 0, "aggregation": null } ],
+  "groupings": [ { "fieldId": "WF_CURRENT_STATE", "fieldTypeId": 1, "groupByOrder": 0, "datePart": null } ],
+  "chartConfig": {
+    "title": "Changes by state", "chartType": "COLUMN", "seriesLabel": "",
+    "baseline": { "value": 0.0, "label": "" },
+    "xAxis": { "fieldId": "WF_CURRENT_STATE", "fieldTypeId": 4, "label": "", "min": null, "max": null, "aggregation": null },
+    "yAxis": { "fieldId": "TITLE", "fieldTypeId": 4, "label": "", "min": null, "max": null, "aggregation": "COUNT" },
+    "xAxisSeries": null, "yAxisSeries": null
+  }
+}
+```
+
+- `WF_CURRENT_STATE` is the workflow state and has `fieldTypeId` `1`; an
+  ordinary item field (here `TITLE`, or a picklist field to group by) is `0`.
+- The chart axes were copied from an existing report, where both carry
+  `fieldTypeId` `4`. Whether other values work wasn't tried.
+- `chartType` values seen on existing reports: `COLUMN`, `MSCOLUMN`,
+  `STACKEDCOLUMN`, `PIE`, `DOUGHNUT`, `LINE`, `AREA`, `MSAREA`, `STACKEDAREA`.
+
+Not checked: how the charts render in the browser, and putting a report on a
+dashboard.
 :::
 
 ## Cloning, updating, and deleting

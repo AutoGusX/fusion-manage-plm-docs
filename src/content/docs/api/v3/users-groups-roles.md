@@ -182,6 +182,13 @@ Adds are additive. To remove one, `DELETE /api/v3/roles/{roleId}/permissions/{pe
 (`OPTIONS` on that path allows only `DELETE`); it returned `204` and the permission was gone
 on the next read (confirmed live 2026-11-03).
 
+To remove several at once, `POST /api/v3/roles/{roleId}/permissions:batch-delete`
+with the same body as the add (a JSON array of permission URNs). It returned
+`204` and the permissions were gone from `GET /api/v3/roles/{roleId}`
+(confirmed live 2026-11-23). If any listed permission isn't on the role, the
+whole call fails with `400` "Permission {id} is not assigned to this role" and
+nothing is removed.
+
 These don't change permissions:
 
 | Request | Result |
